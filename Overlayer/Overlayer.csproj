@@ -1,0 +1,1079 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{54928BEA-BD8B-46A5-8EC7-1355C4D7A977}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Overlayer</RootNamespace>
+    <AssemblyName>Overlayer</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <LangVersion>10.0</LangVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;TOURNAMENT</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;TOURNAMENT</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>9.0</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>9.0</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityModManager\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="DemiLib">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\DemiLib.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\DOTween.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTweenPro">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\DOTweenPro.dll</HintPath>
+    </Reference>
+    <Reference Include="RDTools">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\RDTools.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.CodeDom, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.CodeDom.6.0.0\lib\net461\System.CodeDom.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Immutable, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.6.0.0\lib\net461\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Threading.Channels, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Channels.6.0.0\lib\net461\System.Threading.Channels.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Timeline">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\Unity.Timeline.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AccessibilityModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.AccessibilityModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AIModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.AIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AndroidJNIModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.AndroidJNIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ARModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.ARModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ClothModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.ClothModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ClusterInputModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.ClusterInputModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ClusterRendererModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.ClusterRendererModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CrashReportingModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.CrashReportingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.DirectorModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.DirectorModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.DSPGraphModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.DSPGraphModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GameCenterModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.GameCenterModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GIModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.GIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GridModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.GridModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.HotReloadModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.HotReloadModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.InputModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.JSONSerializeModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.JSONSerializeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.LocalizationModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.LocalizationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.NVIDIAModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.NVIDIAModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PerformanceReportingModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.PerformanceReportingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ProfilerModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.ProfilerModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ScreenCaptureModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.ScreenCaptureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SharedInternalsModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.SharedInternalsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteMaskModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.SpriteMaskModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteShapeModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.SpriteShapeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.StreamingModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.StreamingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SubstanceModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.SubstanceModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SubsystemsModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.SubsystemsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.TerrainModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainPhysicsModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.TerrainPhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreFontEngineModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.TextCoreFontEngineModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreTextEngineModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.TextCoreTextEngineModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TilemapModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.TilemapModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TLSModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.TLSModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsNativeModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.UIElementsNativeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UmbraModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.UmbraModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UNETModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.UNETModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityAnalyticsModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityConnectModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.UnityConnectModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityCurlModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.UnityCurlModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityTestProtocolModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.UnityTestProtocolModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAudioModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestTextureModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestWWWModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VehiclesModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.VehiclesModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VFXModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.VFXModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VideoModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.VideoModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VirtualTexturingModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.VirtualTexturingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VRModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.VRModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.WindModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.WindModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.XRModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityEngine.XRModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityModManager">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\UnityModManager\UnityModManager.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdofaiggApi\Api.cs" />
+    <Compile Include="AdofaiggApi\Music.cs" />
+    <Compile Include="AdofaiggApi\Parameter.cs" />
+    <Compile Include="AdofaiggApi\Parameters.cs" />
+    <Compile Include="AdofaiggApi\Parameter`1.cs" />
+    <Compile Include="AdofaiggApi\Play.cs" />
+    <Compile Include="AdofaiggApi\Response.cs" />
+    <Compile Include="AdofaiggApi\SimpleLevel.cs" />
+    <Compile Include="AdofaiggApi\SortType.cs" />
+    <Compile Include="AdofaiggApi\Tag.cs" />
+    <Compile Include="AdofaiggApi\TinyLevel.cs" />
+    <Compile Include="AdofaiggApi\Types\Json.cs" />
+    <Compile Include="AdofaiggApi\Types\Level.cs" />
+    <Compile Include="AdofaiggApi\Types\PlayLog.cs" />
+    <Compile Include="AdofaiggApi\Types\Ranking.cs" />
+    <Compile Include="AdofaiggApi\User.cs" />
+    <Compile Include="Core\CustomLibrary\Tiles.cs" />
+    <Compile Include="Core\CustomLibrary\Color.cs" />
+    <Compile Include="Core\CustomLibrary\GameObject.cs" />
+    <Compile Include="Core\CustomLibrary\HSV.cs" />
+    <Compile Include="Core\CustomLibrary\Input.cs" />
+    <Compile Include="Core\CustomLibrary\Judgement.cs" />
+    <Compile Include="Core\CustomLibrary\KeyCode.cs" />
+    <Compile Include="Core\CustomLibrary\Overlayer.cs" />
+    <Compile Include="Core\CustomLibrary\Planet.cs" />
+    <Compile Include="Core\CustomLibrary\PlanetType.cs" />
+    <Compile Include="Core\CustomLibrary\Sprite.cs" />
+    <Compile Include="Core\TileData.cs" />
+    <Compile Include="Core\CustomLibrary\Time.cs" />
+    <Compile Include="Core\CustomLibrary\Vector2.cs" />
+    <Compile Include="Core\JavaScript.cs" />
+    <Compile Include="Core\CustomLibrary\Tile.cs" />
+    <Compile Include="Core\Translation\GID.cs" />
+    <Compile Include="Core\Translation\Language.cs" />
+    <Compile Include="Core\StaticCoroutine.cs" />
+    <Compile Include="Core\TagManager.cs" />
+    <Compile Include="Core\Tags\ClassTagAttribute.cs" />
+    <Compile Include="Core\Tags\Tag.cs" />
+    <Compile Include="Core\Tags\TagAttribute.cs" />
+    <Compile Include="Core\Tags\TagCollection.cs" />
+    <Compile Include="Core\Tags\TagExtensions.cs" />
+    <Compile Include="Core\Tags\TextCompiler.cs" />
+    <Compile Include="Core\Tags\TToken.cs" />
+    <Compile Include="Core\Translation\TranslationKeys.cs" />
+    <Compile Include="Core\Utils\ArrayUtils.cs" />
+    <Compile Include="Core\Utils\EmitUtils.cs" />
+    <Compile Include="Core\Utils\EnumerableExtensions.cs" />
+    <Compile Include="Core\Utils\Extensions.cs" />
+    <Compile Include="Core\Utils\GUIUtils.cs" />
+    <Compile Include="Core\Utils\MapExtensions.cs" />
+    <Compile Include="Core\Utils\PatchUtils.cs" />
+    <Compile Include="Core\Utils\StringUtils.cs" />
+    <Compile Include="DT.cs" />
+    <Compile Include="JSEngine\Compiler\Binders\Binder.cs" />
+    <Compile Include="JSEngine\Compiler\Binders\BinderMethod.cs" />
+    <Compile Include="JSEngine\Compiler\Binders\BinderUtilities.cs" />
+    <Compile Include="JSEngine\Compiler\Binders\ClrBinder.cs" />
+    <Compile Include="JSEngine\Compiler\Binders\FieldBinders.cs" />
+    <Compile Include="JSEngine\Compiler\Binders\JSBinder.cs" />
+    <Compile Include="JSEngine\Compiler\Binders\JSBinderMethod.cs" />
+    <Compile Include="JSEngine\Compiler\Binders\MethodBinder.cs" />
+    <Compile Include="JSEngine\Compiler\Debugging\SourceCodePosition.cs" />
+    <Compile Include="JSEngine\Compiler\Debugging\SourceCodeSpan.cs" />
+    <Compile Include="JSEngine\Compiler\Emit\EmitConversion.cs" />
+    <Compile Include="JSEngine\Compiler\Emit\EmitHelpers.cs" />
+    <Compile Include="JSEngine\Compiler\Emit\ILGenerator\DynamicILGenerator.cs" />
+    <Compile Include="JSEngine\Compiler\Emit\ILGenerator\ILGenerator.cs" />
+    <Compile Include="JSEngine\Compiler\Emit\ILGenerator\ILLabel.cs" />
+    <Compile Include="JSEngine\Compiler\Emit\ILGenerator\ILLocalVariable.cs" />
+    <Compile Include="JSEngine\Compiler\Emit\ILGenerator\LoggingILGenerator.cs" />
+    <Compile Include="JSEngine\Compiler\Emit\ILGenerator\ReflectionEmitILGenerator.cs" />
+    <Compile Include="JSEngine\Compiler\Emit\ILGenerator\VerifyingILGenerator.cs" />
+    <Compile Include="JSEngine\Compiler\Emit\LongJumpException.cs" />
+    <Compile Include="JSEngine\Compiler\Emit\MethodOptimizationHints.cs" />
+    <Compile Include="JSEngine\Compiler\Emit\OptimizationInfo.cs" />
+    <Compile Include="JSEngine\Compiler\Emit\PrimitiveType.cs" />
+    <Compile Include="JSEngine\Compiler\Emit\PrimitiveTypeUtilities.cs" />
+    <Compile Include="JSEngine\Compiler\Emit\ReflectionHelpers.cs" />
+    <Compile Include="JSEngine\Compiler\ExecutionContext\ExecutionContext.cs" />
+    <Compile Include="JSEngine\Compiler\ExecutionContext\RuntimeScope.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\ArrayLiteralExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\AssignmentExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\BinaryExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\ClassExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\Expression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\FunctionCallExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\FunctionExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\GroupingExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\IReferenceExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\ListExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\LiteralExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\MemberAccessExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\NameExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\NewExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\NewTargetExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\ObjectLiteralExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\OperatorExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\SuperExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\TemplateLiteralExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\TernaryExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\ThisExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Expressions\UnaryExpression.cs" />
+    <Compile Include="JSEngine\Compiler\Lexer\IdentifierToken.cs" />
+    <Compile Include="JSEngine\Compiler\Lexer\KeywordToken.cs" />
+    <Compile Include="JSEngine\Compiler\Lexer\Lexer.cs" />
+    <Compile Include="JSEngine\Compiler\Lexer\LiteralToken.cs" />
+    <Compile Include="JSEngine\Compiler\Lexer\PunctuatorToken.cs" />
+    <Compile Include="JSEngine\Compiler\Lexer\RegularExpressionLiteral.cs" />
+    <Compile Include="JSEngine\Compiler\Lexer\StringLiteralToken.cs" />
+    <Compile Include="JSEngine\Compiler\Lexer\TemplateLiteralToken.cs" />
+    <Compile Include="JSEngine\Compiler\Lexer\Token.cs" />
+    <Compile Include="JSEngine\Compiler\MethodGenerator\CodeContext.cs" />
+    <Compile Include="JSEngine\Compiler\MethodGenerator\CompilerOptions.cs" />
+    <Compile Include="JSEngine\Compiler\MethodGenerator\FunctionMethodGenerator.cs" />
+    <Compile Include="JSEngine\Compiler\MethodGenerator\GeneratedMethod.cs" />
+    <Compile Include="JSEngine\Compiler\MethodGenerator\GlobalOrEvalMethodGenerator.cs" />
+    <Compile Include="JSEngine\Compiler\MethodGenerator\MethodGenerator.cs" />
+    <Compile Include="JSEngine\Compiler\Parser\AstNode.cs" />
+    <Compile Include="JSEngine\Compiler\Parser\Operator.cs" />
+    <Compile Include="JSEngine\Compiler\Parser\Parser.cs" />
+    <Compile Include="JSEngine\Compiler\Parser\PropertyDeclaration.cs" />
+    <Compile Include="JSEngine\Compiler\Parser\PropertyName.cs" />
+    <Compile Include="JSEngine\Compiler\Parser\Scope.cs" />
+    <Compile Include="JSEngine\Compiler\Parser\ScopeType.cs" />
+    <Compile Include="JSEngine\Compiler\Statements\BlockStatement.cs" />
+    <Compile Include="JSEngine\Compiler\Statements\BreakStatement.cs" />
+    <Compile Include="JSEngine\Compiler\Statements\ContinueStatement.cs" />
+    <Compile Include="JSEngine\Compiler\Statements\DebuggerStatement.cs" />
+    <Compile Include="JSEngine\Compiler\Statements\DoWhileStatement.cs" />
+    <Compile Include="JSEngine\Compiler\Statements\EmptyStatement.cs" />
+    <Compile Include="JSEngine\Compiler\Statements\ExpressionStatement.cs" />
+    <Compile Include="JSEngine\Compiler\Statements\ForInStatement.cs" />
+    <Compile Include="JSEngine\Compiler\Statements\ForOfStatement.cs" />
+    <Compile Include="JSEngine\Compiler\Statements\ForStatement.cs" />
+    <Compile Include="JSEngine\Compiler\Statements\IfStatement.cs" />
+    <Compile Include="JSEngine\Compiler\Statements\LoopStatement.cs" />
+    <Compile Include="JSEngine\Compiler\Statements\ReturnStatement.cs" />
+    <Compile Include="JSEngine\Compiler\Statements\Statement.cs" />
+    <Compile Include="JSEngine\Compiler\Statements\SwitchStatement.cs" />
+    <Compile Include="JSEngine\Compiler\Statements\ThrowStatement.cs" />
+    <Compile Include="JSEngine\Compiler\Statements\TryCatchFinallyStatement.cs" />
+    <Compile Include="JSEngine\Compiler\Statements\VarLetOrConstStatement.cs" />
+    <Compile Include="JSEngine\Compiler\Statements\WhileStatement.cs" />
+    <Compile Include="JSEngine\Compiler\Statements\WithStatement.cs" />
+    <Compile Include="JSEngine\Compiler\SyntaxErrorException.cs" />
+    <Compile Include="JSEngine\Core\BigInteger.cs" />
+    <Compile Include="JSEngine\Core\CompatibilityMode.cs" />
+    <Compile Include="JSEngine\Core\CompiledEval.cs" />
+    <Compile Include="JSEngine\Core\CompiledScript.cs" />
+    <Compile Include="JSEngine\Core\ConcatenatedString.cs" />
+    <Compile Include="JSEngine\Core\JavaScriptException.cs" />
+    <Compile Include="JSEngine\Core\Null.cs" />
+    <Compile Include="JSEngine\Core\NumberFormatter.cs" />
+    <Compile Include="JSEngine\Core\NumberParser.cs" />
+    <Compile Include="JSEngine\Core\ScriptEngine.cs" />
+    <Compile Include="JSEngine\Core\ScriptSource\FileScriptSource.cs" />
+    <Compile Include="JSEngine\Core\ScriptSource\ScriptSource.cs" />
+    <Compile Include="JSEngine\Core\ScriptSource\StringScriptSource.cs" />
+    <Compile Include="JSEngine\Core\StackFrameTransformContext.cs" />
+    <Compile Include="JSEngine\Core\StringHelpers.cs" />
+    <Compile Include="JSEngine\Core\TypeComparer.cs" />
+    <Compile Include="JSEngine\Core\TypeConverter.cs" />
+    <Compile Include="JSEngine\Core\TypeUtilities.cs" />
+    <Compile Include="JSEngine\Core\Undefined.cs" />
+    <Compile Include="JSEngine\JavaScript.cs" />
+    <Compile Include="JSEngine\Library\Array\ArrayAdapter.cs" />
+    <Compile Include="JSEngine\Library\Array\ArrayConstructor.cs" />
+    <Compile Include="JSEngine\Library\Array\ArrayConstructor.g.cs" />
+    <Compile Include="JSEngine\Library\Array\ArrayInstance.cs" />
+    <Compile Include="JSEngine\Library\Array\ArrayInstance.g.cs" />
+    <Compile Include="JSEngine\Library\Array\ArrayIterator.cs" />
+    <Compile Include="JSEngine\Library\Array\ArrayIterator.g.cs" />
+    <Compile Include="JSEngine\Library\Array\SparseArray.cs" />
+    <Compile Include="JSEngine\Library\Boolean\BooleanConstructor.cs" />
+    <Compile Include="JSEngine\Library\Boolean\BooleanConstructor.g.cs" />
+    <Compile Include="JSEngine\Library\Boolean\BooleanInstance.cs" />
+    <Compile Include="JSEngine\Library\Boolean\BooleanInstance.g.cs" />
+    <Compile Include="JSEngine\Library\ClrWrapper\ClrInstanceTypeWrapper.cs" />
+    <Compile Include="JSEngine\Library\ClrWrapper\ClrInstanceWrapper.cs" />
+    <Compile Include="JSEngine\Library\ClrWrapper\ClrStaticTypeWrapper.cs" />
+    <Compile Include="JSEngine\Library\Date\DateConstructor.cs" />
+    <Compile Include="JSEngine\Library\Date\DateConstructor.g.cs" />
+    <Compile Include="JSEngine\Library\Date\DateInstance.cs" />
+    <Compile Include="JSEngine\Library\Date\DateInstance.g.cs" />
+    <Compile Include="JSEngine\Library\Date\DateParser.cs" />
+    <Compile Include="JSEngine\Library\Error\ErrorConstructor.cs" />
+    <Compile Include="JSEngine\Library\Error\ErrorConstructor.g.cs" />
+    <Compile Include="JSEngine\Library\Error\ErrorInstance.cs" />
+    <Compile Include="JSEngine\Library\Error\ErrorInstance.g.cs" />
+    <Compile Include="JSEngine\Library\Error\ErrorType.cs" />
+    <Compile Include="JSEngine\Library\FirebugConsole\FirebugConsole.cs" />
+    <Compile Include="JSEngine\Library\FirebugConsole\FirebugConsole.g.cs" />
+    <Compile Include="JSEngine\Library\FirebugConsole\IFirebugConsoleOutput.cs" />
+    <Compile Include="JSEngine\Library\FirebugConsole\StandardConsoleOutput.cs" />
+    <Compile Include="JSEngine\Library\Function\ArgumentsInstance.cs" />
+    <Compile Include="JSEngine\Library\Function\ArgumentsInstance.g.cs" />
+    <Compile Include="JSEngine\Library\Function\BoundFunction.cs" />
+    <Compile Include="JSEngine\Library\Function\ClassFunction.cs" />
+    <Compile Include="JSEngine\Library\Function\ClrFunction.cs" />
+    <Compile Include="JSEngine\Library\Function\ClrStubFunction.cs" />
+    <Compile Include="JSEngine\Library\Function\FunctionConstructor.cs" />
+    <Compile Include="JSEngine\Library\Function\FunctionConstructor.g.cs" />
+    <Compile Include="JSEngine\Library\Function\FunctionInstance.cs" />
+    <Compile Include="JSEngine\Library\Function\FunctionInstance.g.cs" />
+    <Compile Include="JSEngine\Library\Function\ThrowTypeErrorFunction.cs" />
+    <Compile Include="JSEngine\Library\Function\UserDefinedFunction.cs" />
+    <Compile Include="JSEngine\Library\GlobalObject.cs" />
+    <Compile Include="JSEngine\Library\GlobalObject.g.cs" />
+    <Compile Include="JSEngine\Library\Iterator.cs" />
+    <Compile Include="JSEngine\Library\Iterator.g.cs" />
+    <Compile Include="JSEngine\Library\JSON\JSONLexer.cs" />
+    <Compile Include="JSEngine\Library\JSON\JSONObject.cs" />
+    <Compile Include="JSEngine\Library\JSON\JSONObject.g.cs" />
+    <Compile Include="JSEngine\Library\JSON\JSONParser.cs" />
+    <Compile Include="JSEngine\Library\JSON\JSONSerializer.cs" />
+    <Compile Include="JSEngine\Library\Map\MapConstructor.cs" />
+    <Compile Include="JSEngine\Library\Map\MapConstructor.g.cs" />
+    <Compile Include="JSEngine\Library\Map\MapInstance.cs" />
+    <Compile Include="JSEngine\Library\Map\MapInstance.g.cs" />
+    <Compile Include="JSEngine\Library\Map\MapIterator.cs" />
+    <Compile Include="JSEngine\Library\Map\MapIterator.g.cs" />
+    <Compile Include="JSEngine\Library\MathObject.cs" />
+    <Compile Include="JSEngine\Library\MathObject.g.cs" />
+    <Compile Include="JSEngine\Library\Number\NumberConstructor.cs" />
+    <Compile Include="JSEngine\Library\Number\NumberConstructor.g.cs" />
+    <Compile Include="JSEngine\Library\Number\NumberInstance.cs" />
+    <Compile Include="JSEngine\Library\Number\NumberInstance.g.cs" />
+    <Compile Include="JSEngine\Library\Object\Attributes.cs" />
+    <Compile Include="JSEngine\Library\Object\HiddenClassSchema.cs" />
+    <Compile Include="JSEngine\Library\Object\JSFunctionFlags.cs" />
+    <Compile Include="JSEngine\Library\Object\ObjectConstructor.cs" />
+    <Compile Include="JSEngine\Library\Object\ObjectConstructor.g.cs" />
+    <Compile Include="JSEngine\Library\Object\ObjectInstance.cs" />
+    <Compile Include="JSEngine\Library\Object\ObjectInstance.g.cs" />
+    <Compile Include="JSEngine\Library\Object\PropertyAccessorValue.cs" />
+    <Compile Include="JSEngine\Library\Object\PropertyAttributes.cs" />
+    <Compile Include="JSEngine\Library\Object\PropertyDescriptor.cs" />
+    <Compile Include="JSEngine\Library\Object\PropertyNameAndValue.cs" />
+    <Compile Include="JSEngine\Library\Object\PropertyReference.cs" />
+    <Compile Include="JSEngine\Library\Object\SchemaProperty.cs" />
+    <Compile Include="JSEngine\Library\Promise\PromiseConstructor.cs" />
+    <Compile Include="JSEngine\Library\Promise\PromiseConstructor.g.cs" />
+    <Compile Include="JSEngine\Library\Promise\PromiseInstance.cs" />
+    <Compile Include="JSEngine\Library\Promise\PromiseInstance.g.cs" />
+    <Compile Include="JSEngine\Library\Proxy\IProxyInstance.cs" />
+    <Compile Include="JSEngine\Library\Proxy\ProxyConstructor.cs" />
+    <Compile Include="JSEngine\Library\Proxy\ProxyConstructor.g.cs" />
+    <Compile Include="JSEngine\Library\Proxy\ProxyFunction.cs" />
+    <Compile Include="JSEngine\Library\Proxy\ProxyObject.cs" />
+    <Compile Include="JSEngine\Library\Reflect\Reflect.cs" />
+    <Compile Include="JSEngine\Library\Reflect\Reflect.g.cs" />
+    <Compile Include="JSEngine\Library\RegExp\RegExpConstructor.cs" />
+    <Compile Include="JSEngine\Library\RegExp\RegExpConstructor.g.cs" />
+    <Compile Include="JSEngine\Library\RegExp\RegExpInstance.cs" />
+    <Compile Include="JSEngine\Library\RegExp\RegExpInstance.g.cs" />
+    <Compile Include="JSEngine\Library\Set\SetConstructor.cs" />
+    <Compile Include="JSEngine\Library\Set\SetConstructor.g.cs" />
+    <Compile Include="JSEngine\Library\Set\SetInstance.cs" />
+    <Compile Include="JSEngine\Library\Set\SetInstance.g.cs" />
+    <Compile Include="JSEngine\Library\Set\SetIterator.cs" />
+    <Compile Include="JSEngine\Library\Set\SetIterator.g.cs" />
+    <Compile Include="JSEngine\Library\String\StringConstructor.cs" />
+    <Compile Include="JSEngine\Library\String\StringConstructor.g.cs" />
+    <Compile Include="JSEngine\Library\String\StringInstance.cs" />
+    <Compile Include="JSEngine\Library\String\StringInstance.g.cs" />
+    <Compile Include="JSEngine\Library\String\StringIterator.cs" />
+    <Compile Include="JSEngine\Library\String\StringIterator.g.cs" />
+    <Compile Include="JSEngine\Library\Symbol\Symbol.cs" />
+    <Compile Include="JSEngine\Library\Symbol\SymbolConstructor.cs" />
+    <Compile Include="JSEngine\Library\Symbol\SymbolConstructor.g.cs" />
+    <Compile Include="JSEngine\Library\Symbol\SymbolInstance.cs" />
+    <Compile Include="JSEngine\Library\Symbol\SymbolInstance.g.cs" />
+    <Compile Include="JSEngine\Library\TypedArray\ArrayBufferConstructor.cs" />
+    <Compile Include="JSEngine\Library\TypedArray\ArrayBufferConstructor.g.cs" />
+    <Compile Include="JSEngine\Library\TypedArray\ArrayBufferInstance.cs" />
+    <Compile Include="JSEngine\Library\TypedArray\ArrayBufferInstance.g.cs" />
+    <Compile Include="JSEngine\Library\TypedArray\DataViewConstructor.cs" />
+    <Compile Include="JSEngine\Library\TypedArray\DataViewConstructor.g.cs" />
+    <Compile Include="JSEngine\Library\TypedArray\DataViewInstance.cs" />
+    <Compile Include="JSEngine\Library\TypedArray\DataViewInstance.g.cs" />
+    <Compile Include="JSEngine\Library\TypedArray\TypedArrayConstructor.cs" />
+    <Compile Include="JSEngine\Library\TypedArray\TypedArrayConstructor.g.cs" />
+    <Compile Include="JSEngine\Library\TypedArray\TypedArrayInstance.cs" />
+    <Compile Include="JSEngine\Library\TypedArray\TypedArrayInstance.g.cs" />
+    <Compile Include="JSEngine\Library\TypedArray\TypedArrayType.cs" />
+    <Compile Include="JSEngine\Library\WeakMap\WeakMapConstructor.cs" />
+    <Compile Include="JSEngine\Library\WeakMap\WeakMapConstructor.g.cs" />
+    <Compile Include="JSEngine\Library\WeakMap\WeakMapInstance.cs" />
+    <Compile Include="JSEngine\Library\WeakMap\WeakMapInstance.g.cs" />
+    <Compile Include="JSEngine\Library\WeakSet\WeakSetConstructor.cs" />
+    <Compile Include="JSEngine\Library\WeakSet\WeakSetConstructor.g.cs" />
+    <Compile Include="JSEngine\Library\WeakSet\WeakSetInstance.cs" />
+    <Compile Include="JSEngine\Library\WeakSet\WeakSetInstance.g.cs" />
+    <Compile Include="KeyCombo.cs" />
+    <Compile Include="LevelMeta.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="MapParser\Actions\Action.cs" />
+    <Compile Include="MapParser\Actions\ActionUtils.cs" />
+    <Compile Include="MapParser\Actions\AnimateTrack.cs" />
+    <Compile Include="MapParser\Actions\AutoPlayTiles.cs" />
+    <Compile Include="MapParser\Actions\Bloom.cs" />
+    <Compile Include="MapParser\Actions\Bookmark.cs" />
+    <Compile Include="MapParser\Actions\ChangeTrack.cs" />
+    <Compile Include="MapParser\Actions\Checkpoint.cs" />
+    <Compile Include="MapParser\Actions\ColorTrack.cs" />
+    <Compile Include="MapParser\Actions\CustomBackground.cs" />
+    <Compile Include="MapParser\Actions\Default\AnimateTrack.cs" />
+    <Compile Include="MapParser\Actions\Default\AutoPlayTiles.cs" />
+    <Compile Include="MapParser\Actions\Default\Bloom.cs" />
+    <Compile Include="MapParser\Actions\Default\Bookmark.cs" />
+    <Compile Include="MapParser\Actions\Default\ChangeTrack.cs" />
+    <Compile Include="MapParser\Actions\Default\Checkpoint.cs" />
+    <Compile Include="MapParser\Actions\Default\ColorTrack.cs" />
+    <Compile Include="MapParser\Actions\Default\CustomBackground.cs" />
+    <Compile Include="MapParser\Actions\Default\EditorComment.cs" />
+    <Compile Include="MapParser\Actions\Default\Flash.cs" />
+    <Compile Include="MapParser\Actions\Default\FreeRoam.cs" />
+    <Compile Include="MapParser\Actions\Default\FreeRoamRemove.cs" />
+    <Compile Include="MapParser\Actions\Default\FreeRoamTwirl.cs" />
+    <Compile Include="MapParser\Actions\Default\HallOfMirrors.cs" />
+    <Compile Include="MapParser\Actions\Default\Hide.cs" />
+    <Compile Include="MapParser\Actions\Default\Hold.cs" />
+    <Compile Include="MapParser\Actions\Default\MoveCamera.cs" />
+    <Compile Include="MapParser\Actions\Default\MoveDecorations.cs" />
+    <Compile Include="MapParser\Actions\Default\MoveTrack.cs" />
+    <Compile Include="MapParser\Actions\Default\MultiPlanet.cs" />
+    <Compile Include="MapParser\Actions\Default\Pause.cs" />
+    <Compile Include="MapParser\Actions\Default\PlaySound.cs" />
+    <Compile Include="MapParser\Actions\Default\PositionTrack.cs" />
+    <Compile Include="MapParser\Actions\Default\RecolorTrack.cs" />
+    <Compile Include="MapParser\Actions\Default\RepeatEvents.cs" />
+    <Compile Include="MapParser\Actions\Default\ScaleMargin.cs" />
+    <Compile Include="MapParser\Actions\Default\ScaleRadius.cs" />
+    <Compile Include="MapParser\Actions\Default\ScreenScroll.cs" />
+    <Compile Include="MapParser\Actions\Default\ScreenTile.cs" />
+    <Compile Include="MapParser\Actions\Default\SetConditionalEvents.cs" />
+    <Compile Include="MapParser\Actions\Default\SetFilter.cs" />
+    <Compile Include="MapParser\Actions\Default\SetHitsound.cs" />
+    <Compile Include="MapParser\Actions\Default\SetHoldSound.cs" />
+    <Compile Include="MapParser\Actions\Default\SetPlanetRotation.cs" />
+    <Compile Include="MapParser\Actions\Default\SetSpeed.cs" />
+    <Compile Include="MapParser\Actions\Default\SetText.cs" />
+    <Compile Include="MapParser\Actions\Default\ShakeScreen.cs" />
+    <Compile Include="MapParser\Actions\Default\Twirl.cs" />
+    <Compile Include="MapParser\Actions\EditorComment.cs" />
+    <Compile Include="MapParser\Actions\Flash.cs" />
+    <Compile Include="MapParser\Actions\FreeRoam.cs" />
+    <Compile Include="MapParser\Actions\FreeRoamRemove.cs" />
+    <Compile Include="MapParser\Actions\FreeRoamTwirl.cs" />
+    <Compile Include="MapParser\Actions\HallOfMirrors.cs" />
+    <Compile Include="MapParser\Actions\Hide.cs" />
+    <Compile Include="MapParser\Actions\Hold.cs" />
+    <Compile Include="MapParser\Actions\MoveCamera.cs" />
+    <Compile Include="MapParser\Actions\MoveDecorations.cs" />
+    <Compile Include="MapParser\Actions\MoveTrack.cs" />
+    <Compile Include="MapParser\Actions\MultiPlanet.cs" />
+    <Compile Include="MapParser\Actions\Pause.cs" />
+    <Compile Include="MapParser\Actions\PlaySound.cs" />
+    <Compile Include="MapParser\Actions\PositionTrack.cs" />
+    <Compile Include="MapParser\Actions\RecolorTrack.cs" />
+    <Compile Include="MapParser\Actions\RepeatEvents.cs" />
+    <Compile Include="MapParser\Actions\ScaleMargin.cs" />
+    <Compile Include="MapParser\Actions\ScaleRadius.cs" />
+    <Compile Include="MapParser\Actions\ScreenScroll.cs" />
+    <Compile Include="MapParser\Actions\ScreenTile.cs" />
+    <Compile Include="MapParser\Actions\SetConditionalEvents.cs" />
+    <Compile Include="MapParser\Actions\SetFilter.cs" />
+    <Compile Include="MapParser\Actions\SetHitsound.cs" />
+    <Compile Include="MapParser\Actions\SetHoldSound.cs" />
+    <Compile Include="MapParser\Actions\SetPlanetRotation.cs" />
+    <Compile Include="MapParser\Actions\SetSpeed.cs" />
+    <Compile Include="MapParser\Actions\SetText.cs" />
+    <Compile Include="MapParser\Actions\ShakeScreen.cs" />
+    <Compile Include="MapParser\Actions\Twirl.cs" />
+    <Compile Include="MapParser\Actions\UnknownAction.cs" />
+    <Compile Include="MapParser\CustomLevel.cs" />
+    <Compile Include="MapParser\Decorations\AddDecoration.cs" />
+    <Compile Include="MapParser\Decorations\AddText.cs" />
+    <Compile Include="MapParser\Decorations\Decoration.cs" />
+    <Compile Include="MapParser\Decorations\DecorationUtils.cs" />
+    <Compile Include="MapParser\Decorations\Default\AddDecoration.cs" />
+    <Compile Include="MapParser\Decorations\Default\AddText.cs" />
+    <Compile Include="MapParser\Decorations\UnknownDecoration.cs" />
+    <Compile Include="MapParser\Helpers\AngleHelper.cs" />
+    <Compile Include="MapParser\Helpers\JsonHelper.cs" />
+    <Compile Include="MapParser\Helpers\LETHelper.cs" />
+    <Compile Include="MapParser\JSON.cs" />
+    <Compile Include="MapParser\LevelSettings.cs" />
+    <Compile Include="MapParser\Tile.cs" />
+    <Compile Include="MapParser\TileMeta.cs" />
+    <Compile Include="MapParser\Types\BgDisplayMode.cs" />
+    <Compile Include="MapParser\Types\CamMovementType.cs" />
+    <Compile Include="MapParser\Types\DecPlacementType.cs" />
+    <Compile Include="MapParser\Types\Ease.cs" />
+    <Compile Include="MapParser\Types\EasePartBehaviour.cs" />
+    <Compile Include="MapParser\Types\Filter.cs" />
+    <Compile Include="MapParser\Types\FlashPlane.cs" />
+    <Compile Include="MapParser\Types\FontName.cs" />
+    <Compile Include="MapParser\Types\GameSound.cs" />
+    <Compile Include="MapParser\Types\Hitbox.cs" />
+    <Compile Include="MapParser\Types\HitSound.cs" />
+    <Compile Include="MapParser\Types\HoldEndSound.cs" />
+    <Compile Include="MapParser\Types\HoldLoopSound.cs" />
+    <Compile Include="MapParser\Types\HoldMidSound.cs" />
+    <Compile Include="MapParser\Types\HoldMidSoundTimingRelativeTo.cs" />
+    <Compile Include="MapParser\Types\HoldMidSoundType.cs" />
+    <Compile Include="MapParser\Types\HoldStartSound.cs" />
+    <Compile Include="MapParser\Types\LevelEventType.cs" />
+    <Compile Include="MapParser\Types\SpecialArtistType.cs" />
+    <Compile Include="MapParser\Types\SpeedType.cs" />
+    <Compile Include="MapParser\Types\TileAngle.cs" />
+    <Compile Include="MapParser\Types\TileRelativeTo.cs" />
+    <Compile Include="MapParser\Types\Toggle.cs" />
+    <Compile Include="MapParser\Types\TrackAnimationType.cs" />
+    <Compile Include="MapParser\Types\TrackAnimationType2.cs" />
+    <Compile Include="MapParser\Types\TrackColorPulse.cs" />
+    <Compile Include="MapParser\Types\TrackColorType.cs" />
+    <Compile Include="MapParser\Types\TrackStyle.cs" />
+    <Compile Include="MapParser\Types\Vector2.cs" />
+    <Compile Include="MapParser\Utils.cs" />
+    <Compile Include="Newtonsoft.Json.cs" />
+    <Compile Include="Patches\AttemptsCounter.cs" />
+    <Compile Include="Patches\BpmUpdater.cs" />
+    <Compile Include="Patches\ClearMessagePatch.cs" />
+    <Compile Include="Patches\DataInit.cs" />
+    <Compile Include="Patches\DeathMessagePatch.cs" />
+    <Compile Include="Patches\ErrorMeterPatch.cs" />
+    <Compile Include="Patches\GetHitMarginFixer.cs" />
+    <Compile Include="Patches\JSPatches.cs" />
+    <Compile Include="Patches\KeyJudgePatch.cs" />
+    <Compile Include="Patches\LeastChkPtLogger.cs" />
+    <Compile Include="Patches\Resetter.cs" />
+    <Compile Include="Patches\StartProgUpdater.cs" />
+    <Compile Include="Patches\TimingUpdater.cs" />
+    <Compile Include="Patches\Updater.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="ShadowText.cs" />
+    <Compile Include="OText.cs" />
+    <Compile Include="Tags\Global\CurHitTags.cs" />
+    <Compile Include="Tags\Global\KeyJudgeTag.cs" />
+    <Compile Include="Tags\Global\KPS.cs" />
+    <Compile Include="Tags\Global\Misc.cs" />
+    <Compile Include="Tags\Global\Performance.cs" />
+    <Compile Include="Tags\Global\PlayPoint.cs" />
+    <Compile Include="Tags\Global\ProgressDeath.cs" />
+    <Compile Include="Tags\Global\Scores.cs" />
+    <Compile Include="Tags\Global\Timings.cs" />
+    <Compile Include="Tags\Lenient\LHitTags.cs" />
+    <Compile Include="Tags\Normal\NHitTags.cs" />
+    <Compile Include="Tags\Strict\SHitTags.cs" />
+    <Compile Include="Variables.cs" />
+    <Compile Include="Vostok\Commons\Collections\BinaryHeap.cs" />
+    <Compile Include="Vostok\Commons\Collections\BufferPool.cs" />
+    <Compile Include="Vostok\Commons\Collections\ByReferenceEqualityComparer.cs" />
+    <Compile Include="Vostok\Commons\Collections\CachingTransform.cs" />
+    <Compile Include="Vostok\Commons\Collections\CircularBuffer.cs" />
+    <Compile Include="Vostok\Commons\Collections\ConcurrentBoundedQueue.cs" />
+    <Compile Include="Vostok\Commons\Collections\ConcurrentDictionaryExtensions.cs" />
+    <Compile Include="Vostok\Commons\Collections\DictionaryExtensions.cs" />
+    <Compile Include="Vostok\Commons\Collections\ImmutableArrayDictionary.cs" />
+    <Compile Include="Vostok\Commons\Collections\LRUCache.cs" />
+    <Compile Include="Vostok\Commons\Collections\Quickselect.cs" />
+    <Compile Include="Vostok\Commons\Collections\QuickselectSortOrder.cs" />
+    <Compile Include="Vostok\Commons\Collections\ReadonlyListDictionary.cs" />
+    <Compile Include="Vostok\Commons\Collections\RecyclingBoundedCache.cs" />
+    <Compile Include="Vostok\Commons\Collections\UnboundedObjectPool.cs" />
+    <Compile Include="Vostok\Commons\Formatting\CustomFormatters.cs" />
+    <Compile Include="Vostok\Commons\Formatting\DictionaryInspector.cs" />
+    <Compile Include="Vostok\Commons\Formatting\MessageTemplateEscaper.cs" />
+    <Compile Include="Vostok\Commons\Formatting\ObjectPropertiesExtractor.cs" />
+    <Compile Include="Vostok\Commons\Formatting\ObjectValueFormatter.cs" />
+    <Compile Include="Vostok\Commons\Formatting\ParseMethodFinder.cs" />
+    <Compile Include="Vostok\Commons\Formatting\StringBuilderCache.cs" />
+    <Compile Include="Vostok\Commons\Formatting\ToStringDetector.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Comparers\DictionaryComparer.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Comparers\ListComparer.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Counters\ConcurrentCounter.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Counters\DeltaCollector.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Customization.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Diagnostics\EventHelper.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Disposable\ActionDisposable.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Disposable\EmptyDisposable.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Disposable\ValueDisposable.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Enum.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Extensions\CancellationTokenExtensions.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Extensions\IEnumerableExtensions.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Extensions\StringExtensions.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Extensions\TaskExtensions.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Extensions\TypeExtensions.cs" />
+    <Compile Include="Vostok\Commons\Helpers\LZ4.Legacy\LZ4Legacy.cs" />
+    <Compile Include="Vostok\Commons\Helpers\LZ4.Legacy\LZ4Wrapper.cs" />
+    <Compile Include="Vostok\Commons\Helpers\LZ4\LZ4Codec.cs" />
+    <Compile Include="Vostok\Commons\Helpers\LZ4\LZ4Mem.cs" />
+    <Compile Include="Vostok\Commons\Helpers\LZ4\LZ4_64.cs" />
+    <Compile Include="Vostok\Commons\Helpers\LZ4\LZ4_xx.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Network\ArpCacheMaintainer.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Network\DnsResolver.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Network\FreeTcpPortFinder.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Network\IPv4AddressExtensions.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Network\IPv4Network.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Network\NetworkHelper.cs" />
+    <Compile Include="Vostok\Commons\Helpers\NumericTypeParser.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Observable\BroadcastObservable.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Observable\CachingObservable.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Topology\ReplicaComparer.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Url\UrlExtensions.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Url\UrlNormalizer.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Url\UrlParser.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Windows\ProcessMemoryPriority.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Windows\ProcessPriorityHelper.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Windows\WinApi\IO_COUNTERS.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Windows\WinApi\JOBOBJECTINFOCLASS.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Windows\WinApi\JOBOBJECT_BASIC_LIMIT_FLAGS.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Windows\WinApi\JOBOBJECT_BASIC_LIMIT_INFORMATION.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Windows\WinApi\JOBOBJECT_EXTENDED_LIMIT_INFORMATION.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Windows\WinApi\Kernel32.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Windows\WinApi\ProcessExitCodes.cs" />
+    <Compile Include="Vostok\Commons\Helpers\Windows\WindowsProcessKillJob.cs" />
+    <Compile Include="Vostok\Commons\Threading\AsyncLock.cs" />
+    <Compile Include="Vostok\Commons\Threading\AsyncManualResetEvent.cs" />
+    <Compile Include="Vostok\Commons\Threading\AsyncReaderWriterLock.cs" />
+    <Compile Include="Vostok\Commons\Threading\AtomicBoolean.cs" />
+    <Compile Include="Vostok\Commons\Threading\AtomicInt.cs" />
+    <Compile Include="Vostok\Commons\Threading\AtomicLong.cs" />
+    <Compile Include="Vostok\Commons\Threading\GuidGenerator.cs" />
+    <Compile Include="Vostok\Commons\Threading\LifoSemaphore.cs" />
+    <Compile Include="Vostok\Commons\Threading\ThreadPoolState.cs" />
+    <Compile Include="Vostok\Commons\Threading\ThreadPoolUtility.cs" />
+    <Compile Include="Vostok\Commons\Threading\ThreadRunner.cs" />
+    <Compile Include="Vostok\Commons\Threading\ThreadSafeRandom.cs" />
+    <Compile Include="Vostok\Commons\Time\AsyncPeriodicalAction.cs" />
+    <Compile Include="Vostok\Commons\Time\DateTimeArithmetics.cs" />
+    <Compile Include="Vostok\Commons\Time\DateTimeOffsetArithmetics.cs" />
+    <Compile Include="Vostok\Commons\Time\EpochHelper.cs" />
+    <Compile Include="Vostok\Commons\Time\PeriodicalAction.cs" />
+    <Compile Include="Vostok\Commons\Time\PreciseDateTime.cs" />
+    <Compile Include="Vostok\Commons\Time\TimeBudget.cs" />
+    <Compile Include="Vostok\Commons\Time\TimeProviders\DateTimeOffsetProvider.cs" />
+    <Compile Include="Vostok\Commons\Time\TimeProviders\DateTimeProvider.cs" />
+    <Compile Include="Vostok\Commons\Time\TimeProviders\IDateTimeOffsetProvider.cs" />
+    <Compile Include="Vostok\Commons\Time\TimeProviders\IDateTimeProvider.cs" />
+    <Compile Include="Vostok\Commons\Time\TimeSpanArithmetics.cs" />
+    <Compile Include="Vostok\Commons\Time\TimeSpanConversions.cs" />
+    <Compile Include="Vostok\Commons\Time\TimeSpanFormatting.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\CompositeLog.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Extensions\EnrichBySourceContextExtensions.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Extensions\FilterByEventLogExtensions.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Extensions\FilterByLevelLogExtensions.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Extensions\FilterByPropertyLogExtensions.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Extensions\FilterBySourceContextLogExtensions.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Extensions\LogContextExtensions.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Extensions\LogEventExtensions.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Extensions\LogExtensions.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Extensions\LogExtensions_Interpolated.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Extensions\LogPropertiesExtensions.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Extensions\TransformExtensions.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Extensions\TransformLevelsLogExtensions.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Extensions\WithPropertyLogExtensions.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Helpers\DeconstructionHelper.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Helpers\InterpolatedHelper.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Helpers\TemplatePropertiesExtractor.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Helpers\TypesHelper.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\ILog.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\LogEvent.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\LogLevel.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\LogProvider.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\SilentLog.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Values\HierarchicalContextValue.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Values\OperationContextStringHandler.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Values\OperationContextValue.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Values\SourceContextValue.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\WellKnownProperties.cs" />
+    <Compile Include="Vostok\Logging\Abstractions\Wrappers\SourceContextWrapper.cs" />
+    <Compile Include="Vostok\Metrics\AggregationParametersExtensions.cs" />
+    <Compile Include="Vostok\Metrics\DevNullMetricContext.cs" />
+    <Compile Include="Vostok\Metrics\Grouping\IMetricGroup.cs" />
+    <Compile Include="Vostok\Metrics\Grouping\IMetricGroupExtensions.cs" />
+    <Compile Include="Vostok\Metrics\Grouping\IMetricGroupOfT.cs" />
+    <Compile Include="Vostok\Metrics\Grouping\MetricGroup.cs" />
+    <Compile Include="Vostok\Metrics\Grouping\MetricGroupBase.cs" />
+    <Compile Include="Vostok\Metrics\Grouping\MetricGroupOfT.cs" />
+    <Compile Include="Vostok\Metrics\Grouping\MetricTagsExtractor.cs" />
+    <Compile Include="Vostok\Metrics\Helpers\DoubleSerializer.cs" />
+    <Compile Include="Vostok\Metrics\Helpers\TimeSpanSerializer.cs" />
+    <Compile Include="Vostok\Metrics\IAnnotationContext.cs" />
+    <Compile Include="Vostok\Metrics\IAnnotationContextExtensions.cs" />
+    <Compile Include="Vostok\Metrics\IAnnotationEventSender.cs" />
+    <Compile Include="Vostok\Metrics\IMetricContext.cs" />
+    <Compile Include="Vostok\Metrics\IMetricContextExtensions_Misc.cs" />
+    <Compile Include="Vostok\Metrics\IMetricContextExtensions_Sending.cs" />
+    <Compile Include="Vostok\Metrics\IMetricContextExtensions_Tags.cs" />
+    <Compile Include="Vostok\Metrics\IMetricContextExtensions_Unwrap.cs" />
+    <Compile Include="Vostok\Metrics\IMetricContextWrapper.cs" />
+    <Compile Include="Vostok\Metrics\IMetricEventSender.cs" />
+    <Compile Include="Vostok\Metrics\IScrapeConfigurableMetricContext.cs" />
+    <Compile Include="Vostok\Metrics\MetricContext.cs" />
+    <Compile Include="Vostok\Metrics\MetricContextConfig.cs" />
+    <Compile Include="Vostok\Metrics\MetricContextProvider.cs" />
+    <Compile Include="Vostok\Metrics\Models\AnnotationEvent.cs" />
+    <Compile Include="Vostok\Metrics\Models\EventPrinter.cs" />
+    <Compile Include="Vostok\Metrics\Models\Measurement.cs" />
+    <Compile Include="Vostok\Metrics\Models\MetricDataPoint.cs" />
+    <Compile Include="Vostok\Metrics\Models\MetricEvent.cs" />
+    <Compile Include="Vostok\Metrics\Models\MetricEventPrintFormat.cs" />
+    <Compile Include="Vostok\Metrics\Models\MetricTag.cs" />
+    <Compile Include="Vostok\Metrics\Models\MetricTagAttribute.cs" />
+    <Compile Include="Vostok\Metrics\Models\MetricTags.cs" />
+    <Compile Include="Vostok\Metrics\Models\MetricTagsMerger.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Caching\GlobalCache.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Caching\PerContextCache.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Counter\Counter.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Counter\CounterConfig.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Counter\CounterFactoryExtensions.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Counter\ICounter.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Counter\ICounterExtensions.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Gauge\FloatingGauge.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Gauge\FloatingGaugeConfig.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Gauge\FloatingGaugeFactoryExtensions.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Gauge\FuncGauge.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Gauge\FuncGaugeConfig.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Gauge\FuncGaugeFactoryExtensions.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Gauge\GaugeConfig.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Gauge\GaugeDocumentation.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Gauge\IFloatingGauge.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Gauge\IFuncGauge.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Gauge\IIntegerGauge.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Gauge\IMultiFuncGauge.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Gauge\IntegerGauge.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Gauge\IntegerGaugeConfig.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Gauge\IntegerGaugeFactoryExtensions.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Gauge\MultiFuncGauge.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Gauge\MultiFuncGaugeFactoryExtensions.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Timer\Histogram.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Timer\HistogramBucket.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Timer\HistogramBuckets.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Timer\HistogramConfig.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Timer\HistogramFactoryExtensions.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Timer\ITimer.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Timer\ITimerExtensions_Measurement.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Timer\QuantileMetricsBuilder.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Timer\Quantiles.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Timer\Summary.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Timer\SummaryConfig.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Timer\SummaryFactoryExtensions.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Timer\Timer.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Timer\TimerConfig.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Timer\TimerFactoryExtensions.cs" />
+    <Compile Include="Vostok\Metrics\Primitives\Timer\TimeValuesConverter.cs" />
+    <Compile Include="Vostok\Metrics\Scraping\ConfigExtensions.cs" />
+    <Compile Include="Vostok\Metrics\Scraping\IFastScrapableMetric.cs" />
+    <Compile Include="Vostok\Metrics\Scraping\IScrapableMetric.cs" />
+    <Compile Include="Vostok\Metrics\Scraping\ScrapableMetricConfig.cs" />
+    <Compile Include="Vostok\Metrics\Scraping\ScrapableMetrics.cs" />
+    <Compile Include="Vostok\Metrics\Scraping\Scraper.cs" />
+    <Compile Include="Vostok\Metrics\Scraping\ScrapeScheduler.cs" />
+    <Compile Include="Vostok\Metrics\Senders\AdHocAnnotationEventSender.cs" />
+    <Compile Include="Vostok\Metrics\Senders\AdHocMetricEventSender.cs" />
+    <Compile Include="Vostok\Metrics\Senders\CompositeAnnotationEventSender.cs" />
+    <Compile Include="Vostok\Metrics\Senders\CompositeDynamicAnnotationEventSender.cs" />
+    <Compile Include="Vostok\Metrics\Senders\CompositeDynamicMetricEventSender.cs" />
+    <Compile Include="Vostok\Metrics\Senders\CompositeMetricEventSender.cs" />
+    <Compile Include="Vostok\Metrics\Senders\ConsoleAnnotationEventSender.cs" />
+    <Compile Include="Vostok\Metrics\Senders\ConsoleMetricEventSender.cs" />
+    <Compile Include="Vostok\Metrics\Senders\DevNullAnnotationEventSender.cs" />
+    <Compile Include="Vostok\Metrics\Senders\DevNullMetricEventSender.cs" />
+    <Compile Include="Vostok\Metrics\Senders\TextAnnotationEventSender.cs" />
+    <Compile Include="Vostok\Metrics\Senders\TextMetricEventSender.cs" />
+    <Compile Include="Vostok\Metrics\WellKnownAggregationTypes.cs" />
+    <Compile Include="Vostok\Metrics\WellKnownTagKeys.cs" />
+    <Compile Include="Vostok\Metrics\WellKnownTagValues.cs" />
+    <Compile Include="Vostok\Metrics\WellKnownUnits.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Builder\PerformanceCounterBuilder.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Exceptions\InvalidCategoryException.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Exceptions\InvalidCounterException.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Exceptions\InvalidInstanceException.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Implementations\CounterDescription.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Implementations\CounterPathFactory.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Implementations\CounterReadMode.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Implementations\DynamicPerformanceCounter.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Implementations\IPerformanceCounterFactoryInternal.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Implementations\MultiValuePerformanceCounter.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Implementations\None.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Implementations\SequenceCounter.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Implementations\SingleValuePerformanceCounter.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\InstanceNames\CategoryProcessInstanceNameProviders.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\InstanceNames\ICategoryProcessInstanceNameProviders.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\InstanceNames\InstanceNameProviders.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\InstanceNames\InstanceNameUtility.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\InstanceNames\ProcessInstanceNamesCache.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\IPerformanceCounter.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\IPerformanceCounterBuilder.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\IPerformanceCounterFactory.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Observation.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\PDH\PdhCounterExtensions.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\PDH\PdhCounterReadingExtensions.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\PDH\PdhException.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\PDH\PdhExports.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\PDH\PdhQueryHandle.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\PDH\PdhQueryHandleExtensions.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\PDH\PdhStatusExtensions.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\PDH\PdhStructures.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\PerformanceCounterExtensions.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\PerformanceCounterFactoryExtensions.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\PerformanceCounterFactoryInternal.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\RawValue.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\SetCounterValueContext.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\SetValue.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Utilities\ArrayHolder.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Utilities\ErrorCodes.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Utilities\Factory.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Utilities\ITimeProvider.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Utilities\ProcessAccessRights.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Utilities\ProcessExitCodes.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Utilities\ProcessUtility.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Utilities\TimeCache.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Utilities\TimeCacheOfT.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Utilities\TimeProvider.cs" />
+    <Compile Include="Vostok\Sys\Metrics\PerfCounters\Utilities\Win32ExceptionUtility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Vostok\Commons\Helpers\Windows\WindowsProcessKillJob.props" />
+    <None Include="Vostok\Metrics\Codegen\CodegenCommons.ttinclude" />
+    <None Include="Vostok\Metrics\Codegen\FactoryExtensions.ttinclude" />
+    <None Include="Vostok\Metrics\Codegen\GroupingConstants.ttinclude" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Impl.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="JSEngine\Compiler\Emit\Optimizations.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>이 프로젝트는 이 컴퓨터에 없는 NuGet 패키지를 참조합니다. 해당 패키지를 다운로드하려면 NuGet 패키지 복원을 사용하십시오. 자세한 내용은 http://go.microsoft.com/fwlink/?LinkID=322105를 참조하십시오. 누락된 파일은 {0}입니다.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets'))" />
+  </Target>
+  <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\Mods\Overlayer\Overlayer.dll"</PostBuildEvent>
+  </PropertyGroup>
+</Project>
