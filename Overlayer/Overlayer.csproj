@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;TOURNAMENT</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -355,6 +355,7 @@
     <Compile Include="Core\CustomLibrary\Planet.cs" />
     <Compile Include="Core\CustomLibrary\PlanetType.cs" />
     <Compile Include="Core\CustomLibrary\Sprite.cs" />
+    <Compile Include="Core\Tags\Replacer.cs" />
     <Compile Include="Core\TileData.cs" />
     <Compile Include="Core\CustomLibrary\Time.cs" />
     <Compile Include="Core\CustomLibrary\Vector2.cs" />
@@ -365,12 +366,8 @@
     <Compile Include="Core\StaticCoroutine.cs" />
     <Compile Include="Core\TagManager.cs" />
     <Compile Include="Core\Tags\ClassTagAttribute.cs" />
-    <Compile Include="Core\Tags\Tag.cs" />
     <Compile Include="Core\Tags\TagAttribute.cs" />
-    <Compile Include="Core\Tags\TagCollection.cs" />
     <Compile Include="Core\Tags\TagExtensions.cs" />
-    <Compile Include="Core\Tags\TextCompiler.cs" />
-    <Compile Include="Core\Tags\TToken.cs" />
     <Compile Include="Core\Translation\TranslationKeys.cs" />
     <Compile Include="Core\Utils\ArrayUtils.cs" />
     <Compile Include="Core\Utils\EmitUtils.cs" />
@@ -1060,7 +1057,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Impl.js" />
+    <EmbeddedResource Include="Impl" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="JSEngine\Compiler\Emit\Optimizations.txt" />

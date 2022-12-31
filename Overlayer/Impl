@@ -834,7 +834,7 @@ class Overlayer {
     */
     static getCurDir();
     /**
-    * @returns {string} Overlayer Folder AbsolutePath
+    * @returns {string} Overlayer Folder Absolute Path
     */
     static getModDir();
     /**
@@ -910,6 +910,11 @@ class Overlayer {
     * @returns {Planet} Planet
     */
     static getPlanet(planetType);
+    /**
+    * @param {string} clrType CLR Type FullName
+    * @returns {any} CLR Type
+    */
+    static resolve(clrType);
 }
 class Tiles {
     /**

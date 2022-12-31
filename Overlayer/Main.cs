@@ -14,6 +14,7 @@ using Overlayer.Core.Translation;
 using JSEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using UnityEngine.TextCore.Text;
 
 namespace Overlayer
 {
@@ -27,6 +28,8 @@ namespace Overlayer
         public static float fpsTimeTimer = 0;
         public static float lastDeltaTime;
         public static byte[] Impljs;
+        public static List<Replacer.Tag> AllTags = new List<Replacer.Tag>();
+        public static List<Replacer.Tag> NotPlayingTags = new List<Replacer.Tag>();
         public static void Load(ModEntry modEntry)
         {
             CustomTagsPath = Path.Combine(modEntry.Path, "CustomTags");
@@ -37,11 +40,10 @@ namespace Overlayer
             Settings.Load(modEntry);
             UpdateLanguage();
             Performance.Init();
-            TagManager.AllTags.LoadTags(asm);
-            using var impljs = asm.GetManifestResourceStream("Overlayer.Impl.js");
+            AllTags.LoadTags(asm);
+            using var impljs = asm.GetManifestResourceStream("Overlayer.Impl");
             Impljs = new byte[impljs.Length];
             impljs.Read(Impljs, 0, Impljs.Length);
-
             //StringBuilder sb = new StringBuilder();
             //foreach (Tag tag in TagManager.AllTags)
             //{
@@ -63,38 +65,38 @@ namespace Overlayer
             //}
             //File.WriteAllText("Mods/Overlayer/Tags.js", sb.ToString());
 
-            TagManager.NotPlayingTags.AddTags(new[]
+            NotPlayingTags.AddRange(new[]
             {
-                TagManager.AllTags["Year"],
-                TagManager.AllTags["Month"],
-                TagManager.AllTags["Day"],
-                TagManager.AllTags["Hour"],
-                TagManager.AllTags["Minute"],
-                TagManager.AllTags["Second"],
-                TagManager.AllTags["MilliSecond"],
-                TagManager.AllTags["Fps"],
-                TagManager.AllTags["FrameTime"],
-                TagManager.AllTags["CurKps"],
+                AllTags.FindTag("Year"),
+                AllTags.FindTag("Month"),
+                AllTags.FindTag("Day"),
+                AllTags.FindTag("Hour"),
+                AllTags.FindTag("Minute"),
+                AllTags.FindTag("Second"),
+                AllTags.FindTag("MilliSecond"),
+                AllTags.FindTag("Fps"),
+                AllTags.FindTag("FrameTime"),
+                AllTags.FindTag("CurKps"),
 
-                TagManager.AllTags["ProcessorCount"],
-                TagManager.AllTags["MemoryGBytes"],
-                TagManager.AllTags["CpuUsage"],
-                TagManager.AllTags["TotalCpuUsage"],
-                TagManager.AllTags["MemoryUsage"],
-                TagManager.AllTags["TotalMemoryUsage"],
-                TagManager.AllTags["MemoryUsageGBytes"],
-                TagManager.AllTags["TotalMemoryUsageGBytes"],
+                AllTags.FindTag("ProcessorCount"),
+                AllTags.FindTag("MemoryGBytes"),
+                AllTags.FindTag("CpuUsage"),
+                AllTags.FindTag("TotalCpuUsage"),
+                AllTags.FindTag("MemoryUsage"),
+                AllTags.FindTag("TotalMemoryUsage"),
+                AllTags.FindTag("MemoryUsageGBytes"),
+                AllTags.FindTag("TotalMemoryUsageGBytes"),
 
-                TagManager.AllTags["TEHex"],
-                TagManager.AllTags["VEHex"],
-                TagManager.AllTags["EPHex"],
-                TagManager.AllTags["PHex"],
-                TagManager.AllTags["LPHex"],
-                TagManager.AllTags["VLHex"],
-                TagManager.AllTags["TLHex"],
-                TagManager.AllTags["MPHex"],
-                TagManager.AllTags["FMHex"],
-                TagManager.AllTags["FOHex"],
+                AllTags.FindTag("TEHex"),
+                AllTags.FindTag("VEHex"),
+                AllTags.FindTag("EPHex"),
+                AllTags.FindTag("PHex"),
+                AllTags.FindTag("LPHex"),
+                AllTags.FindTag("VLHex"),
+                AllTags.FindTag("TLHex"),
+                AllTags.FindTag("MPHex"),
+                AllTags.FindTag("FMHex"),
+                AllTags.FindTag("FOHex"),
             });
             modEntry.OnToggle = OnToggle;
             modEntry.OnGUI = OnGUI;
@@ -119,10 +121,10 @@ namespace Overlayer
             };
         }
 
-        public static bool LoadJSTag(string source, string name, out Tag tag)
+        public static bool LoadJSTag(string source, string name, out Replacer.Tag tag)
         {
             tag = null;
-            string desc = "";
+            string desc = null;
             using (StringReader sr = new StringReader(source))
             {
                 string first = sr.ReadLine();
@@ -132,7 +134,8 @@ namespace Overlayer
             try
             {
                 var del = source.CompileEval();
-                tag = new Tag(name, desc, del);
+                tag = new Replacer().CreateTag(name).SetGetter(del);
+                Language[name] = desc;
                 Logger.Log($"Loaded '{name}' Tag.");
                 return true;
             }
@@ -145,29 +148,23 @@ namespace Overlayer
         public static readonly List<string> JSTagCache = new List<string>();
         public static void LoadAllJSTags(string folderPath)
         {
+            var impljsPath = Path.Combine(folderPath, "Impl.js");
             if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
-                var impljsPath = Path.Combine(folderPath, "Impl.js");
                 File.WriteAllBytes(impljsPath, Impljs);
-                File.SetAttributes(impljsPath, FileAttributes.ReadOnly);
                 return;
             }
-            if (!File.Exists(Path.Combine(folderPath, "Impl.js")))
-            {
-                var impljsPath = Path.Combine(folderPath, "Impl.js");
-                File.WriteAllBytes(impljsPath, Impljs);
-                File.SetAttributes(impljsPath, FileAttributes.ReadOnly);
-            }
+            File.WriteAllBytes(impljsPath, Impljs);
             int success = 0, fail = 0;
             foreach (string path in Directory.GetFiles(folderPath, "*.js"))
             {
                 var name = Path.GetFileNameWithoutExtension(path);
                 if (name == "Impl") continue;
-                if (LoadJSTag(File.ReadAllText(path), name, out Tag tag))
+                if (LoadJSTag(File.ReadAllText(path), name, out var tag))
                 {
-                    TagManager.AllTags[tag.Name] = tag;
-                    TagManager.NotPlayingTags[tag.Name] = tag;
+                    AllTags.SetTag(tag.Name, tag);
+                    NotPlayingTags.SetTag(tag.Name, tag);
                     JSTagCache.Add(tag.Name);
                     success++;
                 }
@@ -210,8 +207,8 @@ namespace Overlayer
         {
             foreach (string tagName in JSTagCache)
             {
-                TagManager.AllTags.RemoveTag(tagName);
-                TagManager.NotPlayingTags.RemoveTag(tagName);
+                AllTags.RemoveTag(tagName);
+                NotPlayingTags.RemoveTag(tagName);
             }
             JSTagCache.Clear();
         }
@@ -236,12 +233,12 @@ namespace Overlayer
                     RunInits();
                     UpdateLanguage();
                     var settings = Settings.Instance;
-                    DeathMessagePatch.compiler = new TextCompiler(TagManager.AllTags);
-                    ClearMessagePatch.compiler = new TextCompiler(TagManager.AllTags);
+                    DeathMessagePatch.compiler = new Replacer(AllTags);
+                    ClearMessagePatch.compiler = new Replacer(AllTags);
                     if (!string.IsNullOrEmpty(settings.DeathMessage))
-                        DeathMessagePatch.compiler.Compile(settings.DeathMessage);
+                        DeathMessagePatch.compiler.Source = settings.DeathMessage;
                     if (!string.IsNullOrEmpty(settings.ClearMessage))
-                        ClearMessagePatch.compiler.Compile(settings.ClearMessage);
+                        ClearMessagePatch.compiler.Source = settings.ClearMessage;
                 }
                 else
                 {
@@ -281,7 +278,7 @@ namespace Overlayer
             {
                 settings.DeathMessage = dm;
                 if (!string.IsNullOrEmpty(settings.DeathMessage))
-                    DeathMessagePatch.compiler.Compile(settings.DeathMessage);
+                    DeathMessagePatch.compiler.Source = settings.DeathMessage;
             }
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
@@ -292,7 +289,7 @@ namespace Overlayer
             {
                 settings.ClearMessage = cm;
                 if (!string.IsNullOrEmpty(settings.ClearMessage))
-                    ClearMessagePatch.compiler.Compile(settings.ClearMessage);
+                    ClearMessagePatch.compiler.Source = settings.ClearMessage;
             }
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
@@ -321,7 +318,7 @@ namespace Overlayer
             GUILayout.EndHorizontal();
             for (int i = 0; i < OText.Texts.Count; i++)
                 OText.Texts[i].GUI();
-            TagManager.AllTags.DescGUI();
+            AllTags.DescGUI();
         }
         public static void LangGUI(Settings settings)
         {
@@ -377,10 +374,10 @@ namespace Overlayer
         {
             foreach (OText text in OText.Texts)
             {
-                text.PlayingCompiler.Compile(text.TSetting.PlayingText);
-                text.NotPlayingCompiler.Compile(text.TSetting.NotPlayingText);
-                text.BrokenPlayingCompiler.Compile(text.TSetting.PlayingText.BreakRichTagWithoutSize());
-                text.BrokenNotPlayingCompiler.Compile(text.TSetting.NotPlayingText.BreakRichTagWithoutSize());
+                text.PlayingCompiler.Source = text.TSetting.PlayingText;
+                text.NotPlayingCompiler.Source = text.TSetting.NotPlayingText;
+                text.BrokenPlayingCompiler.Source = text.TSetting.PlayingText.BreakRichTagWithoutSize();
+                text.BrokenNotPlayingCompiler.Source = text.TSetting.NotPlayingText.BreakRichTagWithoutSize();
             }
         }
     }

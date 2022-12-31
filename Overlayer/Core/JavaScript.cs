@@ -21,21 +21,8 @@ namespace Overlayer.Core
         {
             var engine = new ScriptEngine();
             engine.EnableExposedClrTypes = true;
-            foreach (Tag tag in TagManager.AllTags)
-                engine.SetGlobalFunction(tag.Name,
-                    tag.IsDynamic ?
-                    tag.Dyn :
-                    tag.IsOpt ?
-                    tag.IsStringOpt ?
-                    tag.IsString ?
-                    new Func<string, string>(tag.OptValue) :
-                    new Func<string, double>(tag.OptValueFloat) :
-                    tag.IsString ?
-                    new Func<double, string>(tag.OptValue) :
-                    new Func<double, double>(tag.OptValueFloat) :
-                    tag.IsString ?
-                    new Func<string>(() => tag.Value) :
-                    new Func<double>(() => tag.ValueFloat));
+            foreach (var tag in Main.AllTags)
+                engine.SetGlobalFunction(tag.Name, tag.GetterDelegate);
             engine.SetGlobalValue("KeyCode", new Kcde(engine));
             engine.SetGlobalValue("Input", new Ipt(engine));
             engine.SetGlobalValue("Overlayer", new Ovlr(engine));

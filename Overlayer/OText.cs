@@ -120,21 +120,21 @@ namespace Overlayer
             TSetting.ValidCheck();
             if (TSetting.Name == null)
                 TSetting.Name = $"{Main.Language[TranslationKeys.Text]} {Number}";
-            PlayingCompiler = new TextCompiler(TSetting.PlayingText, TagManager.AllTags);
-            NotPlayingCompiler = new TextCompiler(TSetting.NotPlayingText, TagManager.NotPlayingTags);
-            BrokenPlayingCompiler = new TextCompiler(TSetting.PlayingText.BreakRichTagWithoutSize(), TagManager.AllTags);
-            BrokenNotPlayingCompiler = new TextCompiler(TSetting.NotPlayingText.BreakRichTagWithoutSize(), TagManager.NotPlayingTags);
+            PlayingCompiler = new Replacer(TSetting.PlayingText, Main.AllTags);
+            NotPlayingCompiler = new Replacer(TSetting.NotPlayingText, Main.NotPlayingTags);
+            BrokenPlayingCompiler = new Replacer(TSetting.PlayingText.BreakRichTagWithoutSize(), Main.AllTags);
+            BrokenNotPlayingCompiler = new Replacer(TSetting.NotPlayingText.BreakRichTagWithoutSize(), Main.NotPlayingTags);
             SText.Updater = () =>
             {
                 if (IsPlaying)
                 {
-                    SText.Main.text = PlayingCompiler.Result;
-                    SText.Shadow.text = BrokenPlayingCompiler.Result;
+                    SText.Main.text = PlayingCompiler.Replace();
+                    SText.Shadow.text = BrokenPlayingCompiler.Replace();
                 }
                 else
                 {
-                    SText.Main.text = NotPlayingCompiler.Result;
-                    SText.Shadow.text = BrokenNotPlayingCompiler.Result;
+                    SText.Main.text = NotPlayingCompiler.Replace();
+                    SText.Shadow.text = BrokenNotPlayingCompiler.Replace();
                 }
             };
             Texts.Add(this);
@@ -310,16 +310,16 @@ namespace Overlayer
             SText.Alignment = TSetting.Alignment;
             SText.Shadow.color = TSetting.ShadowColor.ToColor();
             Tags.Global.ProgressDeath.Reset();
-            PlayingCompiler.Compile(TSetting.PlayingText);
-            NotPlayingCompiler.Compile(TSetting.NotPlayingText);
-            BrokenPlayingCompiler.Compile(TSetting.PlayingText.BreakRichTagWithoutSize());
-            BrokenNotPlayingCompiler.Compile(TSetting.NotPlayingText.BreakRichTagWithoutSize());
+            PlayingCompiler.Source = TSetting.PlayingText;
+            NotPlayingCompiler.Source = TSetting.NotPlayingText;
+            BrokenPlayingCompiler.Source = TSetting.PlayingText.BreakRichTagWithoutSize();
+            BrokenNotPlayingCompiler.Source = TSetting.NotPlayingText.BreakRichTagWithoutSize();
             return this;
         }
-        public TextCompiler PlayingCompiler;
-        public TextCompiler NotPlayingCompiler;
-        public TextCompiler BrokenPlayingCompiler;
-        public TextCompiler BrokenNotPlayingCompiler;
+        public Replacer PlayingCompiler;
+        public Replacer NotPlayingCompiler;
+        public Replacer BrokenPlayingCompiler;
+        public Replacer BrokenNotPlayingCompiler;
         public readonly ShadowText SText;
         public Setting TSetting;
         public int Number;

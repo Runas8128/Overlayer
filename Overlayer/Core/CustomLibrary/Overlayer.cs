@@ -120,6 +120,11 @@ namespace JSEngine.CustomLibrary
             UnityEngine.Color col = hsv;
             return new ColorConstructor(engine).Construct(col.r, col.g, col.b, col.a);
         }
+        [JSFunction(Name = "resolve", Flags = JSFunctionFlags.HasEngineParameter)]
+        public static ObjectInstance Resolve(ScriptEngine engine, string clrType)
+        {
+            return ClrStaticTypeWrapper.FromCache(engine, AccessTools.TypeByName(clrType));
+        }
         public static List<TileData> tiles = new List<TileData>();
     }
 }

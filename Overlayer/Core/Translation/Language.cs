@@ -40,6 +40,7 @@ namespace Overlayer.Core.Translation
                     return value;
                 return key;
             }
+            set => dict[key] = value;
         }
         IEnumerator Download()
         {

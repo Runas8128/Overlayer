@@ -14,8 +14,6 @@ namespace Overlayer.Patches
         [HarmonyPostfix]
         public static void FCLLPostfix()
         {
-            if (!TagManager.AllTags["Attempts"].Referenced)
-                return;
             if (!GCS.standaloneLevelMode && !GCS.useNoFail)
             {
                 if (FailId == null || !Attempts.TryGetValue(FailId, out _))
@@ -31,8 +29,6 @@ namespace Overlayer.Patches
         [HarmonyPatch(typeof(scrController), "Start")]
         public static void Postfix(scrController __instance)
         {
-            if (!TagManager.AllTags["Attempts"].Referenced)
-                return;
             if (ADOBase.sceneName.Contains("-") && !__instance.noFail)
                 Variables.Attempts = Persistence.GetWorldAttempts(scrController.currentWorld);
         }

@@ -8,6 +8,5 @@ namespace Overlayer.Core
     {
         public ClassTagAttribute(string name) : base(name) { }
         public string[] Threads;
-        public bool HasOtherTags;
     }
 }
