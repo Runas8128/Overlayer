@@ -124,7 +124,7 @@ namespace Overlayer.Patches
                 Variables.StartProg = ctrl.percentComplete * 100;
                 Variables.StartTile = ctrl.currentSeqID;
                 Variables.IsStarted = false;
-                Ovlr.tiles = new List<Core.TileData>();
+                Ovlr.tiles.Clear();
             }
         }
     }

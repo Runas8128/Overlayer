@@ -49,8 +49,19 @@ namespace Overlayer.Core
             }
         }
         public static Tag FindTag(this List<Tag> tags, string name) => tags.Find(t => t.Name == name);
-        public static void SetTag(this List<Tag> tags, string name, Tag tag) => tags[tags.FindIndex(t => t.Name == name)] = tag;
-        public static void RemoveTag(this List<Tag> tags, string name) => tags.RemoveAt(tags.FindIndex(t => t.Name == name));
+        public static void SetTag(this List<Tag> tags, string name, Tag tag)
+        {
+            int index = tags.FindIndex(t => t.Name == name);
+            if (index < 0)
+                tags.Add(tag);
+            else tags[index] = tag;
+        }
+        public static void RemoveTag(this List<Tag> tags, string name)
+        {
+            int index = tags.FindIndex(t => t.Name == name);
+            if (index >= 0)
+                tags.RemoveAt(index);
+        }
         public static void DescGUI(this List<Tag> tags)
         {
             GUILayout.BeginHorizontal();

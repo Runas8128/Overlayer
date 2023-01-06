@@ -149,6 +149,8 @@ namespace Overlayer
         public static void LoadAllJSTags(string folderPath)
         {
             var impljsPath = Path.Combine(folderPath, "Impl.js");
+            if (File.Exists(impljsPath))
+                File.SetAttributes(impljsPath, File.GetAttributes(impljsPath) & ~FileAttributes.ReadOnly);
             if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
@@ -184,16 +186,18 @@ namespace Overlayer
             {
                 Directory.CreateDirectory(InitJSPath);
                 var impljsPath = Path.Combine(InitJSPath, "Impl.js");
+                if (File.Exists(impljsPath))
+                    File.SetAttributes(impljsPath, File.GetAttributes(impljsPath) & ~FileAttributes.ReadOnly);
                 File.WriteAllBytes(impljsPath, Impljs);
-                File.SetAttributes(impljsPath, FileAttributes.ReadOnly);
             }
             else
             {
                 if (!File.Exists(Path.Combine(InitJSPath, "Impl.js")))
                 {
                     var impljsPath = Path.Combine(InitJSPath, "Impl.js");
+                    if (File.Exists(impljsPath))
+                        File.SetAttributes(impljsPath, File.GetAttributes(impljsPath) & ~FileAttributes.ReadOnly);
                     File.WriteAllBytes(impljsPath, Impljs);
-                    File.SetAttributes(impljsPath, FileAttributes.ReadOnly);
                 }
                 foreach (string file in Directory.GetFiles(InitJSPath, "*.js"))
                 {
@@ -385,34 +389,4 @@ namespace Overlayer
 namespace System.Runtime.CompilerServices
 {
     internal static class IsExternalInit { }
-    [AttributeUsage(AttributeTargets.Module | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface | AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Event, Inherited = false)]
-    internal sealed class SkipLocalsInitAttribute : Attribute { }
-    public static class RuntimeFeature
-    {
-        public const string CovariantReturnsOfClasses = nameof(CovariantReturnsOfClasses);
-        public const string DefaultInterfaceImplementation = nameof(DefaultInterfaceImplementation);
-        public const string PortablePdb = nameof(PortablePdb);
-        public const string UnmanagedSignatureCallingConvention = nameof(UnmanagedSignatureCallingConvention);
-        public const string VirtualStaticsInInterfaces = nameof(VirtualStaticsInInterfaces);
-        public static bool IsDynamicCodeCompiled => true;
-        public static bool IsDynamicCodeSupported => true;
-        public static bool IsSupported(string feature)
-        {
-            switch (feature)
-            {
-                case CovariantReturnsOfClasses:
-                case DefaultInterfaceImplementation:
-                case PortablePdb:
-                case UnmanagedSignatureCallingConvention:
-                case VirtualStaticsInInterfaces:
-                    return true;
-                case nameof(IsDynamicCodeCompiled):
-                    return IsDynamicCodeCompiled;
-                case nameof(IsDynamicCodeSupported):
-                    return IsDynamicCodeSupported;
-                default:
-                    return false;
-            }
-        }
-    }
 }
