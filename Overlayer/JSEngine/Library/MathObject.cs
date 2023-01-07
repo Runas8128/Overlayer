@@ -76,7 +76,10 @@ namespace JSEngine.Library
         [JSField]
         public const double SQRT2   = 1.4142135623730950;
 
-
+        [JSField]
+        public const double DEG2RAD = PI / 180;
+        [JSField]
+        public const double RAD2DEG = 180 / PI;
 
         //     JAVASCRIPT FUNCTIONS
         //_________________________________________________________________________________________

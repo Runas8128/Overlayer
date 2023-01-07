@@ -3,6 +3,9 @@ using System.Reflection;
 using System.Xml.Serialization;
 using UnityEngine;
 using Overlayer.Core.Utils;
+using TMPro.Examples;
+using Overlayer.Core;
+using Newtonsoft.Json.Linq;
 #pragma warning disable
 
 namespace Overlayer
@@ -22,7 +25,7 @@ namespace Overlayer
         public int FrameTimeUpdateRate = 500;
         public bool AddAllJudgementsAtErrorMeter = true;
         public bool ApplyPitchAtBpmTags = true;
-
+        public string AdofaiFont = "";
         public void DrawManual()
         {
             Reset = GUIUtils.RightToggle(Reset, Main.Language["ResetOnStart"]);
@@ -32,8 +35,16 @@ namespace Overlayer
             FrameTimeUpdateRate = GUIUtils.SpaceIntField(FrameTimeUpdateRate, Main.Language["FrameTimeUpdateRate"]);
             AddAllJudgementsAtErrorMeter = GUIUtils.RightToggle(AddAllJudgementsAtErrorMeter, Main.Language["AddAllJudgementsAtErrorMeter"]);
             ApplyPitchAtBpmTags = GUIUtils.RightToggle(ApplyPitchAtBpmTags, Main.Language["ApplyPitchAtBpmTags"]);
-        }
 
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Adofai Font");
+            AdofaiFont = GUILayout.TextField(AdofaiFont);
+            if (GUILayout.Button("Apply"))
+                RDString.Setup();
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+        }
+        public bool ChangeFont => !string.IsNullOrEmpty(AdofaiFont);
         public SystemLanguage lang = SystemLanguage.English;
         public string DeathMessage = "";
         public string ClearMessage = "";

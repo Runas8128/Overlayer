@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ namespace Overlayer.AdofaiggApi
         {
             if (!(value is string) && value is IEnumerable)
                 return $"{name}={CombineEnumerable()}";
-            else return $"{name}={value}";
+            else return $"{name}={Uri.EscapeDataString(value.ToString())}";
         }
         public string ToString(bool isFirst)
         {

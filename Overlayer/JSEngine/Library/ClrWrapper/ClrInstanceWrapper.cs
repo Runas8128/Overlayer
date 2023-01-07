@@ -106,5 +106,13 @@ namespace JSEngine.Library
         {
             return this.WrappedInstance.ToString();
         }
+
+        /// <summary>
+        /// This object is a Clr Wrapper
+        /// </summary>
+        protected override bool IsClrWrapper
+        {
+            get { return true; }
+        }
     }
 }

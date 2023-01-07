@@ -41,23 +41,23 @@
         /// </summary>
         /// <param name="thisObject"> The value of the "this" keyword inside the getter. </param>
         /// <returns> The property value returned by the getter. </returns>
-        public object GetValue(object thisObject)
+        public object GetValue(object thisObject, params object[] argumentValues)
         {
             if (this.getter == null)
                 return Undefined.Value;
-            return this.getter.CallLateBound(thisObject);
+            return this.getter.CallLateBound(thisObject, argumentValues);
         }
 
         /// <summary>
         /// Sets the property value by calling the setter, if one is present.
         /// </summary>
         /// <param name="thisObject"> The value of the "this" keyword inside the setter. </param>
-        /// <param name="value"> The desired value. </param>
-        public void SetValue(object thisObject, object value)
+        /// <param name="argumentValues"> The values as arguments list. </param>
+        public void SetValue(object thisObject, params object[] argumentValues)
         {
             if (this.setter == null)
                 return;
-            this.setter.CallLateBound(thisObject, value);
+            this.setter.CallLateBound(thisObject, argumentValues);
         }
 
         /// <summary>

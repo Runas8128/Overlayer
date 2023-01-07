@@ -8,6 +8,8 @@ using UnityEngine.UI;
 using System.Runtime.InteropServices;
 using UnityEngine.TextCore.LowLevel;
 using UnityEngine.Pool;
+using System.IO;
+using Overlayer.Core;
 #pragma warning disable
 
 namespace Overlayer
@@ -23,9 +25,6 @@ namespace Overlayer
             st.Number = count;
             return st;
         }
-        public static Dictionary<string, FontData> Fonts = new Dictionary<string, FontData>();
-        public static TMP_FontAsset DefaultTMPFont;
-        public static Font DefaultFont;
         public Action Updater;
         public TextMeshProUGUI Main;
         public TextMeshProUGUI Shadow;
@@ -81,10 +80,7 @@ namespace Overlayer
         }
         private void Awake()
         {
-            if (DefaultFont == null)
-                DefaultFont = RDString.GetFontDataForLanguage(SystemLanguage.English).font;
-            if (DefaultTMPFont == null)
-                DefaultTMPFont = TMP_FontAsset.CreateFontAsset(DefaultFont, 100, 10, GlyphRenderMode.SDFAA, 1024, 1024);
+            
             if (!PublicCanvas)
             {
                 GameObject pCanvasObj = new GameObject("Overlayer Canvas");
@@ -101,13 +97,14 @@ namespace Overlayer
             shadowObject.MakeFlexible();
             Shadow = shadowObject.AddComponent<TextMeshProUGUI>();
             Shadow.color = Color.black.WithAlpha(0.4f);
-            Shadow.font = DefaultTMPFont;
+            var font = FontManager.GetFont("Default");
+            Shadow.font = font.fontTMP;
 
             GameObject mainObject = new GameObject();
             mainObject.transform.SetParent(PublicCanvas.transform);
             mainObject.MakeFlexible();
             Main = mainObject.AddComponent<TextMeshProUGUI>();
-            Main.font = DefaultTMPFont;
+            Main.font = font.fontTMP;
             Main.enableVertexGradient = true;
 
             Main.lineSpacing -= 25f;
@@ -116,47 +113,17 @@ namespace Overlayer
             Shadow.lineSpacing -= 25f;
             Shadow.lineSpacingAdjustment = 25f;
         }
-        private void Update() => Updater?.Invoke();
-        static bool initialized;
-        internal static string[] fontNames;
         public bool TrySetFont(string name)
         {
-            if (!initialized)
+            if (FontManager.TryGetFont(name, out FontData font))
             {
-                fontNames = Font.GetOSInstalledFontNames();
-                Fonts = new Dictionary<string, FontData>();
-                initialized = true;
-            }
-            if (name == "Default")
-            {
-                Main.font = DefaultTMPFont;
-                Shadow.font = DefaultTMPFont;
+                Main.font = font.fontTMP;
+                Shadow.font = font.fontTMP;
                 return true;
             }
-            if (Fonts.TryGetValue(name, out FontData data))
-            {
-                Main.font = data.fontTMP;
-                Shadow.font = data.fontTMP;
-                return true;
-            }
-            else
-            {
-                int index = Array.IndexOf(fontNames, name);
-                if (index != -1)
-                {
-                    FontData newData = new FontData();
-                    Font newFont = Font.CreateDynamicFontFromOSFont(name, 1);
-                    TMP_FontAsset newTMPFont = TMP_FontAsset.CreateFontAsset(newFont);
-                    Main.font = newTMPFont;
-                    Shadow.font = newTMPFont;
-                    newData.font = newFont;
-                    newData.fontTMP = newTMPFont;
-                    Fonts.Add(name, newData);
-                    return true;
-                }
-                return false;
-            }
+            return false;
         }
+        private void Update() => Updater?.Invoke();
         public bool Active
         {
             get => Main.gameObject.activeSelf;

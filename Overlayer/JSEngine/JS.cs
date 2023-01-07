@@ -6,9 +6,7 @@ using JSEngine.Library;
 using System.Linq;
 using System.Reflection;
 using HarmonyLib;
-using System.Collections.Generic;
-using System.Reflection.Emit;
-using ILGenerator = System.Reflection.Emit.ILGenerator;
+using Overlayer;
 
 namespace JSEngine
 {
@@ -23,9 +21,9 @@ namespace JSEngine
             EnableILAnalysis = false,
             CompatibilityMode = CompatibilityMode.Latest
         };
-        public static Func<object> CompileEval(this ScriptEngine engine, string js, string importPath = "")
+        public static Func<object> CompileEval(this string js, ScriptEngine engine)
         {
-            var source = new TextSource(js, engine, importPath);
+            var source = new TextSource(js, engine);
             if (source.IsProxy)
             {
                 var pType = source.ProxyType;
@@ -35,9 +33,9 @@ namespace JSEngine
             var scr = CompiledEval.Compile(source, Option);
             return () => scr.EvaluateFastInternal(engine);
         }
-        public static Action CompileExec(this ScriptEngine engine, string js, string importPath = "")
+        public static Action CompileExec(this string js, ScriptEngine engine)
         {
-            var source = new TextSource(js, engine, importPath);
+            var source = new TextSource(js, engine);
             if (source.IsProxy)
             {
                 var pType = source.ProxyType;
@@ -53,11 +51,9 @@ namespace JSEngine
             public ScriptEngine engine;
             public bool IsProxy => ProxyType != null;
             public Type ProxyType { get; private set; }
-            public string ImportPath { get; set; }
-            public TextSource(string str, ScriptEngine engine, string importPath = "")
+            public TextSource(string str, ScriptEngine engine)
             {
                 this.str = str;
-                ImportPath = importPath;
                 var reader = new StringReader(str);
                 var firstLine = reader.ReadLine();
                 if (firstLine.EndsWith(" Proxy"))
@@ -78,7 +74,7 @@ namespace JSEngine
                         {
                             line = line.Replace(";", "");
                             var orig = RemoveStartEnd(GetAfter(line, "from").Trim());
-                            var module = System.IO.Path.Combine(ImportPath, orig);
+                            var module = System.IO.Path.Combine(Main.InitJSPath, orig);
                             module = System.IO.Path.GetFullPath(module);
                             if (!System.IO.Path.HasExtension(module))
                                 module += ".js";
@@ -86,6 +82,18 @@ namespace JSEngine
                                 RunExecInstantly(module, ParseAs(line, out string alias) ? alias : null, engine);
                             else if (File.Exists(orig))
                                 RunExecInstantly(orig, null, engine);
+                            else
+                            {
+                                orig = RemoveStartEnd(GetAfter(line, "from").Trim());
+                                module = System.IO.Path.Combine(Main.CustomTagsPath, orig);
+                                module = System.IO.Path.GetFullPath(module);
+                                if (!System.IO.Path.HasExtension(module))
+                                    module += ".js";
+                                if (File.Exists(module))
+                                    RunExecInstantly(module, ParseAs(line, out string alias) ? alias : null, engine);
+                                else if (File.Exists(orig))
+                                    RunExecInstantly(orig, null, engine);
+                            }
                             continue;
                         }
                         sb.AppendLine(line);
@@ -102,7 +110,7 @@ namespace JSEngine
                     engine.SetGlobalValue(alias ?? src.ProxyType.Name, src.ProxyType);
                     SetNestedTypesRecursive(engine, src.ProxyType);
                 }
-                else engine.CompileExec(src.str)?.Invoke();
+                else CompileExec(src.str, engine)?.Invoke();
             }
             static void SetNestedTypesRecursive(ScriptEngine engine, Type type)
             {
@@ -139,130 +147,6 @@ namespace JSEngine
                 str = str.Remove(0, 1);
                 return str.Remove(str.Length - 1, 1);
             }
-        }
-        public static readonly AssemblyBuilder ass;
-        public static readonly ModuleBuilder mod;
-        public static int TypeCount { get; internal set; }
-        static JS()
-        {
-            var assName = new AssemblyName("JSModManager.Patches");
-            ass = AssemblyBuilder.DefineDynamicAssembly(assName, AssemblyBuilderAccess.Run);
-            mod = ass.DefineDynamicModule(assName.Name);
-        }
-        public static LocalBuilder MakeArray<T>(this ILGenerator il, int length)
-        {
-            LocalBuilder array = il.DeclareLocal(typeof(T[]));
-            il.Emit(OpCodes.Ldc_I4, length);
-            il.Emit(OpCodes.Newarr, typeof(T));
-            il.Emit(OpCodes.Stloc, array);
-            return array;
-        }
-        static ParameterInfo[] SelectActualParams(MethodBase m, ParameterInfo[] p, string[] n)
-        {
-            Type dType = m.DeclaringType;
-            List<ParameterInfo> pList = new List<ParameterInfo>();
-            for (int i = 0; i < n.Length; i++)
-            {
-                int index = Array.FindIndex(p, pa => pa.Name == n[i]);
-                if (index > 0)
-                    pList.Add(p[index]);
-                else
-                {
-                    string s = n[i];
-                    switch (s)
-                    {
-                        case "__instance":
-                            pList.Add(new CustomParameter(dType, s));
-                            break;
-                        case "__originalMethod":
-                            pList.Add(new CustomParameter(typeof(MethodBase), s));
-                            break;
-                        case "__args":
-                            pList.Add(new CustomParameter(typeof(MethodBase), s));
-                            break;
-                        case "__result":
-                            pList.Add(new CustomParameter(m is MethodInfo mi ? mi.ReturnType : typeof(object), s));
-                            break;
-                        case "__exception":
-                            pList.Add(new CustomParameter(typeof(Exception), s));
-                            break;
-                        case "__runOriginal":
-                            pList.Add(new CustomParameter(typeof(bool), s));
-                            break;
-                        default:
-                            if (s.StartsWith("__"))
-                            {
-                                if (int.TryParse(s.Substring(0, 2), out int num))
-                                {
-                                    if (num < 0 || num >= p.Length)
-                                        return null;
-                                    pList.Add(new CustomParameter(p[num].ParameterType, s));
-                                }
-                                else return null;
-                            }
-                            else if (s.StartsWith("___"))
-                            {
-                                string name = s.Substring(0, 3);
-                                FieldInfo field = dType.GetField(name, AccessTools.all);
-                                if (field == null)
-                                    return null;
-                            }
-                            break;
-                    }
-                }
-            }
-            return pList.ToArray();
-        }
-        public static MethodInfo Wrap(this UserDefinedFunction udf, MethodBase target, bool rtIsBool)
-        {
-            if (udf == null) return null;
-            UDFWrapper holder = new UDFWrapper(udf);
-            TypeBuilder type = mod.DefineType(TypeCount++.ToString(), TypeAttributes.Public);
-            ParameterInfo[] parameters = SelectActualParams(target, target.GetParameters(), udf.ArgumentNames.ToArray());
-            if (parameters == null) return null;
-            Type[] paramTypes = parameters.Select(p => p.ParameterType).ToArray();
-            MethodBuilder methodB = type.DefineMethod("Wrapper", MethodAttributes.Public | MethodAttributes.Static, rtIsBool ? typeof(bool) : typeof(void), paramTypes);
-            FieldBuilder holderfld = type.DefineField("holder", typeof(UDFWrapper), FieldAttributes.Public | FieldAttributes.Static);
-
-            var il = methodB.GetILGenerator();
-            LocalBuilder arr = il.DeclareLocal(typeof(object[]));
-            il.Emit(OpCodes.Ldc_I4, parameters.Length);
-            il.Emit(OpCodes.Newarr, typeof(object));
-            il.Emit(OpCodes.Stloc, arr);
-
-            int paramIndex = 1;
-            foreach (ParameterInfo param in parameters)
-            {
-                Type pType = param.ParameterType;
-                udf.Engine.SetGlobalValue(pType.Name, pType);
-                methodB.DefineParameter(paramIndex++, ParameterAttributes.None, param.Name);
-                int pIndex = paramIndex - 2;
-                il.Emit(OpCodes.Ldloc, arr);
-                il.Emit(OpCodes.Ldc_I4, pIndex);
-                il.Emit(OpCodes.Ldarg, pIndex);
-                il.Emit(OpCodes.Stelem_Ref);
-            }
-            il.Emit(OpCodes.Ldsfld, holderfld);
-            il.Emit(OpCodes.Ldloc, arr);
-            il.Emit(OpCodes.Call, UDFWrapper.CallMethod);
-            if (rtIsBool)
-                il.Emit(OpCodes.Call, istrue);
-            else il.Emit(OpCodes.Pop);
-            il.Emit(OpCodes.Ret);
-
-            Type t = type.CreateType();
-            t.GetField("holder").SetValue(null, holder);
-            return t.GetMethod("Wrapper");
-        }
-        public static bool IsTrue(object obj) => obj == null || obj.Equals(true);
-        static readonly MethodInfo istrue = typeof(JS).GetMethod("IsTrue", AccessTools.all);
-    }
-    public class CustomParameter : ParameterInfo
-    {
-        public CustomParameter(Type type, string name)
-        {
-            ClassImpl = type;
-            NameImpl = name;
         }
     }
     public class UDFWrapper

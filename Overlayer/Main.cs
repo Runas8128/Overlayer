@@ -14,7 +14,7 @@ using Overlayer.Core.Translation;
 using JSEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
-using UnityEngine.TextCore.Text;
+using JavaScript = Overlayer.Core.JavaScript;
 
 namespace Overlayer
 {
@@ -120,7 +120,6 @@ namespace Overlayer
                 fpsTimeTimer += deltaTime;
             };
         }
-
         public static bool LoadJSTag(string source, string name, out Replacer.Tag tag)
         {
             tag = null;
@@ -203,7 +202,8 @@ namespace Overlayer
                 {
                     if (Path.GetFileNameWithoutExtension(file) == "Impl")
                         continue;
-                    File.ReadAllText(file).CompileExecWithArgs()();
+                    ScriptEngine engine = new ScriptEngine();
+                    File.ReadAllText(file).CompileExec(engine)();
                 }
             }
         }
@@ -228,6 +228,7 @@ namespace Overlayer
                     SceneManager.sceneLoaded += evt;
                     Settings.Load(modEntry);
                     Variables.Reset();
+                    JavaScript.Init();
                     LoadAllJSTags(CustomTagsPath);
                     OText.Load();
                     if (!OText.Texts.Any())

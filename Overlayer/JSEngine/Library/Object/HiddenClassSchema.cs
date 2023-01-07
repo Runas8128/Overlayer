@@ -19,6 +19,13 @@ namespace JSEngine.Library
             public object Key;
             public PropertyAttributes Attributes;
         }
+        public IEnumerable<SchemaProperty> GetIndexers()
+        {
+            if (this.properties == null)
+                this.properties = CreatePropertiesDictionary();
+            IEnumerable<SchemaProperty> result = this.properties.Values.Where(sp => sp.IsIndexer);
+            return result;
+        }
         private Dictionary<TransitionInfo, WeakReference<HiddenClassSchema>> addTransitions;
         private Dictionary<object, WeakReference<HiddenClassSchema>> deleteTransitions;
         private Dictionary<TransitionInfo, WeakReference<HiddenClassSchema>> modifyTransitions;

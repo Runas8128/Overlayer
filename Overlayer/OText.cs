@@ -190,9 +190,6 @@ namespace Overlayer
 
                     GUILayout.BeginHorizontal();
                     if (GUIUtils.DrawTextField(ref TSetting.Font, Main.Language[TranslationKeys.TextFont])) Apply();
-                    if (GUILayout.Button(Main.Language[TranslationKeys.LogFontList]))
-                        for (int i = 0; i < ShadowText.fontNames.Length; i++)
-                            Main.Logger.Log($"{i + 1}. {ShadowText.fontNames[i]}");
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
 

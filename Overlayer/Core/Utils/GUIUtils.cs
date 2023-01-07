@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Discord;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +19,19 @@ namespace Overlayer.Core.Utils
             GUILayout.EndHorizontal();
             return value;
         }
-        public static string SpaceTextField(string value, string label, int space = 100)
+        public static bool SpaceTextField(ref string value, string label, int space = 100)
         {
             GUILayout.BeginHorizontal();
             GUILayout.Label(label);
-            value = GUILayout.TextField(value, GUILayout.Width(space));
+            string newValue;
+            if (space < 0)
+                newValue = GUILayout.TextField(value);
+            else newValue = GUILayout.TextField(value, GUILayout.Width(space));
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
-            return value;
+            bool result =  value != newValue;
+            value = newValue;
+            return result;
         }
         public static int SpaceIntField(int value, string label, int space = 100)
         {

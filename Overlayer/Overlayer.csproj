@@ -355,6 +355,7 @@
     <Compile Include="Core\CustomLibrary\Planet.cs" />
     <Compile Include="Core\CustomLibrary\PlanetType.cs" />
     <Compile Include="Core\CustomLibrary\Sprite.cs" />
+    <Compile Include="Core\FontManager.cs" />
     <Compile Include="Core\Tags\Replacer.cs" />
     <Compile Include="Core\TileData.cs" />
     <Compile Include="Core\CustomLibrary\Time.cs" />
@@ -489,7 +490,8 @@
     <Compile Include="JSEngine\Core\TypeConverter.cs" />
     <Compile Include="JSEngine\Core\TypeUtilities.cs" />
     <Compile Include="JSEngine\Core\Undefined.cs" />
-    <Compile Include="JSEngine\JavaScript.cs" />
+    <Compile Include="JSEngine\JS.cs" />
+    <Compile Include="JSEngine\JSUtils.cs" />
     <Compile Include="JSEngine\Library\Array\ArrayAdapter.cs" />
     <Compile Include="JSEngine\Library\Array\ArrayConstructor.cs" />
     <Compile Include="JSEngine\Library\Array\ArrayConstructor.g.cs" />
@@ -752,6 +754,7 @@
     <Compile Include="Patches\DataInit.cs" />
     <Compile Include="Patches\DeathMessagePatch.cs" />
     <Compile Include="Patches\ErrorMeterPatch.cs" />
+    <Compile Include="Patches\FontPatch.cs" />
     <Compile Include="Patches\GetHitMarginFixer.cs" />
     <Compile Include="Patches\JSPatches.cs" />
     <Compile Include="Patches\KeyJudgePatch.cs" />

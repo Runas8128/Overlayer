@@ -17,6 +17,16 @@ namespace Overlayer.Core
     /// </summary>
     public static class JavaScript
     {
+        public static void Init()
+        {
+            foreach (Type type in JSTypes)
+            {
+                JSUtils.BuildProxy(type, Main.CustomTagsPath, buildNestedTypes: true);
+                JSUtils.BuildProxy(type, Main.InitJSPath, buildNestedTypes: true);
+            }
+        }
+        static readonly List<Type> JSTypes = new List<Type>();
+        public static void RegisterType(params Type[] ts) => JSTypes.AddRange(ts);
         static ScriptEngine PrepareEngine()
         {
             var engine = new ScriptEngine();
@@ -41,24 +51,6 @@ namespace Overlayer.Core
             return engine;
         }
         public static Func<object> CompileEval(this string js) => js.CompileEval(PrepareEngine());
-        public static Action CompileExecWithArgs(this string js)
-        {
-            var engine = PrepareEngine();
-            var action = js.CompileExecWithCommentArgs(engine, out var args);
-            foreach (var arg in args)
-            {
-                if (arg.Item1.Equals("Resolve", StringComparison.OrdinalIgnoreCase))
-                {
-                    var types = arg.Item2.Split(',');
-                    foreach (var type in types)
-                    {
-                        var t = AccessTools.TypeByName(type);
-                        engine.SetGlobalValue(t.Name, t);
-                    }
-                }
-            }
-            return action;
-        }
         static ParameterInfo[] SelectActualParams(MethodBase m, ParameterInfo[] p, string[] n)
         {
             Type dType = m.DeclaringType;

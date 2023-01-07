@@ -78,7 +78,7 @@ namespace JSEngine.Compiler
             /// <summary>
             /// Gets or sets the number of items on the IL stack at the start of the statement.
             /// </summary>
-            public int OriginalStackSize;
+            public int OriginalStackSize = 0;
 #endif
         }
 
