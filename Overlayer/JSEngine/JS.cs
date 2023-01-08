@@ -73,6 +73,9 @@ namespace JSEngine
                         if (line.StartsWith("import"))
                         {
                             line = line.Replace(";", "");
+                            var f = GetAfter(line, "import").Trim();
+                            if (f.StartsWith("\"") || f.StartsWith("'") || f.StartsWith("`"))
+                                continue;
                             var orig = RemoveStartEnd(GetAfter(line, "from").Trim());
                             var module = System.IO.Path.Combine(Main.InitJSPath, orig);
                             module = System.IO.Path.GetFullPath(module);

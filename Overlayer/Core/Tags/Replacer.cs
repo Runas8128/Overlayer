@@ -111,11 +111,30 @@ namespace Overlayer.Core
                                             il.Emit(OpCodes.Ldc_R8, (double)param.DefaultValue);
                                             break;
                                         default:
-                                            il.Emit(OpCodes.Ldc_I4_0);
+                                            var pType = param.ParameterType;
+                                            if (pType.IsValueType)
+                                            {
+                                                LocalBuilder defValue = il.DeclareLocal(pType);
+                                                il.Emit(OpCodes.Ldloca, defValue);
+                                                il.Emit(OpCodes.Initobj, defValue.LocalType);
+                                                il.Emit(OpCodes.Ldloc);
+                                            }
+                                            else il.Emit(OpCodes.Ldnull);
                                             break;
                                     }
                                 }
-                                else il.Emit(OpCodes.Ldc_I4_0);
+                                else
+                                {
+                                    var pType = param.ParameterType;
+                                    if (pType.IsValueType)
+                                    {
+                                        LocalBuilder defValue = il.DeclareLocal(pType);
+                                        il.Emit(OpCodes.Ldloca, defValue);
+                                        il.Emit(OpCodes.Initobj, defValue.LocalType);
+                                        il.Emit(OpCodes.Ldloc);
+                                    }
+                                    else il.Emit(OpCodes.Ldnull);
+                                }
                             }
                             else il.Emit(OpCodes.Ldnull);
                         }
@@ -180,9 +199,25 @@ namespace Overlayer.Core
             }
             public Tag SetGetter(Delegate getter)
             {
+                var invoke = getter.GetType().GetMethod("Invoke");
+                if (!CheckGetterSig(invoke))
+                    throw new InvalidOperationException($"Parameter's Length Must Be Less Than 2. ({getter})");
+                var prms = invoke.GetParameters();
+                HasOption = prms.Length == 1;
+                if (HasOption)
+                {
+                    Type pType = invoke.GetParameters()[0].ParameterType;
+                    if (pType != typeof(string))
+                    {
+                        OptionConverter = StringConverter.GetToConverter(pType);
+                        if (OptionConverter == null)
+                            throw new NotSupportedException($"Option Type:{pType} Is Not Supported.");
+                    }
+                }
+                if (invoke.ReturnType != typeof(string))
+                    ReturnConverter = StringConverter.GetFromConverter(invoke.ReturnType);
                 Getter = Wrapper.Wrap(getter);
                 GetterDelegate = getter;
-                HasOption = Getter.GetParameters().Length == 1;
                 return this;
             }
             public Tag SetGetter(MethodInfo getter)

@@ -6,6 +6,7 @@ using Overlayer.Core.Utils;
 using TMPro.Examples;
 using Overlayer.Core;
 using Newtonsoft.Json.Linq;
+using UnityEngine.SceneManagement;
 #pragma warning disable
 
 namespace Overlayer
@@ -40,7 +41,11 @@ namespace Overlayer
             GUILayout.Label("Adofai Font");
             AdofaiFont = GUILayout.TextField(AdofaiFont);
             if (GUILayout.Button("Apply"))
+            {
+                RDString.initialized = false;
                 RDString.Setup();
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
         }

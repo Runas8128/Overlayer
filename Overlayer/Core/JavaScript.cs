@@ -51,6 +51,7 @@ namespace Overlayer.Core
             return engine;
         }
         public static Func<object> CompileEval(this string js) => js.CompileEval(PrepareEngine());
+        public static Action CompileExec(this string js) => js.CompileExec(PrepareEngine());
         static ParameterInfo[] SelectActualParams(MethodBase m, ParameterInfo[] p, string[] n)
         {
             Type dType = m.DeclaringType;

@@ -30,8 +30,10 @@ namespace Overlayer
         public static byte[] Impljs;
         public static List<Replacer.Tag> AllTags = new List<Replacer.Tag>();
         public static List<Replacer.Tag> NotPlayingTags = new List<Replacer.Tag>();
+        public static Scene activeScene { get; private set; }
         public static void Load(ModEntry modEntry)
         {
+            SceneManager.activeSceneChanged += (cur, next) => activeScene = next;
             CustomTagsPath = Path.Combine(modEntry.Path, "CustomTags");
             InitJSPath = Path.Combine(modEntry.Path, "Inits");
             Mod = modEntry;
@@ -203,7 +205,7 @@ namespace Overlayer
                     if (Path.GetFileNameWithoutExtension(file) == "Impl")
                         continue;
                     ScriptEngine engine = new ScriptEngine();
-                    File.ReadAllText(file).CompileExec(engine)();
+                    File.ReadAllText(file).CompileExec()();
                 }
             }
         }

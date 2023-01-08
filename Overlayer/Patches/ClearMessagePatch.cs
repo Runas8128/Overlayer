@@ -10,7 +10,7 @@ namespace Overlayer.Patches
         public static Replacer compiler;
         public static void Postfix(scrController __instance)
         {
-            if (!__instance.noFail)
+            if (__instance.gameworld && !__instance.noFail)
                 __instance.txtCongrats.text = compiler.Replace();
         }
     }
