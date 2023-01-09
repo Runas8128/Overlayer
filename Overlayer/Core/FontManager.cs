@@ -27,6 +27,7 @@ namespace Overlayer.Core
         public static ReadOnlyCollection<Font> FallbackFonts { get; private set; }
         public static ReadOnlyCollection<TMP_FontAsset> FallbackTMPFonts { get; private set; }
         public static FontData GetFont(string name) => TryGetFont(name, out FontData font) ? font : defaultFont;
+        public static void SetFont(string name, FontData data) => Fonts[name] = data;
         public static bool TryGetFont(string name, out FontData font)
         {
             if (!initialized)
@@ -38,9 +39,9 @@ namespace Overlayer.Core
                 FallbackTMPFonts = FallbackFontDatas.Select(f => f.fontTMP).ToList().AsReadOnly();
                 DefaultTMPFont.fallbackFontAssetTable = FallbackTMPFonts.ToList();
                 defaultFont = RDString.fontData;
-                defaultFont.lineSpacing = 1f;
-                defaultFont.lineSpacingTMP = 1;
-                defaultFont.fontScale = 0.5f;
+                defaultFont.lineSpacing = 0.75f;
+                defaultFont.lineSpacingTMP = 1f;
+                defaultFont.fontScale = 1f;
                 defaultFont.font = DefaultFont;
                 defaultFont.fontTMP = DefaultTMPFont;
                 OSFonts = Font.GetOSInstalledFontNames();
@@ -99,5 +100,6 @@ namespace Overlayer.Core
                 return false;
             }
         }
+        public static bool IsDefault(this FontData font) => font.font == defaultFont.font;
     }
 }

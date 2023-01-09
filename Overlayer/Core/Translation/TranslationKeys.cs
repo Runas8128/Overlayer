@@ -69,5 +69,11 @@
         public static readonly string ClearMessage = nameof(ClearMessage);
         public static readonly string ReloadCustomTags = nameof(ReloadCustomTags);
         public static readonly string ReloadInits = nameof(ReloadInits);
+
+        public static readonly string AdofaiFont = nameof(AdofaiFont);
+        public static readonly string AdofaiFont_Font = nameof(AdofaiFont_Font);
+        public static readonly string AdofaiFont_LineSpacing = nameof(AdofaiFont_LineSpacing);
+        public static readonly string AdofaiFont_FontScale = nameof(AdofaiFont_FontScale);
+        public static readonly string Apply = nameof(Apply);
     }
 }

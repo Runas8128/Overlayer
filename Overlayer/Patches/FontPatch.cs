@@ -23,7 +23,7 @@ namespace Overlayer.Patches
                     return true;
                 if (!Settings.Instance.ChangeFont)
                     return true;
-                if (!FontManager.TryGetFont(Settings.Instance.AdofaiFont, out var font))
+                if (!FontManager.TryGetFont(Settings.Instance.AdofaiFont.name, out var font))
                     return true;
                 if (!(font.font?.dynamic ?? false)) 
                     return true;
@@ -47,6 +47,9 @@ namespace Overlayer.Patches
                 catch { yield break; }
                 foreach (var i in list)
                 {
+                    if (!i.activeSelf) continue;
+                    if (i.GetComponentInChildren(typeof(scrEnableIfBeta)))
+                        continue;
                     foreach (var j in i.GetComponentsInChildren<Text>())
                         j.SetLocalizedFont();
                     yield return null;
