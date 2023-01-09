@@ -3,16 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using TMPro;
-using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.TextCore.LowLevel;
-using UnityEngine.TextCore;
-using HarmonyLib;
-using Overlayer.Patches;
 using System.Collections.ObjectModel;
 
 namespace Overlayer.Core
 {
+    // WOW BEAUTIFUL OVERLAYER FONTMANAGER!
     public static class FontManager
     {
         static TMP_FontAsset DefaultTMPFont;
