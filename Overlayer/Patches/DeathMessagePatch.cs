@@ -14,7 +14,7 @@ namespace Overlayer.Patches
         }
         public static void Postfix(scrController __instance)
         {
-            if (!__instance.noFail)
+            if (!__instance.noFail && !string.IsNullOrEmpty(compiler.Source))
                 __instance.txtTryCalibrating.text = compiler.Replace();
         }
     }

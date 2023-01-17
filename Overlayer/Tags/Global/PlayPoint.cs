@@ -47,21 +47,28 @@ namespace Overlayer.Tags.Global
             ForumDifficulty = 0;
             if (instance)
             {
-                var levelData = instance.levelData;
-                string artist = levelData.artist.BreakRichTag(), author = levelData.author.BreakRichTag(), title = levelData.song.BreakRichTag();
-                var result = Request(artist, title, author, string.IsNullOrWhiteSpace(levelData.pathData) ? levelData.angleData.Count : levelData.pathData.Length, (int)Math.Round(levelData.bpm));
                 try
                 {
-                    IntegratedDifficulty = PredictedDifficulty = PredictDifficulty(instance);
+                    var levelData = instance.levelData;
+                    string artist = levelData.artist.BreakRichTag(), author = levelData.author.BreakRichTag(), title = levelData.song.BreakRichTag();
+                    var result = Request(artist, title, author, string.IsNullOrWhiteSpace(levelData.pathData) ? levelData.angleData.Count : levelData.pathData.Length, (int)Math.Round(levelData.bpm));
+                    try
+                    {
+                        IntegratedDifficulty = PredictedDifficulty = PredictDifficulty(instance);
+                    }
+                    catch (Exception e)
+                    {
+                        var levelPath = instance.customLevel.levelPath;
+                        Main.Logger.Log($"Error On Predicting Difficulty:\n{e}");
+                        Main.Logger.Log($"Level Path: {levelPath}");
+                        Main.Logger.Log($"Adjusting PredictedDifficulty To Editor Difficulty {IntegratedDifficulty = ForumDifficulty = ((double)instance.levelData.difficulty).Map(1, 10, 1, 21)}");
+                    }
+                    IntegratedDifficulty = (result?.difficulty).HasValue ? result.difficulty : 0;
                 }
                 catch (Exception e)
                 {
-                    var levelPath = instance.customLevel.levelPath;
-                    Main.Logger.Log($"Error On Predicting Difficulty:\n{e}");
-                    Main.Logger.Log($"Level Path: {levelPath}");
-                    Main.Logger.Log($"Adjusting PredictedDifficulty To Editor Difficulty {IntegratedDifficulty = ForumDifficulty = ((double)instance.levelData.difficulty).Map(1, 10, 1, 21)}");
+                    Main.Logger.Log($"Error On Requesting Difficulty At Adofai.gg. Check Adofai.gg's Api State.\n{e}");
                 }
-                IntegratedDifficulty = (result?.difficulty).HasValue ? result.difficulty : 0;
             }
         }
         public static AgLevel Request(string artist, string title, string author, int tiles, int bpm)

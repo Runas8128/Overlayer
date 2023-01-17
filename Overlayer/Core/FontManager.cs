@@ -9,7 +9,6 @@ using System.Collections.ObjectModel;
 
 namespace Overlayer.Core
 {
-    // WOW BEAUTIFUL OVERLAYER FONTMANAGER!
     public static class FontManager
     {
         static TMP_FontAsset DefaultTMPFont;

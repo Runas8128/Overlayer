@@ -131,7 +131,6 @@ namespace Overlayer.Core
                 udf.Engine.SetGlobalValue(pType.Name, pType);
                 methodB.DefineParameter(paramIndex++, ParameterAttributes.None, param.Name);
                 int pIndex = paramIndex - 2;
-                Main.Logger.Log($"pIndex:{pIndex}, pType:{pType}");
                 il.Emit(OpCodes.Ldloc, arr);
                 il.Emit(OpCodes.Ldc_I4, pIndex);
                 il.Emit(OpCodes.Ldarg, pIndex);
