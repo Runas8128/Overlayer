@@ -8,11 +8,13 @@ using HarmonyLib;
 using Overlayer;
 using Overlayer.Core;
 using UnityEngine.Experimental.AI;
+using UnityEngine;
 
 namespace JSEngine.CustomLibrary
 {
     public class Ovlr : ObjectInstance
     {
+        internal static Harmony harmony = new Harmony("Overlayer_JS");
         public Ovlr(ScriptEngine engine) : base(engine) => PopulateFunctions();
         [JSFunction(Name = "log")]
         public static int Log(object obj)
@@ -34,7 +36,7 @@ namespace JSEngine.CustomLibrary
             var wrap = func.Wrap(target, true);
             if (wrap == null)
                 return false;
-            Main.Harmony.Patch(target, new HarmonyMethod(wrap));
+            harmony.Patch(target, new HarmonyMethod(wrap));
             return true;
 #else
             return false;
@@ -48,7 +50,7 @@ namespace JSEngine.CustomLibrary
             var wrap = func.Wrap(target, false);
             if (wrap == null)
                 return false;
-            Main.Harmony.Patch(target, postfix: new HarmonyMethod(wrap));
+            harmony.Patch(target, postfix: new HarmonyMethod(wrap));
             return true;
 #else
             return false;
@@ -124,6 +126,30 @@ namespace JSEngine.CustomLibrary
         public static ObjectInstance Resolve(ScriptEngine engine, string clrType)
         {
             return ClrStaticTypeWrapper.FromCache(engine, AccessTools.TypeByName(clrType));
+        }
+        [JSFunction(Name = "generateProxy")]
+        public static void GenerateProxy(string clrType)
+        {
+            Type t = AccessTools.TypeByName(clrType);
+            JSUtils.BuildProxy(t, Main.CustomTagsPath);
+            JSUtils.BuildProxy(t, Main.InitJSPath);
+        }
+        [JSFunction(Name = "registerTag")]
+        public static void RegisterTag(string name, UserDefinedFunction func)
+        {
+            Replacer tmp = new Replacer();
+            Replacer.Tag tag = tmp.CreateTag(name);
+            UDFWrapper wrapper = new UDFWrapper(func);
+            if (func.ArgumentNames.Count == 1)
+                tag.SetGetter((string o) => wrapper.CallGlobal(o));
+            else tag.SetGetter(wrapper.CallGlobal);
+            tag.Build();
+            Main.AllTags.SetTag(name, tag);
+        }
+        [JSFunction(Name = "unregisterTag")]
+        public static void UnregisterTag(string name)
+        {
+            Main.AllTags.RemoveTag(name);
         }
         public static List<TileData> tiles = new List<TileData>();
     }

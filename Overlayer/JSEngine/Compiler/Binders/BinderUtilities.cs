@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JSEngine.Library;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using ErrorType = JSEngine.Library.ErrorType;
@@ -75,8 +76,8 @@ namespace JSEngine.Compiler
                     }
 
                     // Unwrap the input parameter.
-                    if (input is JSEngine.Library.ClrInstanceWrapper)
-                        input = ((JSEngine.Library.ClrInstanceWrapper)input).WrappedInstance;
+                    if (input is Library.ClrInstanceWrapper)
+                        input = ((Library.ClrInstanceWrapper)input).WrappedInstance;
 
                     // Get the type of the output parameter.
                     Type outputType = argument.Type;
@@ -132,6 +133,8 @@ namespace JSEngine.Compiler
                                 if (outputType.IsValueType == true)
                                     demeritPoints[i] += disqualification;
                             }
+                            else if (input is ArrayInstance arr && typeof(IEnumerable<object>).IsAssignableFrom(outputType))
+                                demeritPoints[i]++;
                             else if (outputType.IsAssignableFrom(input.GetType()) == false)
                             {
                                 demeritPoints[i] += disqualification;
@@ -167,7 +170,7 @@ namespace JSEngine.Compiler
                 var ambiguousMethods = new List<BinderMethod>(lowestIndices.Count);
                 foreach (var index in lowestIndices)
                     ambiguousMethods.Add(methods[index]);
-                throw new JavaScriptException(ErrorType.TypeError, "The method call is ambiguous between the following methods: " + StringHelpers.Join(", ", ambiguousMethods));
+                //throw new JavaScriptException(ErrorType.TypeError, "The method call is ambiguous between the following methods: " + StringHelpers.Join(", ", ambiguousMethods));
             }
 
             // Throw an error is there is an invalid argument.

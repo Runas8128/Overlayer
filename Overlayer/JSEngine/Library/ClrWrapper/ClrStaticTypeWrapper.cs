@@ -50,7 +50,7 @@ namespace JSEngine.Library
             this.WrappedType = type;
 
             // Pick up the public constructors, if any.
-            var constructors = type.GetConstructors();
+            var constructors = type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             if (constructors.Length > 0)
                 this.constructBinder = new ClrBinder(constructors);
             else
@@ -183,9 +183,9 @@ namespace JSEngine.Library
 
                     case MemberTypes.Property:
                         PropertyInfo property = (PropertyInfo)member;
-                        var getMethod = property.GetGetMethod();
+                        var getMethod = property.GetGetMethod(true);
                         ClrFunction getter = getMethod == null ? null : new ClrFunction(target.Engine.Function.InstancePrototype, new ClrBinder(getMethod));
-                        var setMethod = property.GetSetMethod();
+                        var setMethod = property.GetSetMethod(true);
                         ClrFunction setter = setMethod == null ? null : new ClrFunction(target.Engine.Function.InstancePrototype, new ClrBinder(setMethod));
                         PropertyAttributes propertyAttributes = PropertyAttributes.NonEnumerable;
                         if (property.GetIndexParameters().Length > 0)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,8 +8,10 @@ namespace JSEngine.Library
     /// <summary>
     /// Represents an instance of the JavaScript Array object.
     /// </summary>
-    public partial class ArrayInstance : ObjectInstance
+    public partial class ArrayInstance : ObjectInstance, IEnumerable<object>
     {
+        IEnumerator IEnumerable.GetEnumerator() => ElementValues.GetEnumerator();
+        IEnumerator<object> IEnumerable<object>.GetEnumerator() => ElementValues.GetEnumerator();
         // The array, if it is dense.
         private object[] dense;
 

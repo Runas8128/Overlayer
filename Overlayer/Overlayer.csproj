@@ -344,6 +344,7 @@
     <Compile Include="AdofaiggApi\Types\PlayLog.cs" />
     <Compile Include="AdofaiggApi\Types\Ranking.cs" />
     <Compile Include="AdofaiggApi\User.cs" />
+    <Compile Include="Core\CustomLibrary\Collections.cs" />
     <Compile Include="Core\CustomLibrary\Tiles.cs" />
     <Compile Include="Core\CustomLibrary\Color.cs" />
     <Compile Include="Core\CustomLibrary\GameObject.cs" />
@@ -355,6 +356,7 @@
     <Compile Include="Core\CustomLibrary\Planet.cs" />
     <Compile Include="Core\CustomLibrary\PlanetType.cs" />
     <Compile Include="Core\CustomLibrary\Sprite.cs" />
+    <Compile Include="Core\CustomLibrary\UnityHelper.cs" />
     <Compile Include="Core\FontManager.cs" />
     <Compile Include="Core\Tags\Replacer.cs" />
     <Compile Include="Core\TileData.cs" />

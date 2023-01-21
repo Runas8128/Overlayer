@@ -54,12 +54,14 @@ namespace JSEngine
             public TextSource(string str, ScriptEngine engine)
             {
                 this.str = str;
-                var reader = new StringReader(str);
-                var firstLine = reader.ReadLine();
-                if (firstLine.EndsWith(" Proxy"))
-                    ProxyType = AccessTools.TypeByName(firstLine.Split(' ')[1]);
-                reader.Close();
                 this.engine = engine;
+                using (var reader = new StringReader(str))
+                {
+                    var firstLine = reader.ReadLine();
+                    if (firstLine == null) return;
+                    if (firstLine.EndsWith(" Proxy"))
+                        ProxyType = AccessTools.TypeByName(firstLine.Split(' ')[1]);
+                }
             }
             public override string Path => null;
             public override TextReader GetReader()
@@ -170,15 +172,6 @@ namespace JSEngine
                 executingFunction: udf);
             return fd(context, arguments);
         }
-        public object Call(params object[] arguments)
-        {
-            var context = ExecutionContext.CreateFunctionContext(
-                engine: udf.Engine,
-                parentScope: udf.ParentScope,
-                thisValue: udf.Prototype ?? (object)Undefined.Value,
-                executingFunction: udf);
-            return fd(context, arguments);
-        }
         public object CallGlobal(params object[] arguments)
         {
             var context = ExecutionContext.CreateFunctionContext(
@@ -188,8 +181,7 @@ namespace JSEngine
                 executingFunction: udf);
             return fd(context, arguments);
         }
-        public static readonly MethodInfo CallMethod = typeof(UDFWrapper).GetMethod("Call", new[] { typeof(object[]) });
-        public static readonly MethodInfo CallThisMethod = typeof(UDFWrapper).GetMethod("Call", new[] { typeof(object), typeof(object[]) });
+        public static readonly MethodInfo CallMethod = typeof(UDFWrapper).GetMethod("Call");
         public static readonly MethodInfo CallGlobalMethod = typeof(UDFWrapper).GetMethod("CallGlobal");
     }
 }

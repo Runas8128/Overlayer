@@ -828,6 +828,40 @@ class Input {
     */
     static getKey(key);
 }
+class Dictionary {
+    /**
+    * @param {any} key Key
+    * @returns {any} Object
+    */
+    get(key);
+   /**
+    * @param {any} key Key
+    * @param {any} value Object
+    */
+    set(key, value);
+    clear();
+    /**
+    * @returns {number} Elements Count
+    */
+    get count() {}
+}
+class List {
+    /**
+    * @param {number} index Index
+    * @returns {any} Object
+    */
+    get(index);
+   /**
+    * @param {number} index Index
+    * @param {any} value Object
+    */
+    set(index, value);
+    clear();
+    /**
+    * @returns {number} Elements Count
+    */
+    get count() {}
+}
 class Overlayer {
     /**
     * @returns {string} Inits Folder Absolute Path
@@ -915,6 +949,19 @@ class Overlayer {
     * @returns {any} CLR Type
     */
     static resolve(clrType);
+    /**
+    * @param {string} clrType CLR Type FullName
+    */
+    static generateProxy(clrType);
+    /**
+    * @param {string} name Tag Name
+    * @param {Function} func Function
+    */
+    static registerTag(name, func);
+    /**
+    * @param {string} name Tag Name
+    */
+    static unregisterTag(name);
 }
 class Tiles {
     /**
@@ -953,6 +1000,31 @@ class Vector3 {
     * Normalize This Vector
     */
     normalize();
+}
+class UnityHelper
+{
+    /**
+    * @param {Component} comp Component
+    * @param {Type} compType Component Type
+    * @returns {Component} Component
+    */
+    static getComponent(comp, compType);
+    /**
+    * @param {Component} comp Component
+    * @param {Type} compType Component Type
+    * @returns {Component} Component In Children Object
+    */
+    static getComponentInChildren(comp, compType);
+    /**
+    * @param {Component} comp Component
+    * @param {Type} compType Component Type
+    * @returns {Component} Added Component
+    */
+    static addComponent(comp, compType);
+    /**
+    * @param {string} clrType CLR Type FullName
+    */
+    static type(clrType);
 }
 class Sprite {
     /**

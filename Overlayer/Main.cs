@@ -15,6 +15,7 @@ using JSEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using JavaScript = Overlayer.Core.JavaScript;
+using JSEngine.CustomLibrary;
 
 namespace Overlayer
 {
@@ -107,7 +108,7 @@ namespace Overlayer
             {
                 if (Input.anyKeyDown)
                     Variables.KpsTemp++;
-                lastDeltaTime += (Time.deltaTime - lastDeltaTime) * 0.1f;
+                lastDeltaTime += (UnityEngine.Time.deltaTime - lastDeltaTime) * 0.1f;
                 if (fpsTimer > Settings.Instance.FPSUpdateRate / 1000.0f)
                 {
                     Variables.Fps = 1.0f / lastDeltaTime;
@@ -183,6 +184,7 @@ namespace Overlayer
         }
         public static void RunInits()
         {
+            Ovlr.harmony.UnpatchAll(Ovlr.harmony.Id);
             if (!Directory.Exists(InitJSPath))
             {
                 Directory.CreateDirectory(InitJSPath);
@@ -193,15 +195,13 @@ namespace Overlayer
             }
             else
             {
-                if (!File.Exists(Path.Combine(InitJSPath, "Impl.js")))
-                {
-                    var impljsPath = Path.Combine(InitJSPath, "Impl.js");
-                    if (File.Exists(impljsPath))
-                        File.SetAttributes(impljsPath, File.GetAttributes(impljsPath) & ~FileAttributes.ReadOnly);
-                    File.WriteAllBytes(impljsPath, Impljs);
-                }
+                var impljsPath = Path.Combine(InitJSPath, "Impl.js");
+                if (File.Exists(impljsPath))
+                    File.SetAttributes(impljsPath, File.GetAttributes(impljsPath) & ~FileAttributes.ReadOnly);
+                File.WriteAllBytes(impljsPath, Impljs);
                 foreach (string file in Directory.GetFiles(InitJSPath, "*.js"))
                 {
+                    
                     if (Path.GetFileNameWithoutExtension(file) == "Impl")
                         continue;
                     ScriptEngine engine = new ScriptEngine();

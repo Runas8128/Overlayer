@@ -48,6 +48,9 @@ namespace Overlayer.Core
 
             engine.SetGlobalValue("Tile", new TileConstructor(engine));
             engine.SetGlobalValue("tiles", new TilesConstructor(engine).Construct());
+            engine.SetGlobalValue("Dictionary", typeof(Dictionary));
+            engine.SetGlobalValue("List", typeof(List));
+            engine.SetGlobalValue("UnityHelper", typeof(UnityHelper));
             return engine;
         }
         public static Func<object> CompileEval(this string js) => js.CompileEval(PrepareEngine());
@@ -138,7 +141,7 @@ namespace Overlayer.Core
             }
             il.Emit(OpCodes.Ldsfld, holderfld);
             il.Emit(OpCodes.Ldloc, arr);
-            il.Emit(OpCodes.Call, UDFWrapper.CallMethod);
+            il.Emit(OpCodes.Call, UDFWrapper.CallGlobalMethod);
             if (rtIsBool)
                 il.Emit(OpCodes.Call, istrue);
             else il.Emit(OpCodes.Pop);
