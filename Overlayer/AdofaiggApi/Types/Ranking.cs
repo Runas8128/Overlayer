@@ -1,8 +1,10 @@
-﻿namespace Overlayer.AdofaiggApi.Types
+﻿using System.Threading.Tasks;
+
+namespace Overlayer.AdofaiggApi.Types
 {
     public class Ranking : Json
     {
-        public static Response<Ranking> Request(params Parameter[] parameters) => Api.Level.Request<Ranking>(parameters);
+        public static async Task<Response<Ranking>> Request(params Parameter[] parameters) => await Api.Ranking.Request<Ranking>(parameters);
         public int id;
         public string name;
         public double totalPp;

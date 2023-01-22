@@ -6,6 +6,7 @@ using Overlayer.AdofaiggApi;
 using AgLevel = Overlayer.AdofaiggApi.Types.Level;
 using Overlayer.Core.Utils;
 using SA.GoogleDoc;
+using System.Threading.Tasks;
 using Overlayer.Patches;
 using ACL = Overlayer.MapParser.CustomLevel;
 using System.IO;
@@ -40,7 +41,7 @@ namespace Overlayer.Tags.Global
             double tilesRating = tile < 2000 ? 0.9 + tile / 10000.0 : PowEx(tile / 2000.0, 0.05);
             return PowEx(difficultyRating * accuracyRating * pitchRating * tilesRating, 1.01);
         }
-        public static void Setup(scnEditor instance)
+        public static async void Setup(scnEditor instance)
         {
             IntegratedDifficulty = 0;
             PredictedDifficulty = 0;
@@ -51,7 +52,8 @@ namespace Overlayer.Tags.Global
                 {
                     var levelData = instance.levelData;
                     string artist = levelData.artist.BreakRichTag(), author = levelData.author.BreakRichTag(), title = levelData.song.BreakRichTag();
-                    var result = Request(artist, title, author, string.IsNullOrWhiteSpace(levelData.pathData) ? levelData.angleData.Count : levelData.pathData.Length, (int)Math.Round(levelData.bpm));
+                    var result = await Request(artist, title, author, string.IsNullOrWhiteSpace(levelData.pathData) ? levelData.angleData.Count : levelData.pathData.Length, (int)Math.Round(levelData.bpm));
+#if DIFFICULTY_PREDICTOR
                     try
                     {
                         IntegratedDifficulty = PredictedDifficulty = PredictDifficulty(instance);
@@ -63,30 +65,37 @@ namespace Overlayer.Tags.Global
                         Main.Logger.Log($"Level Path: {levelPath}");
                         Main.Logger.Log($"Adjusting PredictedDifficulty To Editor Difficulty {IntegratedDifficulty = ForumDifficulty = ((double)instance.levelData.difficulty).Map(1, 10, 1, 21)}");
                     }
-                    IntegratedDifficulty = (result?.difficulty).HasValue ? result.difficulty : 0;
+                    IntegratedDifficulty = (result?.difficulty).HasValue ? (ForumDifficulty = result.difficulty) : PredictedDifficulty;
+#else
+                    PredictedDifficulty = ((double)instance.levelData.difficulty).Map(1, 10, 1, 21);
+                    if ((result?.difficulty).HasValue)
+                        IntegratedDifficulty = ForumDifficulty = result.difficulty;
+                    else IntegratedDifficulty = PredictedDifficulty;
+#endif
                 }
                 catch (Exception e)
                 {
+                    IntegratedDifficulty = PredictedDifficulty = ((double)instance.levelData.difficulty).Map(1, 10, 1, 21);
                     Main.Logger.Log($"Error On Requesting Difficulty At Adofai.gg. Check Adofai.gg's Api State.\n{e}");
                 }
             }
         }
-        public static AgLevel Request(string artist, string title, string author, int tiles, int bpm)
+        public static async Task<AgLevel> Request(string artist, string title, string author, int tiles, int bpm)
         {
             Main.Logger.Log($"<b>Requesting {artist} - {title}, {author}</b>");
-            var result = AgLevel.Request(ActualParams());
+            var result = await AgLevel.Request(ActualParams());
             if (result.count <= 0)
             {
                 Main.Logger.Log($"<b>Result Count Is {result.count}. Re-Requesting With Fixup Artist Name..</b>");
-                result = AgLevel.Request(ActualParams2());
+                result = await AgLevel.Request(ActualParams2());
                 if (result.count <= 0)
                 {
                     Main.Logger.Log($"<b>Result Count Is {result.count}. Re-Requesting With Fixup Author Name..</b>");
-                    result = AgLevel.Request(ActualParams3());
+                    result = await AgLevel.Request(ActualParams3());
                     if (result.count <= 0)
                     {
                         Main.Logger.Log($"<b>Result Count Is {result.count}. Re-Requesting With Fixup Artist And Author Name..</b>");
-                        result = AgLevel.Request(ActualParams4());
+                        result = await AgLevel.Request(ActualParams4());
                         if (result.count <= 0)
                             return Fail();
                         return result.results[0];
@@ -98,19 +107,19 @@ namespace Overlayer.Tags.Global
             if (result.count > 1)
             {
                 Main.Logger.Log($"<b>Result Count Is {result.count}. Re-Requesting With Bpm..</b>");
-                result = AgLevel.Request(ActualParams(AgLevel.MinBpm(bpm - 1), AgLevel.MaxBpm(bpm + 1)));
+                result = await AgLevel.Request(ActualParams(AgLevel.MinBpm(bpm - 1), AgLevel.MaxBpm(bpm + 1)));
             }
             if (result.count <= 0) return Fail();
             if (result.count > 1)
             {
                 Main.Logger.Log($"<b>Result Count Is {result.count}. Re-Requesting With Tile Count..</b>");
-                result = AgLevel.Request(ActualParams(AgLevel.MinTiles(tiles - 1), AgLevel.MaxTiles(tiles + 1)));
+                result = await AgLevel.Request(ActualParams(AgLevel.MinTiles(tiles - 1), AgLevel.MaxTiles(tiles + 1)));
             }
             if (result.count <= 0) return Fail();
             if (result.count > 1)
             {
                 Main.Logger.Log($"<b>Result Count Is {result.count}. Re-Requesting With Bpm And Tile Count..</b>");
-                result = AgLevel.Request(ActualParams(AgLevel.MinBpm(bpm - 1), AgLevel.MaxBpm(bpm + 1), AgLevel.MinTiles(tiles - 1), AgLevel.MaxTiles(tiles + 1)));
+                result = await AgLevel.Request(ActualParams(AgLevel.MinBpm(bpm - 1), AgLevel.MaxBpm(bpm + 1), AgLevel.MinTiles(tiles - 1), AgLevel.MaxTiles(tiles + 1)));
             }
             if (result.count <= 0) return Fail();
             if (result.count > 1)
@@ -207,6 +216,7 @@ namespace Overlayer.Tags.Global
             }
             return CachedStrings[key].Contains(value);
         }
+#if DIFFICULTY_PREDICTOR
         public static double PredictDifficulty(scnEditor editor)
         {
             var levelData = editor.levelData;
@@ -218,6 +228,7 @@ namespace Overlayer.Tags.Global
         }
         public static LevelMeta GetMeta(string levelPath)
             => LevelMeta.GetMeta(ACL.Read(JsonNode.Parse(File.ReadAllText(levelPath))));
+#endif
         public static List<string> CachedState = new List<string>();
         public static Dictionary<string, double> PredictedDiffCache = new Dictionary<string, double>();
         public static Dictionary<string, string[]> CachedStrings = new Dictionary<string, string[]>();

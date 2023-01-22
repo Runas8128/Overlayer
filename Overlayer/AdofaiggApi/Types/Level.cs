@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace Overlayer.AdofaiggApi.Types
 {
     public class Level : Json
     {
-        public static Response<Level> Request(params Parameter[] parameters) => Api.Level.Request<Level>(parameters);
-        public static Response<Level> Request(Parameters parameters) => Api.Level.Request<Level>(parameters);
+        public static async Task<Response<Level>> Request(params Parameter[] parameters) => await Api.Level.Request<Level>(parameters);
+        public static async Task<Response<Level>> Request(Parameters parameters) => await Api.Level.Request<Level>(parameters);
         public int id;
         public string title;
         public double difficulty;

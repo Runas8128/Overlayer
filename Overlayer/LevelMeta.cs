@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if DIFFICULTY_PREDICTOR
+using System;
 using System.Net;
 using System.Text;
 using System.Linq;
@@ -98,3 +99,4 @@ namespace Overlayer
         }
     }
 }
+#endif

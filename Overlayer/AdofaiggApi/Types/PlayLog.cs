@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Overlayer.AdofaiggApi.Types
 {
     public class PlayLog : Json
     {
-        public static Response<PlayLog> Request(params Parameter[] parameters) => Api.Level.Request<PlayLog>(parameters);
+        public static async Task<Response<PlayLog>> Request(params Parameter[] parameters) => await Api.PlayLogs.Request<PlayLog>(parameters);
         public int id;
         public DateTime timestamp;
         public TinyLevel level;

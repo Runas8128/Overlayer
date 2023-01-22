@@ -193,7 +193,7 @@ namespace Overlayer.Core.Utils
         private static readonly double[] dPow = GetDoublePow();
         private static double[] GetDoublePow()
         {
-            var max = 309;
+            const int max = 309;
             var exps = new double[max];
             for (var i = 0; i < max; i++)
                 exps[i] = Math.Pow(10, i);
@@ -202,7 +202,7 @@ namespace Overlayer.Core.Utils
         private static readonly float[] fPow = GetFloatPow();
         private static float[] GetFloatPow()
         {
-            var max = 39;
+            const int max = 39;
             var exps = new float[max];
             for (var i = 0; i < max; i++)
                 exps[i] = (float)Math.Pow(10, i);
