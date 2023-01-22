@@ -142,7 +142,7 @@ namespace JSEngine.CustomLibrary
             UDFWrapper wrapper = new UDFWrapper(func);
             if (func.ArgumentNames.Count == 1)
                 tag.SetGetter((string o) => wrapper.CallGlobal(o));
-            else tag.SetGetter(wrapper.CallGlobal);
+            else tag.SetGetter(() => wrapper.CallGlobal());
             tag.Build();
             Main.AllTags.SetTag(name, tag);
         }
