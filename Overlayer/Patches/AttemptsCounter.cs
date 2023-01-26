@@ -9,21 +9,21 @@ namespace Overlayer.Patches
     public static class AttemptsCounter
     {
         public static Dictionary<string, int> Attempts = new Dictionary<string, int>();
-        public static string FailId = string.Empty;
+        
         [HarmonyPatch(typeof(CustomLevel), "FinishCustomLevelLoading")]
         [HarmonyPostfix]
         public static void FCLLPostfix()
         {
             if (!GCS.standaloneLevelMode && !GCS.useNoFail)
             {
-                if (FailId == null || !Attempts.TryGetValue(FailId, out _))
+                if (PlaytimeCounter.MapID == null || !Attempts.TryGetValue(PlaytimeCounter.MapID, out _))
                 {
-                    FailId = DataInit.MakeHash(RDString.Get("editor.author"), RDString.Get("editor.artist"), RDString.Get("editor.song"));
-                    Attempts[FailId] = Persistence.GetCustomWorldAttempts(FailId);
+                    PlaytimeCounter.MapID = DataInit.MakeHash(RDString.Get("editor.author"), RDString.Get("editor.artist"), RDString.Get("editor.song"));
+                    Attempts[PlaytimeCounter.MapID] = Persistence.GetCustomWorldAttempts(PlaytimeCounter.MapID);
                 }
-                else Attempts[FailId]++;
-                Variables.Attempts = Attempts[FailId];
-                Persistence.IncrementCustomWorldAttempts(FailId);
+                else Attempts[PlaytimeCounter.MapID]++;
+                Variables.Attempts = Attempts[PlaytimeCounter.MapID];
+                Persistence.IncrementCustomWorldAttempts(PlaytimeCounter.MapID);
             }
         }
         [HarmonyPatch(typeof(scrController), "Start")]

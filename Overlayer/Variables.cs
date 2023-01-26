@@ -53,6 +53,7 @@ namespace Overlayer
         public static int KpsTemp;
         public static float Fps;
         public static float FrameTime;
+        public static double PlayTime;
 
         public static readonly Color tooEarlyColor = new Color(1.000f, 0.000f, 0.000f, 1.000f); //FF0000FF
         public static readonly Color veryEarlyColor = new Color(1.000f, 0.436f, 0.306f, 1.000f); //FF6F4EFF

@@ -13,7 +13,7 @@ namespace Overlayer.Patches
             int attempts = Persistence.GetCustomWorldAttempts(hash);
             AttemptsCounter.Attempts[hash] = attempts;
             Variables.Attempts = attempts;
-            AttemptsCounter.FailId = hash;
+            PlaytimeCounter.MapID = hash;
         }
         public static string MakeHash(string author, string artist, string song)
             => MD5Hash.GetHash(author + artist + song);

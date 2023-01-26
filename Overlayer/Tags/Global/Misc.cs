@@ -119,5 +119,26 @@ namespace Overlayer.Tags.Global
         public static double Fps(double digits = -1) => Variables.Fps.Round(digits);
         [Tag("FrameTime")]
         public static double FrameTime(double digits = -1) => Variables.FrameTime.Round(digits);
+        [Tag("PlayTime")]
+        public static double PlayTime(string opt = "M_1")
+        {
+            if (string.IsNullOrEmpty(opt))
+                opt = "M_1";
+            string[] split = opt.Split('_');
+            if (split.Length < 1) return 0;
+            double digits = split.Length > 1 ? split[1].ToDouble() : 1;
+            switch (split[0])
+            {
+                case "H": return H().Round(digits);
+                case "M": return M().Round(digits);
+                case "S": return S().Round(digits);
+                case "MS": return MS().Round(digits);
+                default: return 0;
+            }
+            double H() => Variables.PlayTime / 60 / 60;
+            double M() => Variables.PlayTime / 60;
+            double S() => Variables.PlayTime;
+            double MS() => Variables.PlayTime * 1000;
+        }
     }
 }

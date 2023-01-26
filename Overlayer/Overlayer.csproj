@@ -750,6 +750,7 @@
     <Compile Include="MapParser\Types\Vector2.cs" />
     <Compile Include="MapParser\Utils.cs" />
     <Compile Include="Newtonsoft.Json.cs" />
+    <Compile Include="Patches\PlaytimeCounter.cs" />
     <Compile Include="Patches\AttemptsCounter.cs" />
     <Compile Include="Patches\BpmUpdater.cs" />
     <Compile Include="Patches\ClearMessagePatch.cs" />

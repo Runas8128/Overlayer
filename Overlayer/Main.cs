@@ -16,9 +16,11 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using JavaScript = Overlayer.Core.JavaScript;
 using JSEngine.CustomLibrary;
+using UnityModManagerNet;
 
 namespace Overlayer
 {
+    [EnableReloading]
     public static class Main
     {
         public static ModEntry Mod;
@@ -373,6 +375,18 @@ namespace Overlayer
         }
         public static void OnSaveGUI(ModEntry modEntry)
         {
+            // Force Save Persistence
+            foreach (var kvp in PlaytimeCounter.PlayTimes)
+                Persistence.generalPrefs.SetFloat(kvp.Key, kvp.Value);
+            List<object> list = new List<object>();
+            foreach (CalibrationPreset calibrationPreset in scrConductor.userPresets)
+                list.Add(calibrationPreset.ToDict());
+            Persistence.generalPrefs.SetList("calibrationPresets", list);
+            PlayerPrefsJson playerPrefsJson = PlayerPrefsJson.SelectAll();
+            playerPrefsJson.deltaDict.Add("version", 101);
+            playerPrefsJson.ApplyDeltaDict();
+            PlayerPrefsJson.SaveAllFiles();
+
             Settings.Save(modEntry);
             Variables.Reset();
             OText.Save();

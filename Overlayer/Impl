@@ -452,6 +452,11 @@ function Timing(opt);
  * @returns {number} Average Hit Timing
  */
 function TimingAvg(opt);
+/**
+ * @param {string} opt UnitAndDigits (Default: M_1) (Units: H, M, S, MS) ex) [UNITS]_[DIGITS]
+ * @returns {number} PlayTime With Unit Received As Option
+ */
+function PlayTime(opt);
 /** @type {Tiles} */
 const tiles = undefined;
 const KeyCode =
