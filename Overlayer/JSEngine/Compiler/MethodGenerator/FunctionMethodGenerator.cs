@@ -112,7 +112,7 @@ namespace JSEngine.Compiler
         /// <param name="body"> The source code for the body of the function. </param>
         /// <param name="options"> Options that influence the compiler. </param>
         public FunctionMethodGenerator(string name, string argumentsText, string body, CompilerOptions options)
-            : base(new StringScriptSource(body), options)
+            : base(new StringSource(body), options)
         {
             this.Name = new PropertyName(name);
             this.ArgumentsText = argumentsText;
@@ -272,7 +272,7 @@ namespace JSEngine.Compiler
             else
             {
                 Parser argumentsParser;
-                using (var argumentsLexer = new Lexer(new StringScriptSource(this.ArgumentsText)))
+                using (var argumentsLexer = new Lexer(new StringSource(this.ArgumentsText)))
                 {
                     argumentsParser = new Parser(argumentsLexer, this.Options, CodeContext.Function);
                     this.Arguments = argumentsParser.ParseFunctionArguments(endToken: null);

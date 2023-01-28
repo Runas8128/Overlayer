@@ -27,7 +27,7 @@ namespace Overlayer.Core
         }
         static readonly List<Type> JSTypes = new List<Type>();
         public static void RegisterType(params Type[] ts) => JSTypes.AddRange(ts);
-        static ScriptEngine PrepareEngine()
+        public static ScriptEngine PrepareEngine()
         {
             var engine = new ScriptEngine();
             engine.EnableExposedClrTypes = true;

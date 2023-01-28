@@ -485,7 +485,7 @@
     <Compile Include="JSEngine\Core\ScriptEngine.cs" />
     <Compile Include="JSEngine\Core\ScriptSource\FileScriptSource.cs" />
     <Compile Include="JSEngine\Core\ScriptSource\ScriptSource.cs" />
-    <Compile Include="JSEngine\Core\ScriptSource\StringScriptSource.cs" />
+    <Compile Include="JSEngine\Core\ScriptSource\StringSource.cs" />
     <Compile Include="JSEngine\Core\StackFrameTransformContext.cs" />
     <Compile Include="JSEngine\Core\StringHelpers.cs" />
     <Compile Include="JSEngine\Core\TypeComparer.cs" />
@@ -771,6 +771,7 @@
     <Compile Include="ShadowText.cs" />
     <Compile Include="OText.cs" />
     <Compile Include="Tags\Global\CurHitTags.cs" />
+    <Compile Include="Tags\Global\Expression.cs" />
     <Compile Include="Tags\Global\KeyJudgeTag.cs" />
     <Compile Include="Tags\Global\KPS.cs" />
     <Compile Include="Tags\Global\Misc.cs" />

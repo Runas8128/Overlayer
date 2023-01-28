@@ -6,7 +6,7 @@ namespace JSEngine
     /// <summary>
     /// Represents a string containing script code.
     /// </summary>
-    public class StringScriptSource : ScriptSource
+    public class StringSource : ScriptSource
     {
         private string code;
         private string path;
@@ -15,7 +15,7 @@ namespace JSEngine
         /// Creates a new StringScriptSource instance.
         /// </summary>
         /// <param name="code"> The script code. </param>
-        public StringScriptSource(string code)
+        public StringSource(string code)
             : this(code, null)
         {
         }
@@ -25,7 +25,7 @@ namespace JSEngine
         /// </summary>
         /// <param name="code"> The script code. </param>
         /// <param name="path"> The path of the file the script code was retrieved from. </param>
-        public StringScriptSource(string code, string path)
+        public StringSource(string code, string path)
         {
             if (code == null)
                 throw new ArgumentNullException(nameof(code));

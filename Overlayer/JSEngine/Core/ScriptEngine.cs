@@ -717,7 +717,7 @@ namespace JSEngine
         /// <exception cref="ArgumentNullException"> <paramref name="code"/> is a <c>null</c> reference. </exception>
         public object Evaluate(string code)
         {
-            return Evaluate(new StringScriptSource(code));
+            return Evaluate(new StringSource(code));
         }
 
         /// <summary>
@@ -821,7 +821,7 @@ namespace JSEngine
                 return;
             }
 
-            Execute(new StringScriptSource(code));
+            Execute(new StringSource(code));
         }
 
         /// <summary>
@@ -1225,7 +1225,7 @@ namespace JSEngine
 
             // Parse the eval string into an AST.
             var options = new CompilerOptions() { ForceStrictMode = strictMode };
-            var evalGen = new GlobalOrEvalMethodGenerator(new StringScriptSource(code, "eval"),
+            var evalGen = new GlobalOrEvalMethodGenerator(new StringSource(code, "eval"),
                 options,
                 GlobalOrEvalMethodGenerator.GeneratorContext.Eval);
 

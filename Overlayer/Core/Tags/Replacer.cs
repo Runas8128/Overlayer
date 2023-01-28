@@ -159,7 +159,7 @@ namespace Overlayer.Core
                 int closeIndex = str.IndexOf(tag.Close, index);
                 if (closeIndex < 0) continue;
                 string subStr = str.Substring(index + 1, closeIndex - index - 1);
-                string[] nameOpt = subStr.Split(tag.Separator);
+                string[] nameOpt = subStr.Split(new char[] { tag.Separator }, 2);
                 if (nameOpt[0] != tag.Name) continue;
                 index += closeIndex - index - 1;
                 return new TagInfo(tag, nameOpt.Length < 2 ? null : nameOpt[1]);

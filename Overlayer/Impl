@@ -457,6 +457,11 @@ function TimingAvg(opt);
  * @returns {number} PlayTime With Unit Received As Option
  */
 function PlayTime(opt);
+/**
+ * @param {string} opt JavaScript Expression
+ * @returns {string|number} Evaluated Result
+ */
+function Expression(opt);
 /** @type {Tiles} */
 const tiles = undefined;
 const KeyCode =
