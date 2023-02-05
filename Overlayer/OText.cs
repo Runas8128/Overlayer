@@ -25,7 +25,7 @@ namespace Overlayer
                 Color = new float[4] { 1, 1, 1, 1 };
                 ShadowColor = new float[4] { 0, 0, 0, 0.5f };
                 NotPlayingText = Main.Language[TranslationKeys.NotPlaying];
-                PlayingText = "<color=#{FMHex}>{MissCount}</color> <color=#{TEHex}>{CurTE}</color> <color=#{VEHex}>{CurVE}</color> <color=#{EPHex}>{CurEP}</color> <color=#{PHex}>{CurP}</color> <color=#{LPHex}>{CurLP}</color> <color=#{VLHex}>{CurVL}</color> <color=#{TLHex}>{CurTL}</color> <color=#{FOHex}>{Overloads}</color>";
+                PlayingText = "<color=#{FOHex}>{Overloads}</color> <color=#{TEHex}>{CurTE}</color> <color=#{VEHex}>{CurVE}</color> <color=#{EPHex}>{CurEP}</color> <color=#{PHex}>{CurP}</color> <color=#{LPHex}>{CurLP}</color> <color=#{VLHex}>{CurVL}</color> <color=#{TLHex}>{CurTL}</color> <color=#{FMHex}>{MissCount}</color>";
                 FontSize = 44;
                 IsExpanded = true;
                 Alignment = TextAlignmentOptions.Left;
@@ -58,7 +58,7 @@ namespace Overlayer
                 if (NotPlayingText == null)
                     NotPlayingText = Main.Language[TranslationKeys.NotPlaying];
                 if (PlayingText == null)
-                    PlayingText = "<color=#{FMHex}>{MissCount}</color> <color=#{TEHex}>{CurTE}</color> <color=#{VEHex}>{CurVE}</color> <color=#{EPHex}>{CurEP}</color> <color=#{PHex}>{CurP}</color> <color=#{LPHex}>{CurLP}</color> <color=#{VLHex}>{CurVL}</color> <color=#{TLHex}>{CurTL}</color> <color=#{FOHex}>{Overloads}</color>";
+                    PlayingText = "<color=#{FOHex}>{Overloads}</color> <color=#{TEHex}>{CurTE}</color> <color=#{VEHex}>{CurVE}</color> <color=#{EPHex}>{CurEP}</color> <color=#{PHex}>{CurP}</color> <color=#{LPHex}>{CurLP}</color> <color=#{VLHex}>{CurVL}</color> <color=#{TLHex}>{CurTL}</color> <color=#{FMHex}>{MissCount}</color>";
                 if (FontSize == 0)
                     FontSize = 44;
                 if (Font == null)
@@ -86,7 +86,7 @@ namespace Overlayer
             {
                 var ctrl = scrController.instance;
                 var cdt = scrConductor.instance;
-                if (ctrl && cdt)
+                if (ctrl != null && cdt != null)
                     return !ctrl.paused && cdt.isGameWorld;
                 return false;
             }

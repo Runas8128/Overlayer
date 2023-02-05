@@ -73,7 +73,7 @@ namespace Overlayer.Core
                     {
                         if (Main.Language.dict.TryGetValue(tag.Name, out string desc))
                             GUILayout.Label($"{tag} {desc} ({(Type.GetTypeCode(tag.Getter.ReturnType) == TypeCode.String ? "String" : "Number")})");
-                        else GUILayout.Label($"{tag} ({(Type.GetTypeCode(tag.Getter.ReturnType) == TypeCode.String ? "String" : "Number")})");
+                        else GUILayout.Label($"{tag} (Object)");
                         GUILayout.Space(1);
                     }
                 }, 25f, 10f);

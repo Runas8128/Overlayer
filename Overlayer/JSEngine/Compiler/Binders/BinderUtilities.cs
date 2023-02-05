@@ -133,8 +133,6 @@ namespace JSEngine.Compiler
                                 if (outputType.IsValueType == true)
                                     demeritPoints[i] += disqualification;
                             }
-                            else if (input is ArrayInstance arr && typeof(IEnumerable<object>).IsAssignableFrom(outputType))
-                                demeritPoints[i]++;
                             else if (outputType.IsAssignableFrom(input.GetType()) == false)
                             {
                                 demeritPoints[i] += disqualification;
@@ -165,13 +163,13 @@ namespace JSEngine.Compiler
             }
 
             // Throw an error if the match is ambiguous.
-            if (lowestIndices.Count > 1)
-            {
-                var ambiguousMethods = new List<BinderMethod>(lowestIndices.Count);
-                foreach (var index in lowestIndices)
-                    ambiguousMethods.Add(methods[index]);
+            //if (lowestIndices.Count > 1)
+            //{
+                //var ambiguousMethods = new List<BinderMethod>(lowestIndices.Count);
+                //foreach (var index in lowestIndices)
+                //    ambiguousMethods.Add(methods[index]);
                 //throw new JavaScriptException(ErrorType.TypeError, "The method call is ambiguous between the following methods: " + StringHelpers.Join(", ", ambiguousMethods));
-            }
+            //}
 
             // Throw an error is there is an invalid argument.
             if (lowestIndices.Count == 1 && lowestScore >= disqualification)

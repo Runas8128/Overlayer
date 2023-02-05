@@ -20,7 +20,6 @@ using UnityModManagerNet;
 
 namespace Overlayer
 {
-    [EnableReloading]
     public static class Main
     {
         public static ModEntry Mod;
@@ -203,7 +202,6 @@ namespace Overlayer
                 File.WriteAllBytes(impljsPath, Impljs);
                 foreach (string file in Directory.GetFiles(InitJSPath, "*.js"))
                 {
-                    
                     if (Path.GetFileNameWithoutExtension(file) == "Impl")
                         continue;
                     ScriptEngine engine = new ScriptEngine();

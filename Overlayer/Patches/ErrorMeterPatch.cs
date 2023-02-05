@@ -13,6 +13,7 @@ namespace Overlayer.Patches
         static readonly int Multipress = (int)HitMargin.Multipress;
         static readonly int FailMiss = (int)HitMargin.FailMiss;
         static readonly int FailOverload = (int)HitMargin.FailOverload;
+        static readonly int MaxCount = Enum.GetValues(typeof(HitMargin)).Length;
         [HarmonyPatch("AddHit")]
         [HarmonyPrefix]
         public static bool AHPrefix(float angleDiff)
@@ -51,6 +52,7 @@ namespace Overlayer.Patches
         {
             Queued = new int[10];
         }
+        // TODO: Fix Hide Judgement Case
         [HarmonyPatch(typeof(scrController), "ShowHitText")]
         [HarmonyPostfix]
         public static void SHTPostfix(scrController __instance, HitMargin hitMargin)
@@ -64,7 +66,7 @@ namespace Overlayer.Patches
             if (r92 != null)
                 r92(__instance.errorMeter, QueuedAngle);
             else if (r94 != null)
-                r94(__instance.errorMeter, QueuedAngle, 1);
+                r94(__instance.errorMeter, QueuedAngle, (float)__instance.currFloor.nextfloor.marginScale);
             ForceCall = false;
         }
         public static readonly Action<scrHitErrorMeter, float, float> r94 = (Action<scrHitErrorMeter, float, float>)typeof(scrHitErrorMeter).GetMethod("AddHit", AccessTools.all, null, new[] { typeof(float), typeof(float) }, null)?.CreateDelegate(typeof(Action<scrHitErrorMeter, float, float>));

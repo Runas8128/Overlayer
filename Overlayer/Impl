@@ -966,8 +966,9 @@ class Overlayer {
     /**
     * @param {string} name Tag Name
     * @param {Function} func Function
+    * @param {boolean} notplaying Allow For Not Playing
     */
-    static registerTag(name, func);
+    static registerTag(name, func, notplaying);
     /**
     * @param {string} name Tag Name
     */

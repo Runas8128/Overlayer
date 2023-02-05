@@ -135,7 +135,7 @@ namespace JSEngine.CustomLibrary
             JSUtils.BuildProxy(t, Main.InitJSPath);
         }
         [JSFunction(Name = "registerTag")]
-        public static void RegisterTag(string name, UserDefinedFunction func)
+        public static void RegisterTag(string name, UserDefinedFunction func, bool notplaying)
         {
             Replacer tmp = new Replacer();
             Replacer.Tag tag = tmp.CreateTag(name);
@@ -145,11 +145,13 @@ namespace JSEngine.CustomLibrary
             else tag.SetGetter(() => wrapper.CallGlobal());
             tag.Build();
             Main.AllTags.SetTag(name, tag);
+            if (notplaying) Main.NotPlayingTags.SetTag(name, tag);
         }
         [JSFunction(Name = "unregisterTag")]
         public static void UnregisterTag(string name)
         {
             Main.AllTags.RemoveTag(name);
+            Main.NotPlayingTags.RemoveTag(name);
         }
         public static List<TileData> tiles = new List<TileData>();
     }
