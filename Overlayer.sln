@@ -11,6 +11,8 @@ Global
 		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
+		Tournament|Any CPU = Tournament|Any CPU
+		Tournament|x64 = Tournament|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{54928BEA-BD8B-46A5-8EC7-1355C4D7A977}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{54928BEA-BD8B-46A5-8EC7-1355C4D7A977}.Release|Any CPU.Build.0 = Release|Any CPU
 		{54928BEA-BD8B-46A5-8EC7-1355C4D7A977}.Release|x64.ActiveCfg = Release|x64
 		{54928BEA-BD8B-46A5-8EC7-1355C4D7A977}.Release|x64.Build.0 = Release|x64
+		{54928BEA-BD8B-46A5-8EC7-1355C4D7A977}.Tournament|Any CPU.ActiveCfg = Tournament|Any CPU
+		{54928BEA-BD8B-46A5-8EC7-1355C4D7A977}.Tournament|Any CPU.Build.0 = Tournament|Any CPU
+		{54928BEA-BD8B-46A5-8EC7-1355C4D7A977}.Tournament|x64.ActiveCfg = Tournament|x64
+		{54928BEA-BD8B-46A5-8EC7-1355C4D7A977}.Tournament|x64.Build.0 = Tournament|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
