@@ -72,7 +72,7 @@ namespace Overlayer
         public static void Load()
         {
             Global.Load(GlobalTextsPath);
-            foreach (string file in Directory.GetFiles(Main.Mod.Path, "_Group.json"))
+            foreach (string file in Directory.GetFiles(Main.Mod.Path, "*.txtgrp"))
             {
                 var fileName = Path.GetFileNameWithoutExtension(file);
                 var groupName = fileName.Split('_')[0];
@@ -104,7 +104,7 @@ namespace Overlayer
             }
         }
         public static readonly string GlobalTextsPath = Path.Combine(Main.Mod.Path, "Texts.json");
-        public TextGroup group;
+        private TextGroup group;
         public OverlayerText(TextGroup group, Setting setting = null)
         {
             this.group = group;
@@ -152,6 +152,28 @@ namespace Overlayer
                     if (active != TSetting.Active)
                         SText.Active = TSetting.Active = active;
                     GUILayout.BeginVertical();
+
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Select Group:");
+                    int selected = Groups.FindIndex(g => g == group);
+                    selected = selected < 0 ? 0 : selected;
+                    if (UnityModManager.UI.PopupToggleGroup(ref selected, Groups.Select(t => t.Name).Prepend("Global").Append("New Group").ToArray(), $"Select Group Of {TSetting.Name}"))
+                    {
+                        if (selected > 0)
+                        {
+                            if (selected < Groups.Count)
+                                group.Move(this, Groups[selected - 1]);
+                            else
+                            {
+                                var newGroup = new TextGroup();
+                                newGroup.Name = "New Group";
+                                group.Move(this, newGroup);
+                                Groups.Add(newGroup);
+                            }
+                        }
+                    }
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
                     if (UnityModManager.UI.DrawFloatField(ref TSetting.Position[0], Main.Language[TranslationKeys.TextXPos])) Apply();

@@ -17,6 +17,7 @@ using UnityEngine.SceneManagement;
 using JavaScript = Overlayer.Core.JavaScript;
 using JSEngine.CustomLibrary;
 using UnityModManagerNet;
+using SFB;
 
 namespace Overlayer
 {
@@ -222,7 +223,9 @@ namespace Overlayer
         }
         public static string CustomTagsPath;
         public static string InitJSPath;
+#if !TOURNAMENT
         public static UnityAction<Scene, LoadSceneMode> evt = (s, m) => JSPatches.SceneLoads();
+#endif
         public static bool OnToggle(ModEntry modEntry, bool value)
         {
             try
@@ -318,20 +321,26 @@ namespace Overlayer
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Import Group"))
+            {
+                var result = StandaloneFileBrowser.OpenFilePanel("Import Group", Persistence.GetLastUsedFolder(), "json", false);
+                if (result.Length > 0)
+                {
+                    var group = new TextGroup();
+                    group.Name = Path.GetFileNameWithoutExtension(result[0]);
+                    group.Load(result[0]);
+                }
+            }
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
             if (GUILayout.Button(Language[TranslationKeys.AddText]))
                 OverlayerText.Global.Add(new OverlayerText.Setting());
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             OverlayerText.Global.GUI();
-            foreach (TextGroup group in OverlayerText.Groups)
-            {
-                GUILayout.BeginHorizontal();
-                if (GUILayout.Button(Language[TranslationKeys.AddText]))
-                    group.Add(new OverlayerText.Setting());
-                GUILayout.FlexibleSpace();
-                GUILayout.EndHorizontal();
-                group.GUI();
-            }
+            for (int i = 0; i < OverlayerText.Groups.Count; i++)
+                OverlayerText.Groups[i].GUI();
             AllTags.DescGUI();
         }
         public static void LangGUI(Settings settings)
