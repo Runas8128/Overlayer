@@ -14,7 +14,7 @@ using Overlayer.Core.Translation;
 
 namespace Overlayer
 {
-    public class OText
+    public class OverlayerText
     {
         public class Setting
         {
@@ -67,18 +67,30 @@ namespace Overlayer
                     Gradient = new float[4][] { new float[4] { 1, 1, 1, 1 }, new float[4] { 1, 1, 1, 1 }, new float[4] { 1, 1, 1, 1 }, new float[4] { 1, 1, 1, 1 } };
             }
         }
+        public static TextGroup Global = new TextGroup(true);
+        public static List<TextGroup> Groups = new List<TextGroup>();
+        public static void Load()
+        {
+            Global.Load(GlobalTextsPath);
+            foreach (string file in Directory.GetFiles(Main.Mod.Path, "_Group.json"))
+            {
+                var fileName = Path.GetFileNameWithoutExtension(file);
+                var groupName = fileName.Split('_')[0];
+                var group = new TextGroup(false);
+                group.Name = groupName;
+                group.Load(file);
+                Groups.Add(group);
+            }
+        }
         public static void Clear()
         {
-            foreach (var text in Texts)
-            {
-                text.PlayingCompiler = null;
-                text.NotPlayingCompiler = null;
-                UnityEngine.Object.Destroy(text.SText.Main.gameObject);
-                UnityEngine.Object.Destroy(text.SText.Shadow.gameObject);
-            }
-            UnityEngine.Object.Destroy(ShadowText.PublicCanvas);
-            ShadowText.Count = 0;
-            Texts.Clear();
+            Global.Clear();
+            Groups.ForEach(g => g.Clear());
+        }
+        public static void Save()
+        {
+            Global.Save(GlobalTextsPath);
+            Groups.ForEach(g => g.Save());
         }
         public static bool IsPlaying
         {
@@ -91,28 +103,11 @@ namespace Overlayer
                 return false;
             }
         }
-        public static List<OText> Texts = new List<OText>();
-        public static readonly string JsonPath = Path.Combine(Main.Mod.Path, "Texts.json");
-        public static void Load()
+        public static readonly string GlobalTextsPath = Path.Combine(Main.Mod.Path, "Texts.json");
+        public TextGroup group;
+        public OverlayerText(TextGroup group, Setting setting = null)
         {
-            if (File.Exists(JsonPath))
-            {
-                List<Setting> settings = File.ReadAllText(JsonPath).FromJson<List<Setting>>();
-                for (int i = 0; i < settings.Count; i++)
-                    new OText(settings[i]).Apply();
-                Order();
-            }
-        }
-        public static void Save()
-        {
-            List<Setting> settings = new List<Setting>();
-            foreach (OText text in Texts)
-                settings.Add(text.TSetting);
-            File.WriteAllText(JsonPath, settings.ToJson());
-        }
-        public static void Order() => Texts = new List<OText>(Texts.OrderBy(t => t.SText.Number));
-        public OText(Setting setting = null)
-        {
+            this.group = group;
             SText = ShadowText.NewText();
             UnityEngine.Object.DontDestroyOnLoad(SText.gameObject);
             TSetting = setting ?? new Setting();
@@ -137,7 +132,6 @@ namespace Overlayer
                     SText.Shadow.text = BrokenNotPlayingCompiler.Replace();
                 }
             };
-            Texts.Add(this);
             SText.gameObject.SetActive(TSetting.Active);
         }
         public void GUI()
@@ -268,7 +262,7 @@ namespace Overlayer
                     if (ShadowText.Count > 1 && GUILayout.Button(Main.Language[TranslationKeys.Destroy]))
                     {
                         UnityEngine.Object.Destroy(SText.gameObject);
-                        Remove(this);
+                        group.Remove(this);
                     }
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
@@ -276,22 +270,7 @@ namespace Overlayer
                 GUILayout.EndVertical();
             }
         }
-        public static void Remove(OText text)
-        {
-            int index = Texts.IndexOf(text);
-            Texts.RemoveAt(index);
-            UnityEngine.Object.Destroy(text.SText.Main.gameObject);
-            UnityEngine.Object.Destroy(text.SText.Shadow.gameObject);
-            for (int i = index; i < Texts.Count; i++)
-            {
-                var txt = Texts[i];
-                txt.Number--;
-                txt.SText.Number--;
-            }
-            ShadowText.Count--;
-            GC.SuppressFinalize(text);
-        }
-        public OText Apply()
+        public OverlayerText Apply()
         {
             SText.TrySetFont(TSetting.Font);
             if (TSetting.GradientText)

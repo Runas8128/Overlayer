@@ -789,7 +789,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="ShadowText.cs" />
-    <Compile Include="OText.cs" />
+    <Compile Include="OverlayerText.cs" />
     <Compile Include="Tags\Global\CurHitTags.cs" />
     <Compile Include="Tags\Global\Expression.cs" />
     <Compile Include="Tags\Global\KeyJudgeTag.cs" />
@@ -803,6 +803,7 @@
     <Compile Include="Tags\Lenient\LHitTags.cs" />
     <Compile Include="Tags\Normal\NHitTags.cs" />
     <Compile Include="Tags\Strict\SHitTags.cs" />
+    <Compile Include="TextGroup.cs" />
     <Compile Include="Variables.cs" />
     <Compile Include="Vostok\Commons\Collections\BinaryHeap.cs" />
     <Compile Include="Vostok\Commons\Collections\BufferPool.cs" />

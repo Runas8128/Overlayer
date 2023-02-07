@@ -24,10 +24,12 @@ namespace Overlayer.Core
                 compiled = false;
             }
         }
+        public List<Tag> References { get; private set; }
         public List<Tag> Tags => tags;
         public Replacer(List<Tag> tags = null)
         {
             this.tags = tags ?? new List<Tag>();
+            References = new List<Tag>();
             tagOpenChars = tags != null ? tags.Select(t => t.Open).Distinct().ToHashSet() : new HashSet<char>();
         }
         public Replacer(string str, List<Tag> tags = null) : this(tags) => Source = str;
@@ -39,6 +41,7 @@ namespace Overlayer.Core
         void Compile()
         {
             if (compiled) return;
+            References = new List<Tag>();
             DynamicMethod result = new DynamicMethod("", typeof(string), Type.EmptyTypes, typeof(Replacer), true);
             ILGenerator il = result.GetILGenerator();
             StringBuilder stack = new StringBuilder();
@@ -72,6 +75,7 @@ namespace Overlayer.Core
                     il.Emit(OpCodes.Ldstr, str);
                 if (emit is TagInfo info)
                 {
+                    References.Add(info.tag);
                     if (info.tag.HasOption)
                     {
                         if (info.option != null)
@@ -148,6 +152,7 @@ namespace Overlayer.Core
             il.Emit(OpCodes.Call, Concats);
             il.Emit(OpCodes.Ret);
             compiledResult = (Func<string>)result.CreateDelegate(typeof(Func<string>));
+            References = References.Distinct().ToList();
             compiled = true;
         }
         TagInfo ParseTag(char open, ref int index)
@@ -180,6 +185,8 @@ namespace Overlayer.Core
             public MethodInfo OptionConverter { get; private set; }
             public MethodInfo ReturnConverter { get; private set; }
             public bool HasOption { get; private set; }
+            // For CustomTag
+            public string SourcePath = null;
             public Tag(Replacer replacer, string name, char open, char close, char separator)
             {
                 Replacer = replacer;

@@ -124,10 +124,11 @@ namespace Overlayer
                 fpsTimeTimer += deltaTime;
             };
         }
-        public static bool LoadJSTag(string source, string name, out Replacer.Tag tag)
+        public static bool LoadJSTag(string path, string name, out Replacer.Tag tag)
         {
             tag = null;
             string desc = null;
+            var source = File.ReadAllText(path);
             using (StringReader sr = new StringReader(source))
             {
                 string first = sr.ReadLine();
@@ -138,6 +139,7 @@ namespace Overlayer
             {
                 var del = source.CompileEval();
                 tag = new Replacer().CreateTag(name).SetGetter(del);
+                tag.SourcePath = path;
                 Language[name] = desc;
                 Logger.Log($"Loaded '{name}' Tag.");
                 return true;
@@ -166,7 +168,7 @@ namespace Overlayer
             {
                 var name = Path.GetFileNameWithoutExtension(path);
                 if (name == "Impl") continue;
-                if (LoadJSTag(File.ReadAllText(path), name, out var tag))
+                if (LoadJSTag(path, name, out var tag))
                 {
                     AllTags.SetTag(tag.Name, tag);
                     NotPlayingTags.SetTag(tag.Name, tag);
@@ -232,9 +234,9 @@ namespace Overlayer
                     Variables.Reset();
                     JavaScript.Init();
                     LoadAllJSTags(CustomTagsPath);
-                    OText.Load();
-                    if (!OText.Texts.Any())
-                        new OText().Apply();
+                    OverlayerText.Load();
+                    if (!OverlayerText.Global.Texts.Any()) 
+                        OverlayerText.Global.Add(new OverlayerText.Setting());
                     Harmony = new Harmony(modEntry.Info.Id);
                     Harmony.PatchAll(Assembly.GetExecutingAssembly());
                     RunInits();
@@ -253,7 +255,7 @@ namespace Overlayer
                     OnSaveGUI(modEntry);
                     try
                     {
-                        OText.Clear();
+                        OverlayerText.Clear();
                         UnloadAllJSTags();
                         DeathMessagePatch.compiler = null;
                         ClearMessagePatch.compiler = null;
@@ -317,14 +319,19 @@ namespace Overlayer
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(Language[TranslationKeys.AddText]))
-            {
-                new OText().Apply();
-                OText.Order();
-            }
+                OverlayerText.Global.Add(new OverlayerText.Setting());
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
-            for (int i = 0; i < OText.Texts.Count; i++)
-                OText.Texts[i].GUI();
+            OverlayerText.Global.GUI();
+            foreach (TextGroup group in OverlayerText.Groups)
+            {
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button(Language[TranslationKeys.AddText]))
+                    group.Add(new OverlayerText.Setting());
+                GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
+                group.GUI();
+            }
             AllTags.DescGUI();
         }
         public static void LangGUI(Settings settings)
@@ -387,11 +394,11 @@ namespace Overlayer
 
             Settings.Save(modEntry);
             Variables.Reset();
-            OText.Save();
+            OverlayerText.Save();
         }
         public static void Recompile()
         {
-            foreach (OText text in OText.Texts)
+            foreach (OverlayerText text in OverlayerText.Global.Texts.Concat(OverlayerText.Groups.SelectMany(g => g.Texts)))
             {
                 text.PlayingCompiler.Source = text.TSetting.PlayingText;
                 text.NotPlayingCompiler.Source = text.TSetting.NotPlayingText;
