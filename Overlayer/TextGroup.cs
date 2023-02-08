@@ -11,24 +11,26 @@ using Setting = Overlayer.OverlayerText.Setting;
 using static UnityModManagerNet.UnityModManager.UI;
 using Overlayer.Core.Translation;
 using HarmonyLib;
+using JSEngine;
+using System.Xml.Linq;
 
 namespace Overlayer
 {
     public class TextGroup
     {
-        static bool globalExists = false;
         readonly bool isGlobal = false;
-        internal List<Replacer.Tag> references = new List<Replacer.Tag>();
+        internal HashSet<Replacer.Tag> references = new HashSet<Replacer.Tag>();
         private Vector2 relativePos = new Vector2();
         private float relativeSize = 0;
         public TextGroup(bool isGlobal = false)
         {
             Name = string.Empty;
             Texts = new List<OverlayerText>();
-            if (globalExists && isGlobal)
-                throw new InvalidOperationException("Global Text Group Cannot Be 2!");
-            globalExists |= this.isGlobal = isGlobal;
+            if (this.isGlobal = isGlobal)
+                Name = "Global";
         }
+        public int Count { get; internal set; }
+        public string LoadedPath { get; private set; }
         public string Name { get; set; }
         public List<OverlayerText> Texts { get; set; }
         public bool Expanded = false;
@@ -37,8 +39,14 @@ namespace Overlayer
             get => relativePos;
             set
             {
+                var inc = value - relativePos;
                 relativePos = value;
-                Texts.ForEach(t => t.SText.Position += relativePos);
+                Texts.ForEach(t => t.SText.Position += inc);
+                Texts.ForEach(t =>
+                {
+                    t.TSetting.Position[0] += inc.x;
+                    t.TSetting.Position[1] += inc.y;
+                });
             }
         }
         public float Size
@@ -46,8 +54,10 @@ namespace Overlayer
             get => relativeSize;
             set
             {
+                var inc = value - relativeSize;
                 relativeSize = value;
-                Texts.ForEach(t => t.SText.FontSize += relativeSize);
+                Texts.ForEach(t => t.SText.FontSize += inc);
+                Texts.ForEach(t => t.TSetting.FontSize += inc);
             }
         }
         public void GUI()
@@ -73,7 +83,14 @@ namespace Overlayer
                     {
                         GUILayout.BeginHorizontal();
                         if (GUILayout.Button(Main.Language[TranslationKeys.AddText]))
-                            Add(new OverlayerText.Setting());
+                            Add(new Setting());
+                        if (GUILayout.Button("Remove Group"))
+                        {
+                            Clear();
+                            if (File.Exists(LoadedPath))
+                                File.Delete(LoadedPath);
+                            OverlayerText.Groups.Remove(this);
+                        }
                         if (GUILayout.Button("Export Group"))
                         {
                             var result = StandaloneFileBrowser.OpenFolderPanel("Export Group", Persistence.GetLastUsedFolder(), true);
@@ -84,14 +101,16 @@ namespace Overlayer
 
                         GUILayout.BeginHorizontal();
                         GUILayout.Label("Position");
-                        if (DrawVector(ref relativePos))
-                            Position = relativePos;
+                        Vector2 v = relativePos;
+                        if (DrawVector(ref v))
+                            Position = v;
                         GUILayout.FlexibleSpace();
                         GUILayout.EndHorizontal();
 
                         GUILayout.BeginHorizontal();
-                        if (DrawFloatField(ref relativeSize, "Size"))
-                            Size = relativeSize;
+                        float s = relativeSize;
+                        if (DrawFloatField(ref s, "Size"))
+                            Size = s;
                         GUILayout.FlexibleSpace();
                         GUILayout.EndHorizontal();
 
@@ -108,7 +127,7 @@ namespace Overlayer
                 Texts = new List<OverlayerText>();
                 return;
             }
-            var json = File.ReadAllText(path);
+            var json = File.ReadAllText(LoadedPath = path);
             try
             {
                 var pkg = json.FromJson<TextPackage>();
@@ -116,26 +135,27 @@ namespace Overlayer
                 Texts = group.Texts;
                 Name = group.Name;
                 Expanded = group.Expanded;
-                relativePos = group.relativePos;
-                relativeSize = group.relativeSize;
-                Texts.ForEach(t => t.SText.FontSize += relativeSize);
-                Texts.ForEach(t => t.SText.Position += relativePos);
+                Position = group.relativePos;
+                Size = group.relativeSize;
             }
             catch
             {
                 var texts = json.FromJson<List<Setting>>();
-                Texts = texts.Select(s => new OverlayerText(this, s).Apply()).ToList();
+                Texts = texts.Select(s => new OverlayerText(this, s)).ToList();
             }
+            Texts.ForEach(t => t.Apply());
             Order();
         }
         public void Save(string path = null)
         {
+            if (File.Exists(LoadedPath))
+                File.Delete(LoadedPath);
             var json = TextPackage.Pack(this).ToJson();
             if (isGlobal)
                 File.WriteAllText(OverlayerText.GlobalTextsPath, json);
             else
             {
-                var name = $"{Name}_Group.txtgrp";
+                var name = $"{Name}.txtgrp";
                 path = path ?? Main.Mod.Path;
                 File.WriteAllText(Path.Combine(path, name), json);
             }
@@ -147,39 +167,30 @@ namespace Overlayer
         }
         public void Move(OverlayerText text, TextGroup group)
         {
+            group.Add(text.TSetting.Copy());
             Remove(text);
-            Setting newSetting = new Setting();
-            newSetting.Active = text.TSetting.Active;
-            newSetting.Alignment = text.TSetting.Alignment;
-            newSetting.FontSize = text.TSetting.FontSize;
-            newSetting.Gradient = text.TSetting.Gradient.Select(arr => arr.ToArray()).ToArray();
-            newSetting.Font = text.TSetting.Font;
-            newSetting.Name = text.TSetting.Name;
-            newSetting.Color = text.TSetting.Color.ToArray();
-            newSetting.GradientText = text.TSetting.GradientText;
-            newSetting.IsExpanded = text.TSetting.IsExpanded;
-            newSetting.ShadowColor = text.TSetting.ShadowColor.ToArray();
-            newSetting.Position = text.TSetting.Position.ToArray();
-            newSetting.PlayingText = text.TSetting.PlayingText;
-            newSetting.NotPlayingText = text.TSetting.NotPlayingText;
-            group.Add(newSetting);
             Order();
         }
         public void Remove(OverlayerText text)
         {
             int index = Texts.IndexOf(text);
             Texts.RemoveAt(index);
+            UnityEngine.Object.Destroy(text.SText);
+            UnityEngine.Object.Destroy(text.SText.Main);
+            UnityEngine.Object.Destroy(text.SText.Shadow);
+            text.Activated = false;
             text.PlayingCompiler = null;
             text.NotPlayingCompiler = null;
-            UnityEngine.Object.Destroy(text.SText.Main.gameObject);
-            UnityEngine.Object.Destroy(text.SText.Shadow.gameObject);
+            text.BrokenNotPlayingCompiler = null;
+            text.BrokenNotPlayingCompiler = null;
+            text.SText.Updater = null;
             for (int i = index; i < Texts.Count; i++)
             {
                 var txt = Texts[i];
                 txt.Number--;
                 txt.SText.Number--;
             }
-            ShadowText.Count--;
+            Count--;
             GC.SuppressFinalize(text);
             Order();
         }
@@ -190,21 +201,16 @@ namespace Overlayer
         }
         public void Clear()
         {
-            foreach (var text in Texts)
-                Remove(text);
-            UnityEngine.Object.Destroy(ShadowText.PublicCanvas.gameObject);
-            ShadowText.Count = 0;
+            for (int i = 0; i < Texts.Count; i++)
+                Remove(Texts[i]);
+            Count = 0;
             Texts.Clear();
-            references = new List<Replacer.Tag>();
+            references = new HashSet<Replacer.Tag>();
         }
         public void TagAnalyze()
         {
-            references = Texts.Aggregate(new List<Replacer.Tag>(), (list, text) =>
-            {
-                list.AddRange(text.PlayingCompiler.References);
-                return list;
-            });
-            references = references.Distinct().ToList();
+            foreach (var tag in Texts.SelectMany(t => t.PlayingCompiler.References))
+                references.Add(tag);
         }
     }
     public class TextPackage
@@ -213,6 +219,7 @@ namespace Overlayer
         public string Name;
         public float[] Position;
         public float Size;
+        public bool Expanded;
         public List<JSData> JSDatas;
         public static TextPackage Pack(TextGroup group)
         {
@@ -220,7 +227,8 @@ namespace Overlayer
             pkg.Name = group.Name;
             pkg.Position = new float[2] { group.Position.x, group.Position.y };
             pkg.Size = group.Size;
-            pkg.Texts = group.Texts.Select(t => t.TSetting).ToList();
+            pkg.Expanded = group.Expanded;
+            pkg.Texts = group.Texts.Where(t => t.Activated).Select(t => t.TSetting).ToList();
             List<JSData> jsDatas = pkg.JSDatas = new List<JSData>();
             foreach (var reference in group.references)
                 if (reference.SourcePath != null)
@@ -237,12 +245,30 @@ namespace Overlayer
             foreach (var js in pkg.JSDatas)
             {
                 if (js.Inits)
-                    File.WriteAllText(Path.Combine(Main.InitJSPath, js.Name + ".js"), js.Source);
-                else File.WriteAllText(Path.Combine(Main.CustomTagsPath, js.Name + ".js"), js.Source);
+                {
+                    var path = Path.Combine(Main.InitJSPath, js.Name + ".js");
+                    if (File.Exists(path)) continue;
+                    File.WriteAllText(path, js.Source);
+                    ScriptEngine engine = new ScriptEngine();
+                    js.Source.CompileExec()();
+                }
+                else
+                {
+                    var path = Path.Combine(Main.CustomTagsPath, js.Name + ".js");
+                    if (File.Exists(path)) continue;
+                    File.WriteAllText(path, js.Source);
+                    if (Main.LoadJSTag(path, js.Name, out var tag))
+                    {
+                        Main.AllTags.SetTag(tag.Name, tag);
+                        Main.NotPlayingTags.SetTag(tag.Name, tag);
+                        Main.JSTagCache.Add(tag.Name);
+                    }
+                }
             }
             var group = new TextGroup();
-            group.Texts = pkg.Texts.Select(t => new OverlayerText(group, t).Apply()).ToList();
+            group.Texts = pkg.Texts.Select(t => new OverlayerText(group, t)).ToList();
             group.Name = pkg.Name;
+            group.Expanded = pkg.Expanded;
             group.Position = new Vector2(pkg.Position[0], pkg.Position[1]);
             group.Size = pkg.Size;
             return group;

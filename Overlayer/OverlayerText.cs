@@ -34,10 +34,28 @@ namespace Overlayer
                 GradientText = false;
                 Gradient = new float[4][] { new float[4] { 1, 1, 1, 1 }, new float[4] { 1, 1, 1, 1 }, new float[4] { 1, 1, 1, 1 }, new float[4] { 1, 1, 1, 1 } };
             }
+            public Setting Copy()
+            {
+                Setting newSetting = new Setting();
+                newSetting.Active = Active;
+                newSetting.Alignment = Alignment;
+                newSetting.FontSize = FontSize;
+                newSetting.Gradient = Gradient.Select(arr => arr.ToArray()).ToArray();
+                newSetting.Font = Font;
+                newSetting.Name = Name;
+                newSetting.Color = Color.ToArray();
+                newSetting.GradientText = GradientText;
+                newSetting.IsExpanded = IsExpanded;
+                newSetting.ShadowColor = ShadowColor.ToArray();
+                newSetting.Position = Position.ToArray();
+                newSetting.PlayingText = PlayingText;
+                newSetting.NotPlayingText = NotPlayingText;
+                return newSetting;
+            }
             public string Name;
             public float[] Position;
             public float[] Color;
-            public int FontSize;
+            public float FontSize;
             public string NotPlayingText;
             public string PlayingText;
             public bool IsExpanded;
@@ -69,6 +87,7 @@ namespace Overlayer
         }
         public static TextGroup Global = new TextGroup(true);
         public static List<TextGroup> Groups = new List<TextGroup>();
+        public bool Activated { get; internal set; } = true;
         public static void Load()
         {
             Global.Load(GlobalTextsPath);
@@ -86,6 +105,7 @@ namespace Overlayer
         {
             Global.Clear();
             Groups.ForEach(g => g.Clear());
+            UnityEngine.Object.Destroy(ShadowText.PublicCanvas);
         }
         public static void Save()
         {
@@ -104,21 +124,21 @@ namespace Overlayer
             }
         }
         public static readonly string GlobalTextsPath = Path.Combine(Main.Mod.Path, "Texts.json");
-        private TextGroup group;
+        internal TextGroup group;
         public OverlayerText(TextGroup group, Setting setting = null)
         {
             this.group = group;
-            SText = ShadowText.NewText();
+            SText = ShadowText.NewText(group);
             UnityEngine.Object.DontDestroyOnLoad(SText.gameObject);
             TSetting = setting ?? new Setting();
             Number = SText.Number;
             TSetting.ValidCheck();
             if (TSetting.Name == null)
                 TSetting.Name = $"{Main.Language[TranslationKeys.Text]} {Number}";
-            PlayingCompiler = new Replacer(TSetting.PlayingText, Main.AllTags);
-            NotPlayingCompiler = new Replacer(TSetting.NotPlayingText, Main.NotPlayingTags);
-            BrokenPlayingCompiler = new Replacer(TSetting.PlayingText.BreakRichTagWithoutSize(), Main.AllTags);
-            BrokenNotPlayingCompiler = new Replacer(TSetting.NotPlayingText.BreakRichTagWithoutSize(), Main.NotPlayingTags);
+            PlayingCompiler = new Replacer(TSetting.PlayingText, Main.AllTags).Compile();
+            NotPlayingCompiler = new Replacer(TSetting.NotPlayingText, Main.NotPlayingTags).Compile();
+            BrokenPlayingCompiler = new Replacer(TSetting.PlayingText.BreakRichTagWithoutSize(), Main.AllTags).Compile();
+            BrokenNotPlayingCompiler = new Replacer(TSetting.NotPlayingText.BreakRichTagWithoutSize(), Main.NotPlayingTags).Compile();
             SText.Updater = () =>
             {
                 if (IsPlaying)
@@ -136,6 +156,9 @@ namespace Overlayer
         }
         public void GUI()
         {
+            if (!Activated) return;
+            bool move = false;
+            int selected = 0;
             GUILayout.BeginHorizontal();
             TSetting.IsExpanded = GUILayout.Toggle(TSetting.IsExpanded, "");
             if (TSetting.IsExpanded)
@@ -155,23 +178,9 @@ namespace Overlayer
 
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Select Group:");
-                    int selected = Groups.FindIndex(g => g == group);
-                    selected = selected < 0 ? 0 : selected;
-                    if (UnityModManager.UI.PopupToggleGroup(ref selected, Groups.Select(t => t.Name).Prepend("Global").Append("New Group").ToArray(), $"Select Group Of {TSetting.Name}"))
-                    {
-                        if (selected > 0)
-                        {
-                            if (selected < Groups.Count)
-                                group.Move(this, Groups[selected - 1]);
-                            else
-                            {
-                                var newGroup = new TextGroup();
-                                newGroup.Name = "New Group";
-                                group.Move(this, newGroup);
-                                Groups.Add(newGroup);
-                            }
-                        }
-                    }
+                    selected = Groups.FindIndex(g => ReferenceEquals(g, group));
+                    selected = selected < 0 ? 0 : selected + 1;
+                    move = UnityModManager.UI.PopupToggleGroup(ref selected, Groups.Select(t => t.Name).Prepend("Global").Append("New Group").ToArray(), $"Select Group Of {TSetting.Name} ({group.Name})");
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
 
@@ -201,7 +210,7 @@ namespace Overlayer
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
-                    if (UnityModManager.UI.DrawIntField(ref TSetting.FontSize, Main.Language[TranslationKeys.TextSize])) Apply();
+                    if (UnityModManager.UI.DrawFloatField(ref TSetting.FontSize, Main.Language[TranslationKeys.TextSize])) Apply();
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
@@ -281,15 +290,30 @@ namespace Overlayer
                         TSetting = new Setting();
                         Apply();
                     }
-                    if (ShadowText.Count > 1 && GUILayout.Button(Main.Language[TranslationKeys.Destroy]))
-                    {
-                        UnityEngine.Object.Destroy(SText.gameObject);
+                    if (group.Count > 1 && GUILayout.Button(Main.Language[TranslationKeys.Destroy]))
                         group.Remove(this);
-                    }
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
                 });
                 GUILayout.EndVertical();
+                if (move)
+                {
+                    Main.LockGUI();
+                    if (selected > 0)
+                    {
+                        if (selected < Groups.Count)
+                            group.Move(this, Groups[selected - 1]);
+                        else
+                        {
+                            var newGroup = new TextGroup();
+                            newGroup.Name = "New Group";
+                            Groups.Add(newGroup);
+                            group.Move(this, newGroup);
+                        }
+                    }
+                    else if (!ReferenceEquals(group, Global))
+                        group.Move(this, Global);
+                }
             }
         }
         public OverlayerText Apply()

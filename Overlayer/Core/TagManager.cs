@@ -69,8 +69,9 @@ namespace Overlayer.Core
             {
                 GUIUtils.IndentGUI(() =>
                 {
-                    foreach (Tag tag in tags)
+                    for (int i = 0; i < tags.Count; i++)
                     {
+                        Tag tag = tags[i];
                         if (Main.Language.dict.TryGetValue(tag.Name, out string desc))
                             GUILayout.Label($"{tag} {desc} ({(Type.GetTypeCode(tag.Getter.ReturnType) == TypeCode.String ? "String" : "Number")})");
                         else GUILayout.Label($"{tag} (Object)");
@@ -82,5 +83,24 @@ namespace Overlayer.Core
             GUILayout.EndHorizontal();
         }
         public static bool TagDesc { get; private set; }
+        static HashSet<Tag> References = new HashSet<Tag>();
+        public static void UpdateReference()
+        {
+            References = new HashSet<Tag>();
+            var global = OverlayerText.Global.Texts.SelectMany(t => t.PlayingCompiler.References);
+            var groups = OverlayerText.Groups.SelectMany(g => g.Texts.SelectMany(t => t.PlayingCompiler.References));
+            var references = global.Concat(groups);
+            foreach (var reference in references)
+                References.Add(reference);
+        }
+        public static Tag GetReference(string name)
+        {
+            foreach (var tag in References)
+                if (tag.Name == name)
+                    return tag;
+            return null;
+        }
+        public static bool HasReference(string name)
+            => GetReference(name) != null;
     }
 }

@@ -16,11 +16,10 @@ namespace Overlayer
 {
     public class ShadowText : MonoBehaviour
     {
-        public static int Count = 0;
         public static Canvas PublicCanvas;
-        public static ShadowText NewText()
+        public static ShadowText NewText(TextGroup group)
         {
-            int count = ++Count;
+            int count = ++group.Count;
             ShadowText st = new GameObject($"ShadowText_{count}").AddComponent<ShadowText>();
             st.Number = count;
             return st;

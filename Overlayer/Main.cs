@@ -31,6 +31,8 @@ namespace Overlayer
         public static float fpsTimeTimer = 0;
         public static float lastDeltaTime;
         public static byte[] Impljs;
+        // Prevent GUI Error
+        public static int LockGUIFrames = 0;
         public static List<Replacer.Tag> AllTags = new List<Replacer.Tag>();
         public static List<Replacer.Tag> NotPlayingTags = new List<Replacer.Tag>();
         public static Scene activeScene { get; private set; }
@@ -180,6 +182,7 @@ namespace Overlayer
             }
             Logger.Log($"Loaded {success} Scripts Successfully. (Failed: {fail})");
         }
+        public static void LockGUI(int frames = 1) => LockGUIFrames += frames;
         public static void ReloadAllJSTags(string folderPath)
         {
             Logger.Log($"Reloading {JSTagCache.Count} Scripts..");
@@ -280,6 +283,11 @@ namespace Overlayer
         }
         public static void OnGUI(ModEntry modEntry)
         {
+            if (LockGUIFrames > 0)
+            {
+                LockGUIFrames--;
+                return;
+            }
             var settings = Settings.Instance;
             LangGUI(settings);
             settings.DrawManual();
@@ -323,11 +331,12 @@ namespace Overlayer
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Import Group"))
             {
-                var result = StandaloneFileBrowser.OpenFilePanel("Import Group", Persistence.GetLastUsedFolder(), "json", false);
+                var result = StandaloneFileBrowser.OpenFilePanel("Import Group", Persistence.GetLastUsedFolder(), "txtgrp", false);
                 if (result.Length > 0)
                 {
                     var group = new TextGroup();
                     group.Name = Path.GetFileNameWithoutExtension(result[0]);
+                    OverlayerText.Groups.Add(group);
                     group.Load(result[0]);
                 }
             }
@@ -339,8 +348,19 @@ namespace Overlayer
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             OverlayerText.Global.GUI();
-            for (int i = 0; i < OverlayerText.Groups.Count; i++)
-                OverlayerText.Groups[i].GUI();
+
+            if (OverlayerText.Groups.Any())
+            {
+                GUILayout.BeginVertical();
+                GUILayout.Space(20);
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("--Groups--");
+                GUILayout.EndHorizontal();
+                for (int i = 0; i < OverlayerText.Groups.Count; i++)
+                    OverlayerText.Groups[i].GUI();
+                GUILayout.EndVertical();
+            }
+
             AllTags.DescGUI();
         }
         public static void LangGUI(Settings settings)

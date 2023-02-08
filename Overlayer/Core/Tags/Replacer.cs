@@ -20,16 +20,16 @@ namespace Overlayer.Core
             get => str;
             set
             {
+                compiled = str == value;
                 str = value;
-                compiled = false;
             }
         }
-        public List<Tag> References { get; private set; }
+        public HashSet<Tag> References { get; private set; }
         public List<Tag> Tags => tags;
         public Replacer(List<Tag> tags = null)
         {
             this.tags = tags ?? new List<Tag>();
-            References = new List<Tag>();
+            References = new HashSet<Tag>();
             tagOpenChars = tags != null ? tags.Select(t => t.Open).Distinct().ToHashSet() : new HashSet<char>();
         }
         public Replacer(string str, List<Tag> tags = null) : this(tags) => Source = str;
@@ -38,10 +38,10 @@ namespace Overlayer.Core
             Compile();
             return compiledResult();
         }
-        void Compile()
+        public Replacer Compile()
         {
-            if (compiled) return;
-            References = new List<Tag>();
+            if (compiled && compiledResult != null) return this;
+            References = new HashSet<Tag>();
             DynamicMethod result = new DynamicMethod("", typeof(string), Type.EmptyTypes, typeof(Replacer), true);
             ILGenerator il = result.GetILGenerator();
             StringBuilder stack = new StringBuilder();
@@ -55,6 +55,7 @@ namespace Overlayer.Core
                     var info = ParseTag(c, ref i);
                     if (info != null)
                     {
+                        References.Add(info.tag);
                         stack.Remove(stack.Length - 1, 1);
                         emits.Add(stack.ToString());
                         emits.Add(info);
@@ -75,7 +76,6 @@ namespace Overlayer.Core
                     il.Emit(OpCodes.Ldstr, str);
                 if (emit is TagInfo info)
                 {
-                    References.Add(info.tag);
                     if (info.tag.HasOption)
                     {
                         if (info.option != null)
@@ -152,8 +152,9 @@ namespace Overlayer.Core
             il.Emit(OpCodes.Call, Concats);
             il.Emit(OpCodes.Ret);
             compiledResult = (Func<string>)result.CreateDelegate(typeof(Func<string>));
-            References = References.Distinct().ToList();
             compiled = true;
+            TagManager.UpdateReference();
+            return this;
         }
         TagInfo ParseTag(char open, ref int index)
         {
