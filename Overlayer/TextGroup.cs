@@ -169,6 +169,8 @@ namespace Overlayer
         {
             int index = Texts.IndexOf(text);
             Texts.RemoveAt(index);
+            text.PlayingCompiler = null;
+            text.NotPlayingCompiler = null;
             UnityEngine.Object.Destroy(text.SText.Main.gameObject);
             UnityEngine.Object.Destroy(text.SText.Shadow.gameObject);
             for (int i = index; i < Texts.Count; i++)
@@ -189,15 +191,11 @@ namespace Overlayer
         public void Clear()
         {
             foreach (var text in Texts)
-            {
-                text.PlayingCompiler = null;
-                text.NotPlayingCompiler = null;
-                UnityEngine.Object.Destroy(text.SText.Main.gameObject);
-                UnityEngine.Object.Destroy(text.SText.Shadow.gameObject);
-            }
+                Remove(text);
             UnityEngine.Object.Destroy(ShadowText.PublicCanvas.gameObject);
             ShadowText.Count = 0;
             Texts.Clear();
+            references = new List<Replacer.Tag>();
         }
         public void TagAnalyze()
         {
