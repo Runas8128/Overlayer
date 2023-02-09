@@ -43,12 +43,12 @@ namespace Overlayer
             {
                 var inc = value - relativePos;
                 relativePos = value;
-                Texts.ForEach(t => t.SText.Position += inc);
                 Texts.ForEach(t =>
                 {
                     t.TSetting.Position[0] += inc.x;
                     t.TSetting.Position[1] += inc.y;
                 });
+                Texts.ForEach(t => t.Apply());
             }
         }
         public float Size
@@ -58,8 +58,8 @@ namespace Overlayer
             {
                 var inc = value - relativeSize;
                 relativeSize = value;
-                Texts.ForEach(t => t.SText.FontSize += inc);
                 Texts.ForEach(t => t.TSetting.FontSize += inc);
+                Texts.ForEach(t => t.Apply());
             }
         }
         public void GUI()

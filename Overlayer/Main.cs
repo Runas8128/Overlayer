@@ -211,7 +211,7 @@ namespace Overlayer
                     if (Path.GetFileNameWithoutExtension(file) == "Impl")
                         continue;
                     ScriptEngine engine = new ScriptEngine();
-                    File.ReadAllText(file).CompileExec()();
+                    file.CompileFileExec()();
                 }
             }
         }

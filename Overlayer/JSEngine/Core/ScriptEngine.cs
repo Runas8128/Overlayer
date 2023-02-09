@@ -69,6 +69,8 @@ namespace JSEngine
         private ObjectInstance setIteratorPrototype;
         private ObjectInstance arrayIteratorPrototype;
 
+        // Source
+        public ScriptSource Source { get; private set; }
         /// <summary>
         /// Initializes a new scripting environment.
         /// </summary>

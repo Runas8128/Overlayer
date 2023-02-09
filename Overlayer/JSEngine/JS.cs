@@ -45,15 +45,40 @@ namespace JSEngine
             var scr = CompiledScript.Compile(source, Option);
             return () => scr.ExecuteFastInternal(engine);
         }
+        public static Func<object> CompileFileEval(this string path, ScriptEngine engine)
+        {
+            var source = new TextSource(File.ReadAllText(path), engine, path);
+            if (source.IsProxy)
+            {
+                var pType = source.ProxyType;
+                engine.SetGlobalValue(pType.Name, pType);
+                return null;
+            }
+            var scr = CompiledEval.Compile(source, Option);
+            return () => scr.EvaluateFastInternal(engine);
+        }
+        public static Action CompileFileExec(this string path, ScriptEngine engine)
+        {
+            var source = new TextSource(File.ReadAllText(path), engine, path);
+            if (source.IsProxy)
+            {
+                var pType = source.ProxyType;
+                engine.SetGlobalValue(pType.Name, pType);
+                return null;
+            }
+            var scr = CompiledScript.Compile(source, Option);
+            return () => scr.ExecuteFastInternal(engine);
+        }
         class TextSource : ScriptSource
         {
             public string str;
             public ScriptEngine engine;
             public bool IsProxy => ProxyType != null;
             public Type ProxyType { get; private set; }
-            public TextSource(string str, ScriptEngine engine)
+            public TextSource(string str, ScriptEngine engine, string path = null)
             {
                 this.str = str;
+                Path = path;
                 this.engine = engine;
                 using (var reader = new StringReader(str))
                 {
@@ -63,7 +88,7 @@ namespace JSEngine
                         ProxyType = AccessTools.TypeByName(firstLine.Split(' ')[1]);
                 }
             }
-            public override string Path => null;
+            public override string Path { get; }
             public override TextReader GetReader()
             {
                 using (StringReader sr = new StringReader(str))

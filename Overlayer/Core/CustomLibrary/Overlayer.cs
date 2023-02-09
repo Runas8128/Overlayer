@@ -134,8 +134,8 @@ namespace JSEngine.CustomLibrary
             JSUtils.BuildProxy(t, Main.CustomTagsPath);
             JSUtils.BuildProxy(t, Main.InitJSPath);
         }
-        [JSFunction(Name = "registerTag")]
-        public static void RegisterTag(string name, UserDefinedFunction func, bool notplaying)
+        [JSFunction(Name = "registerTag", Flags = JSFunctionFlags.HasEngineParameter)]
+        public static void RegisterTag(ScriptEngine engine, string name, UserDefinedFunction func, bool notplaying)
         {
             Replacer tmp = new Replacer();
             Replacer.Tag tag = tmp.CreateTag(name);
@@ -145,6 +145,7 @@ namespace JSEngine.CustomLibrary
             else tag.SetGetter(() => wrapper.CallGlobal());
             tag.Build();
             Main.AllTags.SetTag(name, tag);
+            tag.SourcePath = engine.Source.Path;
             if (notplaying) Main.NotPlayingTags.SetTag(name, tag);
         }
         [JSFunction(Name = "unregisterTag")]
