@@ -55,6 +55,7 @@ namespace JSEngine
                 return null;
             }
             var scr = CompiledEval.Compile(source, Option);
+            engine.Source = source;
             return () => scr.EvaluateFastInternal(engine);
         }
         public static Action CompileFileExec(this string path, ScriptEngine engine)
@@ -67,6 +68,7 @@ namespace JSEngine
                 return null;
             }
             var scr = CompiledScript.Compile(source, Option);
+            engine.Source = source;
             return () => scr.ExecuteFastInternal(engine);
         }
         class TextSource : ScriptSource
