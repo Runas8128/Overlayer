@@ -16,11 +16,11 @@ namespace Overlayer.Patches
         {
             if (!GCS.standaloneLevelMode && !GCS.useNoFail)
             {
-                if (PlaytimeCounter.MapID == null || !Attempts.TryGetValue(PlaytimeCounter.MapID, out _))
-                {
+                if (PlaytimeCounter.MapID == null)
                     PlaytimeCounter.MapID = DataInit.MakeHash(RDString.Get("editor.author"), RDString.Get("editor.artist"), RDString.Get("editor.song"));
+                if (!TagManager.HasReference("Attempts")) return;
+                if (PlaytimeCounter.MapID == null || !Attempts.TryGetValue(PlaytimeCounter.MapID, out _))
                     Attempts[PlaytimeCounter.MapID] = Persistence.GetCustomWorldAttempts(PlaytimeCounter.MapID);
-                }
                 else Attempts[PlaytimeCounter.MapID]++;
                 Variables.Attempts = Attempts[PlaytimeCounter.MapID];
                 Persistence.IncrementCustomWorldAttempts(PlaytimeCounter.MapID);
@@ -29,6 +29,7 @@ namespace Overlayer.Patches
         [HarmonyPatch(typeof(scrController), "Start")]
         public static void Postfix(scrController __instance)
         {
+            if (!TagManager.HasReference("Attempts")) return;
             if (ADOBase.sceneName.Contains("-") && !__instance.noFail)
                 Variables.Attempts = Persistence.GetWorldAttempts(scrController.currentWorld);
         }
