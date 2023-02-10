@@ -353,6 +353,7 @@
     <Compile Include="Core\CustomLibrary\PlanetType.cs" />
     <Compile Include="Core\CustomLibrary\Sprite.cs" />
     <Compile Include="Core\CustomLibrary\UnityHelper.cs" />
+    <Compile Include="Core\ExceptionCatcher.cs" />
     <Compile Include="Core\FontManager.cs" />
     <Compile Include="Core\Tags\Replacer.cs" />
     <Compile Include="Core\TileData.cs" />
@@ -746,6 +747,7 @@
     <Compile Include="MapParser\Types\Vector2.cs" />
     <Compile Include="MapParser\Utils.cs" />
     <Compile Include="Newtonsoft.Json.cs" />
+    <Compile Include="Patches\DisplayExceptionMessagePatch.cs" />
     <Compile Include="Patches\PlaytimeCounter.cs" />
     <Compile Include="Patches\AttemptsCounter.cs" />
     <Compile Include="Patches\BpmUpdater.cs" />
@@ -758,6 +760,7 @@
     <Compile Include="Patches\JSPatches.cs" />
     <Compile Include="Patches\KeyJudgePatch.cs" />
     <Compile Include="Patches\LeastChkPtLogger.cs" />
+    <Compile Include="Patches\RemoveFuckingUMMDummyLogPatch.cs" />
     <Compile Include="Patches\Resetter.cs" />
     <Compile Include="Patches\StartProgUpdater.cs" />
     <Compile Include="Patches\TimingUpdater.cs" />

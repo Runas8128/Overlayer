@@ -18,6 +18,8 @@ using JavaScript = Overlayer.Core.JavaScript;
 using JSEngine.CustomLibrary;
 using UnityModManagerNet;
 using SFB;
+using System.Runtime.ExceptionServices;
+using System.Text;
 
 namespace Overlayer
 {
@@ -35,6 +37,7 @@ namespace Overlayer
         public static int LockGUIFrames = 0;
         public static List<Replacer.Tag> AllTags = new List<Replacer.Tag>();
         public static List<Replacer.Tag> NotPlayingTags = new List<Replacer.Tag>();
+        public static readonly string AsmFullName = Assembly.GetExecutingAssembly().FullName;
         public static Scene activeScene { get; private set; }
         public static void Load(ModEntry modEntry)
         {
@@ -226,15 +229,41 @@ namespace Overlayer
         }
         public static string CustomTagsPath;
         public static string InitJSPath;
+        public static string ErrorString = null;
+        public static int OverlayerEntryIndex;
 #if !TOURNAMENT
         public static UnityAction<Scene, LoadSceneMode> evt = (s, m) => JSPatches.SceneLoads();
 #endif
+        public static void CatchException(Exception e)
+        {
+            var target = e.TargetSite;
+            if (target.DeclaringType.Assembly.FullName != AsmFullName)
+                return;
+            if (target.Name == "Update" ||
+                target.Name == "FixedUpdate" ||
+                target.Name == "LateUpdate")
+                return;
+            StringBuilder error = new StringBuilder();
+            error.AppendLine($"Exception: {e.GetType()}");
+            error.AppendLine($"Target Site: {e.TargetSite.FullDescription()}");
+            error.AppendLine($"Message: {e.Message}");
+            ErrorString = error.ToString();
+            Mod.Info.DisplayName = "Overlayer <b>Error Detected! See GUI Option!</b>";
+        }
+        public static void Reported()
+        {
+            ErrorString = null;
+            Mod.Info.DisplayName = "Overlayer";
+        }
         public static bool OnToggle(ModEntry modEntry, bool value)
         {
             try
             {
                 if (value)
                 {
+                    OverlayerEntryIndex = modEntries.IndexOf(modEntry);
+                    ExceptionCatcher.Catch();
+                    ExceptionCatcher.Unhandled += CatchException;
                     SceneManager.sceneLoaded += evt;
                     Settings.Load(modEntry);
                     Variables.Reset();
@@ -257,6 +286,7 @@ namespace Overlayer
                 }
                 else
                 {
+                    ExceptionCatcher.Drop();
                     SceneManager.sceneLoaded -= evt;
                     OnSaveGUI(modEntry);
                     try
@@ -278,7 +308,8 @@ namespace Overlayer
             catch (Exception e)
             {
                 Logger.Log(e.ToString());
-                return false;
+                CatchException(e);
+                return true;
             }
         }
         public static void OnGUI(ModEntry modEntry)
@@ -288,80 +319,108 @@ namespace Overlayer
                 LockGUIFrames--;
                 return;
             }
-            var settings = Settings.Instance;
-            LangGUI(settings);
-            settings.DrawManual();
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(Language[TranslationKeys.DeathMessage]);
-            var dm = GUILayout.TextField(settings.DeathMessage);
-            if (dm != settings.DeathMessage)
+            if (ErrorString != null)
             {
-                settings.DeathMessage = dm;
-                if (!string.IsNullOrEmpty(settings.DeathMessage))
-                    DeathMessagePatch.compiler.Source = settings.DeathMessage;
+                GUILayout.Label("<b>Overlayer Error Detected!</b>");
+                GUILayout.Label($"<b>{ErrorString}</b>");
+                GUILayout.Label("<b>PLEASE CAPTURE THIS MESSAGE AND REPORT!</b>");
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("I Reported"))
+                    Reported();
+                GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
             }
-            GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(Language[TranslationKeys.ClearMessage]);
-            var cm = GUILayout.TextField(settings.ClearMessage);
-            if (cm != settings.ClearMessage)
+            try
             {
-                settings.ClearMessage = cm;
-                if (!string.IsNullOrEmpty(settings.ClearMessage))
-                    ClearMessagePatch.compiler.Source = settings.ClearMessage;
-            }
-            GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button(Language[TranslationKeys.ReloadCustomTags]))
-            {
-                ReloadAllJSTags(CustomTagsPath);
-                Recompile();
-            }
-            if (GUILayout.Button(Language[TranslationKeys.ReloadInits]))
-            {
-                RunInits();
-                Recompile();
-            }
-            GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Import Group"))
-            {
-                var result = StandaloneFileBrowser.OpenFilePanel("Import Group", Persistence.GetLastUsedFolder(), "txtgrp", false);
-                if (result.Length > 0)
+                var settings = Settings.Instance;
+                LangGUI(settings);
+                settings.DrawManual();
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(Language[TranslationKeys.DeathMessage]);
+                var dm = GUILayout.TextField(settings.DeathMessage);
+                if (dm != settings.DeathMessage)
                 {
-                    var group = new TextGroup();
-                    group.Name = Path.GetFileNameWithoutExtension(result[0]);
-                    OverlayerText.Groups.Add(group);
-                    group.Load(result[0]);
+                    settings.DeathMessage = dm;
+                    if (!string.IsNullOrEmpty(settings.DeathMessage))
+                        DeathMessagePatch.compiler.Source = settings.DeathMessage;
+                }
+                GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(Language[TranslationKeys.ClearMessage]);
+                var cm = GUILayout.TextField(settings.ClearMessage);
+                if (cm != settings.ClearMessage)
+                {
+                    settings.ClearMessage = cm;
+                    if (!string.IsNullOrEmpty(settings.ClearMessage))
+                        ClearMessagePatch.compiler.Source = settings.ClearMessage;
+                }
+                GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button(Language[TranslationKeys.ReloadCustomTags]))
+                {
+                    ReloadAllJSTags(CustomTagsPath);
+                    Recompile();
+                }
+                if (GUILayout.Button(Language[TranslationKeys.ReloadInits]))
+                {
+                    RunInits();
+                    Recompile();
+                }
+                GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Import Group"))
+                {
+                    var result = StandaloneFileBrowser.OpenFilePanel("Import Group", Persistence.GetLastUsedFolder(), "txtgrp", false);
+                    if (result.Length > 0)
+                    {
+                        var group = new TextGroup();
+                        group.Name = Path.GetFileNameWithoutExtension(result[0]);
+                        OverlayerText.Groups.Add(group);
+                        group.Load(result[0]);
+                    }
+                }
+                GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button(Language[TranslationKeys.AddText]))
+                    OverlayerText.Global.Add(new OverlayerText.Setting());
+                GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
+                OverlayerText.Global.GUI();
+
+                if (OverlayerText.Groups.Any())
+                {
+                    GUILayout.BeginVertical();
+                    GUILayout.Space(20);
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("--Groups--");
+                    GUILayout.EndHorizontal();
+                    for (int i = 0; i < OverlayerText.Groups.Count; i++)
+                        OverlayerText.Groups[i].GUI();
+                    GUILayout.EndVertical();
+                }
+
+                AllTags.DescGUI();
+            }
+            catch 
+            {
+                if (ErrorString != null)
+                {
+                    GUILayout.Label("<b>Overlayer Error Detected!</b>");
+                    GUILayout.Label($"<b>{ErrorString}</b>");
+                    GUILayout.Label("<b>PLEASE CAPTURE THIS MESSAGE AND REPORT!</b>");
+                    GUILayout.BeginHorizontal();
+                    if (GUILayout.Button("I Reported"))
+                        ErrorString = null;
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
                 }
             }
-            GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button(Language[TranslationKeys.AddText]))
-                OverlayerText.Global.Add(new OverlayerText.Setting());
-            GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
-            OverlayerText.Global.GUI();
-
-            if (OverlayerText.Groups.Any())
-            {
-                GUILayout.BeginVertical();
-                GUILayout.Space(20);
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("--Groups--");
-                GUILayout.EndHorizontal();
-                for (int i = 0; i < OverlayerText.Groups.Count; i++)
-                    OverlayerText.Groups[i].GUI();
-                GUILayout.EndVertical();
-            }
-
-            AllTags.DescGUI();
         }
         public static void LangGUI(Settings settings)
         {
@@ -429,11 +488,13 @@ namespace Overlayer
         {
             foreach (OverlayerText text in OverlayerText.Global.Texts.Concat(OverlayerText.Groups.SelectMany(g => g.Texts)))
             {
-                text.PlayingCompiler.Source = text.TSetting.PlayingText;
-                text.NotPlayingCompiler.Source = text.TSetting.NotPlayingText;
-                text.BrokenPlayingCompiler.Source = text.TSetting.PlayingText.BreakRichTagWithoutSize();
-                text.BrokenNotPlayingCompiler.Source = text.TSetting.NotPlayingText.BreakRichTagWithoutSize();
+                text.PlayingCompiler.Compile();
+                text.NotPlayingCompiler.Compile();
+                text.BrokenPlayingCompiler.Compile();
+                text.BrokenNotPlayingCompiler.Compile();
             }
+            DeathMessagePatch.compiler?.Compile();
+            ClearMessagePatch.compiler?.Compile();
         }
     }
 }

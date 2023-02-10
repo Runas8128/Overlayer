@@ -147,12 +147,14 @@ namespace JSEngine.CustomLibrary
             Main.AllTags.SetTag(name, tag);
             tag.SourcePath = engine.Source.Path;
             if (notplaying) Main.NotPlayingTags.SetTag(name, tag);
+            Main.Recompile();
         }
         [JSFunction(Name = "unregisterTag")]
         public static void UnregisterTag(string name)
         {
             Main.AllTags.RemoveTag(name);
             Main.NotPlayingTags.RemoveTag(name);
+            Main.Recompile();
         }
         public static List<TileData> tiles = new List<TileData>();
     }
