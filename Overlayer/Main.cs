@@ -245,8 +245,9 @@ namespace Overlayer
                 return;
             StringBuilder error = new StringBuilder();
             error.AppendLine($"Exception: {e.GetType()}");
-            error.AppendLine($"Target Site: {e.TargetSite.FullDescription()}");
             error.AppendLine($"Message: {e.Message}");
+            error.AppendLine($"Target Site: {e.TargetSite.FullDescription()}");
+            error.AppendLine($"StackTrace: {e.StackTrace}");
             ErrorString = error.ToString();
             Mod.Info.DisplayName = "Overlayer <b>Error Detected! See GUI Option!</b>";
         }

@@ -20,7 +20,7 @@ namespace Overlayer.Core
             get => str;
             set
             {
-                compiled = str == value;
+                compiled = false;
                 str = value;
             }
         }
