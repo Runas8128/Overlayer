@@ -5,6 +5,8 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Overlayer", "Overlayer\Overlayer.csproj", "{54928BEA-BD8B-46A5-8EC7-1355C4D7A977}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Overlayer.Python", "Overlayer.Python\Overlayer.Python.csproj", "{83BBE75A-6F83-4D9D-BB17-21A50EAC8F0D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,18 @@ Global
 		{54928BEA-BD8B-46A5-8EC7-1355C4D7A977}.Tournament|Any CPU.Build.0 = Tournament|Any CPU
 		{54928BEA-BD8B-46A5-8EC7-1355C4D7A977}.Tournament|x64.ActiveCfg = Tournament|x64
 		{54928BEA-BD8B-46A5-8EC7-1355C4D7A977}.Tournament|x64.Build.0 = Tournament|x64
+		{83BBE75A-6F83-4D9D-BB17-21A50EAC8F0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83BBE75A-6F83-4D9D-BB17-21A50EAC8F0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83BBE75A-6F83-4D9D-BB17-21A50EAC8F0D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{83BBE75A-6F83-4D9D-BB17-21A50EAC8F0D}.Debug|x64.Build.0 = Debug|Any CPU
+		{83BBE75A-6F83-4D9D-BB17-21A50EAC8F0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83BBE75A-6F83-4D9D-BB17-21A50EAC8F0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83BBE75A-6F83-4D9D-BB17-21A50EAC8F0D}.Release|x64.ActiveCfg = Release|Any CPU
+		{83BBE75A-6F83-4D9D-BB17-21A50EAC8F0D}.Release|x64.Build.0 = Release|Any CPU
+		{83BBE75A-6F83-4D9D-BB17-21A50EAC8F0D}.Tournament|Any CPU.ActiveCfg = Debug|Any CPU
+		{83BBE75A-6F83-4D9D-BB17-21A50EAC8F0D}.Tournament|Any CPU.Build.0 = Debug|Any CPU
+		{83BBE75A-6F83-4D9D-BB17-21A50EAC8F0D}.Tournament|x64.ActiveCfg = Debug|Any CPU
+		{83BBE75A-6F83-4D9D-BB17-21A50EAC8F0D}.Tournament|x64.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

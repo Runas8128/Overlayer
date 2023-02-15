@@ -265,7 +265,7 @@ namespace Overlayer
                     {
                         Main.AllTags.SetTag(tag.Name, tag);
                         Main.NotPlayingTags.SetTag(tag.Name, tag);
-                        Main.JSTagCache.Add(tag.Name);
+                        Main.CustomTagCache.Add(tag.Name);
                     }
                 }
             }

@@ -37,6 +37,7 @@ namespace Overlayer
         public static int LockGUIFrames = 0;
         public static List<Replacer.Tag> AllTags = new List<Replacer.Tag>();
         public static List<Replacer.Tag> NotPlayingTags = new List<Replacer.Tag>();
+        public static event Action AllCustomTagsLoaded = delegate { };
         public static readonly string AsmFullName = Assembly.GetExecutingAssembly().FullName;
         public static Scene activeScene { get; private set; }
         public static void Load(ModEntry modEntry)
@@ -156,8 +157,8 @@ namespace Overlayer
                 return false;
             }
         }
-        public static readonly List<string> JSTagCache = new List<string>();
-        public static void LoadAllJSTags(string folderPath)
+        public static readonly List<string> CustomTagCache = new List<string>();
+        public static void LoadAllCustomTags(string folderPath)
         {
             var impljsPath = Path.Combine(folderPath, "Impl.js");
             if (File.Exists(impljsPath))
@@ -178,19 +179,20 @@ namespace Overlayer
                 {
                     AllTags.SetTag(tag.Name, tag);
                     NotPlayingTags.SetTag(tag.Name, tag);
-                    JSTagCache.Add(tag.Name);
+                    CustomTagCache.Add(tag.Name);
                     success++;
                 }
                 else fail++;
             }
+            AllCustomTagsLoaded();
             Logger.Log($"Loaded {success} Scripts Successfully. (Failed: {fail})");
         }
         public static void LockGUI(int frames = 1) => LockGUIFrames += frames;
-        public static void ReloadAllJSTags(string folderPath)
+        public static void ReloadAllCustomTags(string folderPath)
         {
-            Logger.Log($"Reloading {JSTagCache.Count} Scripts..");
-            UnloadAllJSTags();
-            LoadAllJSTags(folderPath);
+            Logger.Log($"Reloading {CustomTagCache.Count} Scripts..");
+            UnloadAllCustomTags();
+            LoadAllCustomTags(folderPath);
         }
         public static void RunInits()
         {
@@ -218,14 +220,14 @@ namespace Overlayer
                 }
             }
         }
-        public static void UnloadAllJSTags()
+        public static void UnloadAllCustomTags()
         {
-            foreach (string tagName in JSTagCache)
+            foreach (string tagName in CustomTagCache)
             {
                 AllTags.RemoveTag(tagName);
                 NotPlayingTags.RemoveTag(tagName);
             }
-            JSTagCache.Clear();
+            CustomTagCache.Clear();
         }
         public static string CustomTagsPath;
         public static string InitJSPath;
@@ -267,7 +269,7 @@ namespace Overlayer
                     Settings.Load(modEntry);
                     Variables.Reset();
                     JavaScript.Init();
-                    LoadAllJSTags(CustomTagsPath);
+                    LoadAllCustomTags(CustomTagsPath);
                     OverlayerText.Load();
                     if (!OverlayerText.Global.Texts.Any()) 
                         OverlayerText.Global.Add(new OverlayerText.Setting());
@@ -290,7 +292,7 @@ namespace Overlayer
                     try
                     {
                         OverlayerText.Clear();
-                        UnloadAllJSTags();
+                        UnloadAllCustomTags();
                         DeathMessagePatch.compiler = null;
                         ClearMessagePatch.compiler = null;
                         GC.Collect();
@@ -359,7 +361,7 @@ namespace Overlayer
                 GUILayout.BeginHorizontal();
                 if (GUILayout.Button(Language[TranslationKeys.ReloadCustomTags]))
                 {
-                    ReloadAllJSTags(CustomTagsPath);
+                    ReloadAllCustomTags(CustomTagsPath);
                     Recompile();
                 }
                 if (GUILayout.Button(Language[TranslationKeys.ReloadInits]))
