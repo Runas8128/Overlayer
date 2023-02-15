@@ -105,7 +105,9 @@ namespace Overlayer
         {
             Global.Clear();
             Groups.ForEach(g => g.Clear());
-            UnityEngine.Object.Destroy(ShadowText.PublicCanvas);
+            UnityEngine.Object.Destroy(ShadowText.PCanvasObj);
+            ShadowText.PCanvasObj = null;
+            ShadowText.PublicCanvas = null;
         }
         public static void Save()
         {

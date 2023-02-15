@@ -263,8 +263,6 @@ namespace Overlayer
                 if (value)
                 {
                     OverlayerEntryIndex = modEntries.IndexOf(modEntry);
-                    ExceptionCatcher.Catch();
-                    ExceptionCatcher.Unhandled += CatchException;
                     SceneManager.sceneLoaded += evt;
                     Settings.Load(modEntry);
                     Variables.Reset();
@@ -287,7 +285,6 @@ namespace Overlayer
                 }
                 else
                 {
-                    ExceptionCatcher.Drop();
                     SceneManager.sceneLoaded -= evt;
                     OnSaveGUI(modEntry);
                     try

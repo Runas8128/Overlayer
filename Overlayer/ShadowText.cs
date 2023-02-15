@@ -16,6 +16,7 @@ namespace Overlayer
 {
     public class ShadowText : MonoBehaviour
     {
+        public static GameObject PCanvasObj;
         public static Canvas PublicCanvas;
         public static ShadowText NewText(TextGroup group)
         {
@@ -82,7 +83,7 @@ namespace Overlayer
             
             if (!PublicCanvas)
             {
-                GameObject pCanvasObj = new GameObject("Overlayer Canvas");
+                GameObject pCanvasObj = PCanvasObj = new GameObject("Overlayer Canvas");
                 PublicCanvas = pCanvasObj.AddComponent<Canvas>();
                 PublicCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
                 CanvasScaler scaler = pCanvasObj.AddComponent<CanvasScaler>();

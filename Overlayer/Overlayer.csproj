@@ -353,7 +353,6 @@
     <Compile Include="Core\CustomLibrary\PlanetType.cs" />
     <Compile Include="Core\CustomLibrary\Sprite.cs" />
     <Compile Include="Core\CustomLibrary\UnityHelper.cs" />
-    <Compile Include="Core\ExceptionCatcher.cs" />
     <Compile Include="Core\FontManager.cs" />
     <Compile Include="Core\Tags\Replacer.cs" />
     <Compile Include="Core\TileData.cs" />
