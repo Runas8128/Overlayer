@@ -9,7 +9,8 @@ namespace Overlayer.Patches
         public static AccessTools.FieldRef<UI, int> guiIndex = AccessTools.FieldRefAccess<UI, int>(AccessTools.Field(typeof(UI), "mShowModSettings"));
         public static void Postfix(UI __instance)
         {
-            guiIndex(__instance) = Main.OverlayerEntryIndex;
+            if (Main.ErrorString != null)
+                guiIndex(__instance) = Main.OverlayerEntryIndex;
         }
     }
 }
