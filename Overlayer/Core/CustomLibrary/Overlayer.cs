@@ -132,7 +132,7 @@ namespace JSEngine.CustomLibrary
         {
             Type t = AccessTools.TypeByName(clrType);
             JSUtils.BuildProxy(t, Main.CustomTagsPath);
-            JSUtils.BuildProxy(t, Main.InitJSPath);
+            JSUtils.BuildProxy(t, Main.InitsPath);
         }
         [JSFunction(Name = "registerTag", Flags = JSFunctionFlags.HasEngineParameter)]
         public static void RegisterTag(ScriptEngine engine, string name, UserDefinedFunction func, bool notplaying)

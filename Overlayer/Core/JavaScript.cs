@@ -22,7 +22,7 @@ namespace Overlayer.Core
             foreach (Type type in JSTypes)
             {
                 JSUtils.BuildProxy(type, Main.CustomTagsPath, buildNestedTypes: true);
-                JSUtils.BuildProxy(type, Main.InitJSPath, buildNestedTypes: true);
+                JSUtils.BuildProxy(type, Main.InitsPath, buildNestedTypes: true);
             }
         }
         static readonly List<Type> JSTypes = new List<Type>();

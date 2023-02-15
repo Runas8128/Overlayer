@@ -10,8 +10,10 @@ namespace Overlayer.Core
 {
     public static class TagManager
     {
+        public static Dictionary<string, Tag> Dict = new Dictionary<string, Tag>();
         public static void LoadTags(this List<Tag> tags, Assembly assembly = null)
         {
+            Dict = new Dictionary<string, Tag>();
             foreach (Type type in (assembly ?? Assembly.GetCallingAssembly()).GetTypes())
                 LoadTags(tags, type);
         }
@@ -37,6 +39,7 @@ namespace Overlayer.Core
                 cTagAttr.Threads?.ForEach(s => tag.AddThread(type.GetMethod(s)));
                 tag.Build();
                 tags.Add(tag);
+                Dict.Add(tag.Name, tag);
             }
             foreach (MethodInfo method in methods)
             {
@@ -46,6 +49,7 @@ namespace Overlayer.Core
                 var tag = tmpRep.CreateTag(tagAttr.Name).SetGetter(method);
                 tag.Build();
                 tags.Add(tag);
+                Dict.Add(tag.Name, tag);
             }
         }
         public static Tag FindTag(this List<Tag> tags, string name) => tags.Find(t => t.Name == name);
@@ -55,12 +59,14 @@ namespace Overlayer.Core
             if (index < 0)
                 tags.Add(tag);
             else tags[index] = tag;
+            Dict[name] = tag;
         }
         public static void RemoveTag(this List<Tag> tags, string name)
         {
             int index = tags.FindIndex(t => t.Name == name);
             if (index >= 0)
                 tags.RemoveAt(index);
+            Dict.Remove(name);
         }
         public static void DescGUI(this List<Tag> tags)
         {

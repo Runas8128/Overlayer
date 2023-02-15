@@ -199,7 +199,7 @@ namespace Overlayer
         public void Order()
         {
             Texts = Texts.OrderBy(o => o.Number).ToList();
-            TagAnalyze();
+            TraceReference();
         }
         public void Clear()
         {
@@ -209,10 +209,10 @@ namespace Overlayer
             Texts.Clear();
             references = new List<Replacer.Tag>();
         }
-        public void TagAnalyze()
+        public void TraceReference()
         {
             HashSet<Replacer.Tag> refs = new HashSet<Replacer.Tag>();
-            foreach (var tag in Texts.SelectMany(t => t.PlayingCompiler.References))
+            foreach (var tag in Texts.Where(t => t.Activated).SelectMany(t => t.PlayingCompiler.References))
                 refs.Add(tag);
             references = refs.ToList();
         }
@@ -224,7 +224,7 @@ namespace Overlayer
         public float[] Position;
         public float Size;
         public bool Expanded;
-        public List<JSData> JSDatas;
+        public List<CustomTag> CustomTags;
         public static TextPackage Pack(TextGroup group)
         {
             TextPackage pkg = new TextPackage();
@@ -233,11 +233,12 @@ namespace Overlayer
             pkg.Size = group.Size;
             pkg.Expanded = group.Expanded;
             pkg.Texts = group.Texts.Where(t => t.Activated).Select(t => t.TSetting).ToList();
-            List<JSData> jsDatas = pkg.JSDatas = new List<JSData>();
+            List<CustomTag> ctDatas = pkg.CustomTags = new List<CustomTag>();
             foreach (var reference in group.references)
                 if (reference.SourcePath != null)
-                    jsDatas.Add(new JSData()
+                    ctDatas.Add(new CustomTag()
                     {
+                        Py = Path.GetExtension(reference.SourcePath) == ".py",
                         Name = reference.Name,
                         Inits = reference.SourcePath.Contains("Inits/"),
                         Source = File.ReadAllText(reference.SourcePath)
@@ -246,22 +247,22 @@ namespace Overlayer
         }
         public static TextGroup Unpack(TextPackage pkg)
         {
-            foreach (var js in pkg.JSDatas)
+            foreach (var ct in pkg.CustomTags)
             {
-                if (js.Inits)
+                if (ct.Inits)
                 {
-                    var path = Path.Combine(Main.InitJSPath, js.Name + ".js");
+                    var path = Path.Combine(Main.InitsPath, ct.Name + (ct.Py ? ".py" : ".js"));
                     if (File.Exists(path)) continue;
-                    File.WriteAllText(path, js.Source);
+                    File.WriteAllText(path, ct.Source);
                     ScriptEngine engine = new ScriptEngine();
-                    js.Source.CompileExec()();
+                    ct.Source.CompileExec()();
                 }
                 else
                 {
-                    var path = Path.Combine(Main.CustomTagsPath, js.Name + ".js");
+                    var path = Path.Combine(Main.CustomTagsPath, ct.Name + (ct.Py ? ".py" : ".js"));
                     if (File.Exists(path)) continue;
-                    File.WriteAllText(path, js.Source);
-                    if (Main.LoadJSTag(path, js.Name, out var tag))
+                    File.WriteAllText(path, ct.Source);
+                    if (Main.LoadJSTag(path, ct.Name, out var tag))
                     {
                         Main.AllTags.SetTag(tag.Name, tag);
                         Main.NotPlayingTags.SetTag(tag.Name, tag);
@@ -278,8 +279,9 @@ namespace Overlayer
             return group;
         }
     }
-    public class JSData
+    public class CustomTag
     {
+        public bool Py;
         public bool Inits;
         public string Name;
         public string Source;

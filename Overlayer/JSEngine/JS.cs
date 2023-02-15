@@ -106,7 +106,7 @@ namespace JSEngine
                             if (f.StartsWith("\"") || f.StartsWith("'") || f.StartsWith("`"))
                                 continue;
                             var orig = RemoveStartEnd(GetAfter(line, "from").Trim());
-                            var module = System.IO.Path.Combine(Main.InitJSPath, orig);
+                            var module = System.IO.Path.Combine(Main.InitsPath, orig);
                             module = System.IO.Path.GetFullPath(module);
                             if (!System.IO.Path.HasExtension(module))
                                 module += ".js";

@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Linq.Expressions;
 using System.Collections.Generic;
+using System.CodeDom;
+
 namespace Overlayer.Core
 {
     public class Replacer
@@ -185,6 +187,8 @@ namespace Overlayer.Core
             public Delegate GetterDelegate { get; private set; }
             public MethodInfo OptionConverter { get; private set; }
             public MethodInfo ReturnConverter { get; private set; }
+            public Func<object> FastInvoker { get; private set; }
+            public Func<object, object> FastInvokerOpt { get; private set; }
             public bool HasOption { get; private set; }
             // For CustomTag
             public string SourcePath = null;
@@ -271,6 +275,16 @@ namespace Overlayer.Core
                 Threads.ForEach(t => t.Start());
                 Replacer.tags.Add(this);
                 Replacer.tagOpenChars.Add(Open);
+                if (HasOption)
+                {
+                    FastInvoker = null;
+                    FastInvokerOpt = Wrapper.WrapFastOpt(Getter);
+                }
+                else
+                {
+                    FastInvoker = Wrapper.WrapFast(Getter);
+                    FastInvokerOpt = null;
+                }
                 return Replacer;
             }
             public Tag Copy()
@@ -339,6 +353,39 @@ namespace Overlayer.Core
                 t.GetField("function").SetValue(null, del);
                 return t.GetMethod("Wrapper");
             }
+            public static Func<object> WrapFast(MethodInfo m)
+            {
+                TypeBuilder type = mod.DefineType(TypeCount++.ToString(), TypeAttributes.Public);
+                Type rt = m.ReturnType;
+                MethodBuilder methodB = type.DefineMethod("Wrapper", MethodAttributes.Public | MethodAttributes.Static, typeof(object), Type.EmptyTypes);
+                ILGenerator il = methodB.GetILGenerator();
+                il.Emit(OpCodes.Call, m);
+                il.Emit(OpCodes.Ret);
+                if (rt != typeof(object))
+                    il.Emit(OpCodes.Box, rt);
+                return (Func<object>)type.CreateType().GetMethod("Wrapper").CreateDelegate(typeof(Func<object>));
+            }
+            public static Func<object, object> WrapFastOpt(MethodInfo m)
+            {
+                TypeBuilder type = mod.DefineType(TypeCount++.ToString(), TypeAttributes.Public);
+                var p = m.GetParameters().First();
+                Type pt = p.ParameterType;
+                Type rt = m.ReturnType;
+                MethodBuilder methodB = type.DefineMethod("Wrapper", MethodAttributes.Public | MethodAttributes.Static, typeof(object), new[] { typeof(object) });
+                ILGenerator il = methodB.GetILGenerator();
+                methodB.DefineParameter(1, ParameterAttributes.None, p.Name);
+                il.Emit(OpCodes.Ldarg_0);
+                if (pt != typeof(object))
+                    il.Emit(OpCodes.Call, GetConvert(pt));
+                il.Emit(OpCodes.Call, m);
+                if (rt != typeof(object))
+                    il.Emit(OpCodes.Box, rt);
+                il.Emit(OpCodes.Ret);
+                return (Func<object, object>)type.CreateType().GetMethod("Wrapper").CreateDelegate(typeof(Func<object, object>));
+            }
+            public static MethodInfo GetConvert(Type to) => to.IsPrimitive ? typeof(Convert).GetMethod($"To{to.Name}", new[] { typeof(object) }) : to == typeof(string) ? ts : null;
+            public static string ToString(object o) => o.ToString();
+            static readonly MethodInfo ts = typeof(Wrapper).GetMethod("ToString", new[] { typeof(object) });
         }
         public static class StringConverter
         {
@@ -592,7 +639,7 @@ namespace Overlayer.Core
                 else if (numType == typeof(double)) return FDouble;
                 else return FObject;
             }
-            public static string FromObject(object s) => s.ToString();
+            public static string FromObject(object s) => s?.ToString();
             public static readonly MethodInfo TInt8 = typeof(StringConverter).GetMethod("ToInt8");
             public static readonly MethodInfo TInt16 = typeof(StringConverter).GetMethod("ToInt16");
             public static readonly MethodInfo TInt32 = typeof(StringConverter).GetMethod("ToInt32");

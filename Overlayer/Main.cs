@@ -38,15 +38,20 @@ namespace Overlayer
         public static List<Replacer.Tag> AllTags = new List<Replacer.Tag>();
         public static List<Replacer.Tag> NotPlayingTags = new List<Replacer.Tag>();
         public static event Action AllCustomTagsLoaded = delegate { };
+        public static event Action AllInitsLoaded = delegate { };
         public static readonly string AsmFullName = Assembly.GetExecutingAssembly().FullName;
         public static Scene activeScene { get; private set; }
+        public static bool PythonAvailable { get; private set; }
         public static void Load(ModEntry modEntry)
         {
+            PythonAvailable = modEntries.Any(m => m.Info.Id == "Overlayer.Python");
             SceneManager.activeSceneChanged += (cur, next) => activeScene = next;
             CustomTagsPath = Path.Combine(modEntry.Path, "CustomTags");
-            InitJSPath = Path.Combine(modEntry.Path, "Inits");
+            InitsPath = Path.Combine(modEntry.Path, "Inits");
             Mod = modEntry;
             Logger = modEntry.Logger;
+            if (PythonAvailable)
+                Logger.Log("Python Is Available!");
             var asm = Assembly.GetExecutingAssembly();
             Settings.Load(modEntry);
             UpdateLanguage();
@@ -146,6 +151,7 @@ namespace Overlayer
             {
                 var del = source.CompileEval();
                 tag = new Replacer().CreateTag(name).SetGetter(del);
+                tag.Build();
                 tag.SourcePath = path;
                 Language[name] = desc;
                 Logger.Log($"Loaded '{name}' Tag.");
@@ -197,21 +203,21 @@ namespace Overlayer
         public static void RunInits()
         {
             Ovlr.harmony.UnpatchAll(Ovlr.harmony.Id);
-            if (!Directory.Exists(InitJSPath))
+            if (!Directory.Exists(InitsPath))
             {
-                Directory.CreateDirectory(InitJSPath);
-                var impljsPath = Path.Combine(InitJSPath, "Impl.js");
+                Directory.CreateDirectory(InitsPath);
+                var impljsPath = Path.Combine(InitsPath, "Impl.js");
                 if (File.Exists(impljsPath))
                     File.SetAttributes(impljsPath, File.GetAttributes(impljsPath) & ~FileAttributes.ReadOnly);
                 File.WriteAllBytes(impljsPath, Impljs);
             }
             else
             {
-                var impljsPath = Path.Combine(InitJSPath, "Impl.js");
+                var impljsPath = Path.Combine(InitsPath, "Impl.js");
                 if (File.Exists(impljsPath))
                     File.SetAttributes(impljsPath, File.GetAttributes(impljsPath) & ~FileAttributes.ReadOnly);
                 File.WriteAllBytes(impljsPath, Impljs);
-                foreach (string file in Directory.GetFiles(InitJSPath, "*.js"))
+                foreach (string file in Directory.GetFiles(InitsPath, "*.js"))
                 {
                     if (Path.GetFileNameWithoutExtension(file) == "Impl")
                         continue;
@@ -219,6 +225,7 @@ namespace Overlayer
                     file.CompileFileExec()();
                 }
             }
+            AllInitsLoaded();
         }
         public static void UnloadAllCustomTags()
         {
@@ -230,7 +237,7 @@ namespace Overlayer
             CustomTagCache.Clear();
         }
         public static string CustomTagsPath;
-        public static string InitJSPath;
+        public static string InitsPath;
         public static string ErrorString = null;
         public static int OverlayerEntryIndex;
 #if !TOURNAMENT
@@ -239,7 +246,7 @@ namespace Overlayer
         public static void CatchException(Exception e)
         {
             var target = e.TargetSite;
-            if (target.DeclaringType.Assembly.FullName != AsmFullName)
+            if (!target.DeclaringType.Assembly.FullName.Contains("Overlayer"))
                 return;
             if (target.Name == "Update" ||
                 target.Name == "FixedUpdate" ||
@@ -265,17 +272,21 @@ namespace Overlayer
                 if (value)
                 {
                     OverlayerEntryIndex = modEntries.IndexOf(modEntry);
+                    ExceptionCatcher.Catch();
+                    ExceptionCatcher.Unhandled += CatchException;
                     SceneManager.sceneLoaded += evt;
                     Settings.Load(modEntry);
                     Variables.Reset();
                     JavaScript.Init();
-                    LoadAllCustomTags(CustomTagsPath);
-                    OverlayerText.Load();
-                    if (!OverlayerText.Global.Texts.Any()) 
-                        OverlayerText.Global.Add(new OverlayerText.Setting());
+                    if (!PythonAvailable)
+                    {
+                        LoadAllCustomTags(CustomTagsPath);
+                        OverlayerText.Load();
+                    }
                     Harmony = new Harmony(modEntry.Info.Id);
                     Harmony.PatchAll(Assembly.GetExecutingAssembly());
-                    RunInits();
+                    if (!PythonAvailable)
+                        RunInits();
                     UpdateLanguage();
                     var settings = Settings.Instance;
                     DeathMessagePatch.compiler = new Replacer(AllTags);
@@ -287,6 +298,8 @@ namespace Overlayer
                 }
                 else
                 {
+                    ExceptionCatcher.Unhandled -= CatchException;
+                    ExceptionCatcher.Drop();
                     SceneManager.sceneLoaded -= evt;
                     OnSaveGUI(modEntry);
                     try
