@@ -6,6 +6,7 @@ using Overlayer.Python.CustomLibrary;
 using static IronPython.Modules._ast;
 using System.Reflection;
 using System.Text;
+using System.Linq;
 
 namespace Overlayer.Python
 {
@@ -74,6 +75,26 @@ namespace Overlayer.Python
             Overlayer.Main.LoadAllCustomTags(Overlayer.Main.CustomTagsPath);
             OverlayerText.Load();
             Overlayer.Main.RunInits();
+            //StringBuilder sb = new StringBuilder();
+            //foreach (var tag in Overlayer.Main.AllTags)
+            //{
+            //    if (tag.HasOption)
+            //        sb.AppendLine($"def {tag.Name}(op) -> {(tag.Getter.ReturnType == typeof(double) ? "float" : "str")}:");
+            //    else sb.AppendLine($"def {tag.Name}() -> {(tag.Getter.ReturnType == typeof(double) ? "float" : "str")}:");
+            //    if (tag.HasOption)
+            //        sb.AppendLine($"  return Overlayer_Internal.{tag.Name}(op)");
+            //    else sb.AppendLine($"  return Overlayer_Internal.{tag.Name}()");
+            //}
+            //File.WriteAllText(Path.Combine(modEntry.Path, "tag.py"), sb.ToString());
+
+            //sb.Clear();
+            //foreach (var tag in Overlayer.Main.AllTags)
+            //{
+            //    if (tag.HasOption)
+            //        sb.AppendLine($"public static {tag.Getter.ReturnType.Name} {tag.Name}({tag.Getter.GetParameters().First().ParameterType.Name} op) => {tag.Getter.DeclaringType.Name}.{tag.Getter.Name}(op);");
+            //    else sb.AppendLine($"public static {tag.Getter.ReturnType.Name} {tag.Name}() => {tag.Getter.DeclaringType.Name}.{tag.Getter.Name}();");
+            //}
+            //File.WriteAllText(Path.Combine(modEntry.Path, "tag.cs"), sb.ToString());
         }
     }
 }

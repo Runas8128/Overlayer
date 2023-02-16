@@ -25,18 +25,15 @@ namespace Overlayer.Python
             Overlayer.Main.InitsPath,
             Overlayer.Main.CustomTagsPath
         };
-        public static Func<T> Compile<T>(string path)
+        public static Func<dynamic> Compile(string path)
         {
             var engine = Py.CreateEngine();
             ScriptScope scope = Py.GetBuiltinModule(engine);
             scope.SetVariable("__import__", new ImportDelegate(ResolveImport));
-            ScriptScope eScope = engine.CreateScope();
             engine.SetSearchPaths(modulePaths);
-            foreach (var tag in Overlayer.Main.AllTags)
-                eScope.SetVariable(tag.Name, tag.GetterDelegate);
             var source = engine.CreateScriptSourceFromFile(path);
             var com = source.Compile();
-            return () => com.Execute<T>(eScope);
+            return com.Execute<object>;
         }
         public static Replacer.Tag CreateTag(string path)
         {
@@ -44,11 +41,11 @@ namespace Overlayer.Python
             var name = Path.GetFileNameWithoutExtension(path);
             var tag = tmp.CreateTag(name);
             tag.SourcePath = path;
-            tag.SetGetter(Compile<object>(path));
+            tag.SetGetter(Compile(path));
             tag.Build();
             return tag;
         }
-        public static object Execute(string path) => Compile<object>(path)();
+        public static object Execute(string path) => Compile(path)();
         private static object ResolveImport(CodeContext context, string moduleName, PythonDictionary globals, PythonDictionary locals, PythonTuple fromlist, int level)
         {
             var builtin = IronPython.Modules.Builtin.__import__(context, moduleName, globals, locals, fromlist, level);

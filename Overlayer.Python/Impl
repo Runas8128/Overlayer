@@ -1,226 +1,227 @@
-def SHit():
-  return Overlayer_Internal.invokeTag("SHit", None)
-def STE():
-  return Overlayer_Internal.invokeTag("STE", None)
-def SVE():
-  return Overlayer_Internal.invokeTag("SVE", None)
-def SEP():
-  return Overlayer_Internal.invokeTag("SEP", None)
-def SP():
-  return Overlayer_Internal.invokeTag("SP", None)
-def SLP():
-  return Overlayer_Internal.invokeTag("SLP", None)
-def SVL():
-  return Overlayer_Internal.invokeTag("SVL", None)
-def STL():
-  return Overlayer_Internal.invokeTag("STL", None)
-def NHit():
-  return Overlayer_Internal.invokeTag("NHit", None)
-def NTE():
-  return Overlayer_Internal.invokeTag("NTE", None)
-def NVE():
-  return Overlayer_Internal.invokeTag("NVE", None)
-def NEP():
-  return Overlayer_Internal.invokeTag("NEP", None)
-def NP():
-  return Overlayer_Internal.invokeTag("NP", None)
-def NLP():
-  return Overlayer_Internal.invokeTag("NLP", None)
-def NVL():
-  return Overlayer_Internal.invokeTag("NVL", None)
-def NTL():
-  return Overlayer_Internal.invokeTag("NTL", None)
-def LHit():
-  return Overlayer_Internal.invokeTag("LHit", None)
-def LTE():
-  return Overlayer_Internal.invokeTag("LTE", None)
-def LVE():
-  return Overlayer_Internal.invokeTag("LVE", None)
-def LEP():
-  return Overlayer_Internal.invokeTag("LEP", None)
-def LP():
-  return Overlayer_Internal.invokeTag("LP", None)
-def LLP():
-  return Overlayer_Internal.invokeTag("LLP", None)
-def LVL():
-  return Overlayer_Internal.invokeTag("LVL", None)
-def LTL():
-  return Overlayer_Internal.invokeTag("LTL", None)
-def CurHit():
-  return Overlayer_Internal.invokeTag("CurHit", None)
-def CurTE():
-  return Overlayer_Internal.invokeTag("CurTE", None)
-def CurVE():
-  return Overlayer_Internal.invokeTag("CurVE", None)
-def CurEP():
-  return Overlayer_Internal.invokeTag("CurEP", None)
-def CurP():
-  return Overlayer_Internal.invokeTag("CurP", None)
-def CurLP():
-  return Overlayer_Internal.invokeTag("CurLP", None)
-def CurVL():
-  return Overlayer_Internal.invokeTag("CurVL", None)
-def CurTL():
-  return Overlayer_Internal.invokeTag("CurTL", None)
-def CurDifficulty():
-  return Overlayer_Internal.invokeTag("CurDifficulty", None)
-def Expression(op):
-  return Overlayer_Internal.invokeTag("Expression", op)
-def KeyJudge(op):
-  return Overlayer_Internal.invokeTag("KeyJudge", op)
-def CurKps():
-  return Overlayer_Internal.invokeTag("CurKps", None)
-def Radius(op):
-  return Overlayer_Internal.invokeTag("Radius", op)
-def Pitch(op):
-  return Overlayer_Internal.invokeTag("Pitch", op)
-def EditorPitch(op):
-  return Overlayer_Internal.invokeTag("EditorPitch", op)
-def ShortcutPitch(op):
-  return Overlayer_Internal.invokeTag("ShortcutPitch", op)
-def TEHex():
-  return Overlayer_Internal.invokeTag("TEHex", None)
-def VEHex():
-  return Overlayer_Internal.invokeTag("VEHex", None)
-def EPHex():
-  return Overlayer_Internal.invokeTag("EPHex", None)
-def PHex():
-  return Overlayer_Internal.invokeTag("PHex", None)
-def LPHex():
-  return Overlayer_Internal.invokeTag("LPHex", None)
-def VLHex():
-  return Overlayer_Internal.invokeTag("VLHex", None)
-def TLHex():
-  return Overlayer_Internal.invokeTag("TLHex", None)
-def MPHex():
-  return Overlayer_Internal.invokeTag("MPHex", None)
-def FMHex():
-  return Overlayer_Internal.invokeTag("FMHex", None)
-def FOHex():
-  return Overlayer_Internal.invokeTag("FOHex", None)
-def Title():
-  return Overlayer_Internal.invokeTag("Title", None)
-def Author():
-  return Overlayer_Internal.invokeTag("Author", None)
-def Artist():
-  return Overlayer_Internal.invokeTag("Artist", None)
-def StartTile():
-  return Overlayer_Internal.invokeTag("StartTile", None)
-def IntegratedDifficulty(op):
-  return Overlayer_Internal.invokeTag("IntegratedDifficulty", op)
-def PredictedDifficulty(op):
-  return Overlayer_Internal.invokeTag("PredictedDifficulty", op)
-def ForumDifficulty(op):
-  return Overlayer_Internal.invokeTag("ForumDifficulty", op)
-def Accuracy(op):
-  return Overlayer_Internal.invokeTag("Accuracy", op)
-def Progress(op):
-  return Overlayer_Internal.invokeTag("Progress", op)
-def CheckPoint():
-  return Overlayer_Internal.invokeTag("CheckPoint", None)
-def CurCheckPoint():
-  return Overlayer_Internal.invokeTag("CurCheckPoint", None)
-def TotalCheckPoint():
-  return Overlayer_Internal.invokeTag("TotalCheckPoint", None)
-def XAccuracy(op):
-  return Overlayer_Internal.invokeTag("XAccuracy", op)
-def FailCount():
-  return Overlayer_Internal.invokeTag("FailCount", None)
-def MissCount():
-  return Overlayer_Internal.invokeTag("MissCount", None)
-def Overloads():
-  return Overlayer_Internal.invokeTag("Overloads", None)
-def CurBpm(op):
-  return Overlayer_Internal.invokeTag("CurBpm", op)
-def TileBpm(op):
-  return Overlayer_Internal.invokeTag("TileBpm", op)
-def RecKps(op):
-  return Overlayer_Internal.invokeTag("RecKps", op)
-def BestProgress(op):
-  return Overlayer_Internal.invokeTag("BestProgress", op)
-def LeastCheckPoint():
-  return Overlayer_Internal.invokeTag("LeastCheckPoint", None)
-def StartProgress(op):
-  return Overlayer_Internal.invokeTag("StartProgress", op)
-def CurMinute():
-  return Overlayer_Internal.invokeTag("CurMinute", None)
-def CurSecond():
-  return Overlayer_Internal.invokeTag("CurSecond", None)
-def CurMilliSecond():
-  return Overlayer_Internal.invokeTag("CurMilliSecond", None)
-def TotalMinute():
-  return Overlayer_Internal.invokeTag("TotalMinute", None)
-def TotalSecond():
-  return Overlayer_Internal.invokeTag("TotalSecond", None)
-def TotalMilliSecond():
-  return Overlayer_Internal.invokeTag("TotalMilliSecond", None)
-def LeftTile():
-  return Overlayer_Internal.invokeTag("LeftTile", None)
-def TotalTile():
-  return Overlayer_Internal.invokeTag("TotalTile", None)
-def CurTile():
-  return Overlayer_Internal.invokeTag("CurTile", None)
-def Attempts():
-  return Overlayer_Internal.invokeTag("Attempts", None)
-def Year():
-  return Overlayer_Internal.invokeTag("Year", None)
-def Month():
-  return Overlayer_Internal.invokeTag("Month", None)
-def Day():
-  return Overlayer_Internal.invokeTag("Day", None)
-def Hour():
-  return Overlayer_Internal.invokeTag("Hour", None)
-def Minute():
-  return Overlayer_Internal.invokeTag("Minute", None)
-def Second():
-  return Overlayer_Internal.invokeTag("Second", None)
-def MilliSecond():
-  return Overlayer_Internal.invokeTag("MilliSecond", None)
-def Multipress():
-  return Overlayer_Internal.invokeTag("Multipress", None)
-def Combo():
-  return Overlayer_Internal.invokeTag("Combo", None)
-def Fps(op):
-  return Overlayer_Internal.invokeTag("Fps", op)
-def FrameTime(op):
-  return Overlayer_Internal.invokeTag("FrameTime", op)
-def PlayTime(op):
-  return Overlayer_Internal.invokeTag("PlayTime", op)
-def ProcessorCount():
-  return Overlayer_Internal.invokeTag("ProcessorCount", None)
-def MemoryGBytes(op):
-  return Overlayer_Internal.invokeTag("MemoryGBytes", op)
-def CpuUsage(op):
-  return Overlayer_Internal.invokeTag("CpuUsage", op)
-def TotalCpuUsage(op):
-  return Overlayer_Internal.invokeTag("TotalCpuUsage", op)
-def MemoryUsage(op):
-  return Overlayer_Internal.invokeTag("MemoryUsage", op)
-def TotalMemoryUsage(op):
-  return Overlayer_Internal.invokeTag("TotalMemoryUsage", op)
-def MemoryUsageGBytes(op):
-  return Overlayer_Internal.invokeTag("MemoryUsageGBytes", op)
-def TotalMemoryUsageGBytes(op):
-  return Overlayer_Internal.invokeTag("TotalMemoryUsageGBytes", op)
-def PlayPoint(op):
-  return Overlayer_Internal.invokeTag("PlayPoint", op)
-def ProgressDeath(op):
-  return Overlayer_Internal.invokeTag("ProgressDeath", op)
-def Score():
-  return Overlayer_Internal.invokeTag("Score", None)
-def LScore():
-  return Overlayer_Internal.invokeTag("LScore", None)
-def NScore():
-  return Overlayer_Internal.invokeTag("NScore", None)
-def SScore():
-  return Overlayer_Internal.invokeTag("SScore", None)
-def Timing(op):
-  return Overlayer_Internal.invokeTag("Timing", op)
-def TimingAvg(op):
-  return Overlayer_Internal.invokeTag("TimingAvg", op)
-def RankedTrophy():
-  return Overlayer_Internal.invokeTag("RankedTrophy", None)
+def SHit() -> str:
+  return Overlayer_Internal.SHit()
+def STE() -> float:
+  return Overlayer_Internal.STE()
+def SVE() -> float:
+  return Overlayer_Internal.SVE()
+def SEP() -> float:
+  return Overlayer_Internal.SEP()
+def SP() -> float:
+  return Overlayer_Internal.SP()
+def SLP() -> float:
+  return Overlayer_Internal.SLP()
+def SVL() -> float:
+  return Overlayer_Internal.SVL()
+def STL() -> float:
+  return Overlayer_Internal.STL()
+def NHit() -> str:
+  return Overlayer_Internal.NHit()
+def NTE() -> float:
+  return Overlayer_Internal.NTE()
+def NVE() -> float:
+  return Overlayer_Internal.NVE()
+def NEP() -> float:
+  return Overlayer_Internal.NEP()
+def NP() -> float:
+  return Overlayer_Internal.NP()
+def NLP() -> float:
+  return Overlayer_Internal.NLP()
+def NVL() -> float:
+  return Overlayer_Internal.NVL()
+def NTL() -> float:
+  return Overlayer_Internal.NTL()
+def LHit() -> str:
+  return Overlayer_Internal.LHit()
+def LTE() -> float:
+  return Overlayer_Internal.LTE()
+def LVE() -> float:
+  return Overlayer_Internal.LVE()
+def LEP() -> float:
+  return Overlayer_Internal.LEP()
+def LP() -> float:
+  return Overlayer_Internal.LP()
+def LLP() -> float:
+  return Overlayer_Internal.LLP()
+def LVL() -> float:
+  return Overlayer_Internal.LVL()
+def LTL() -> float:
+  return Overlayer_Internal.LTL()
+def CurHit() -> str:
+  return Overlayer_Internal.CurHit()
+def CurTE() -> float:
+  return Overlayer_Internal.CurTE()
+def CurVE() -> float:
+  return Overlayer_Internal.CurVE()
+def CurEP() -> float:
+  return Overlayer_Internal.CurEP()
+def CurP() -> float:
+  return Overlayer_Internal.CurP()
+def CurLP() -> float:
+  return Overlayer_Internal.CurLP()
+def CurVL() -> float:
+  return Overlayer_Internal.CurVL()
+def CurTL() -> float:
+  return Overlayer_Internal.CurTL()
+def CurDifficulty() -> str:
+  return Overlayer_Internal.CurDifficulty()
+def Expression(op) -> str:
+  return Overlayer_Internal.Expression(op)
+def KeyJudge(op) -> str:
+  return Overlayer_Internal.KeyJudge(op)
+def CurKps() -> float:
+  return Overlayer_Internal.CurKps()
+def Radius(op) -> float:
+  return Overlayer_Internal.Radius(op)
+def Pitch(op) -> float:
+  return Overlayer_Internal.Pitch(op)
+def EditorPitch(op) -> float:
+  return Overlayer_Internal.EditorPitch(op)
+def ShortcutPitch(op) -> float:
+  return Overlayer_Internal.ShortcutPitch(op)
+def TEHex() -> str:
+  return Overlayer_Internal.TEHex()
+def VEHex() -> str:
+  return Overlayer_Internal.VEHex()
+def EPHex() -> str:
+  return Overlayer_Internal.EPHex()
+def PHex() -> str:
+  return Overlayer_Internal.PHex()
+def LPHex() -> str:
+  return Overlayer_Internal.LPHex()
+def VLHex() -> str:
+  return Overlayer_Internal.VLHex()
+def TLHex() -> str:
+  return Overlayer_Internal.TLHex()
+def MPHex() -> str:
+  return Overlayer_Internal.MPHex()
+def FMHex() -> str:
+  return Overlayer_Internal.FMHex()
+def FOHex() -> str:
+  return Overlayer_Internal.FOHex()
+def Title() -> str:
+  return Overlayer_Internal.Title()
+def Author() -> str:
+  return Overlayer_Internal.Author()
+def Artist() -> str:
+  return Overlayer_Internal.Artist()
+def StartTile() -> float:
+  return Overlayer_Internal.StartTile()
+def IntegratedDifficulty(op) -> float:
+  return Overlayer_Internal.IntegratedDifficulty(op)
+def PredictedDifficulty(op) -> float:
+  return Overlayer_Internal.PredictedDifficulty(op)
+def ForumDifficulty(op) -> float:
+  return Overlayer_Internal.ForumDifficulty(op)
+def Accuracy(op) -> float:
+  return Overlayer_Internal.Accuracy(op)
+def Progress(op) -> float:
+  return Overlayer_Internal.Progress(op)
+def CheckPoint() -> float:
+  return Overlayer_Internal.CheckPoint()
+def CurCheckPoint() -> float:
+  return Overlayer_Internal.CurCheckPoint()
+def TotalCheckPoint() -> float:
+  return Overlayer_Internal.TotalCheckPoint()
+def XAccuracy(op) -> float:
+  return Overlayer_Internal.XAccuracy(op)
+def FailCount() -> float:
+  return Overlayer_Internal.FailCount()
+def MissCount() -> float:
+  return Overlayer_Internal.MissCount()
+def Overloads() -> float:
+  return Overlayer_Internal.Overloads()
+def CurBpm(op) -> float:
+  return Overlayer_Internal.CurBpm(op)
+def TileBpm(op) -> float:
+  return Overlayer_Internal.TileBpm(op)
+def RecKps(op) -> float:
+  return Overlayer_Internal.RecKps(op)
+def BestProgress(op) -> float:
+  return Overlayer_Internal.BestProgress(op)
+def LeastCheckPoint() -> float:
+  return Overlayer_Internal.LeastCheckPoint()
+def StartProgress(op) -> float:
+  return Overlayer_Internal.StartProgress(op)
+def CurMinute() -> float:
+  return Overlayer_Internal.CurMinute()
+def CurSecond() -> float:
+  return Overlayer_Internal.CurSecond()
+def CurMilliSecond() -> float:
+  return Overlayer_Internal.CurMilliSecond()
+def TotalMinute() -> float:
+  return Overlayer_Internal.TotalMinute()
+def TotalSecond() -> float:
+  return Overlayer_Internal.TotalSecond()
+def TotalMilliSecond() -> float:
+  return Overlayer_Internal.TotalMilliSecond()
+def LeftTile() -> float:
+  return Overlayer_Internal.LeftTile()
+def TotalTile() -> float:
+  return Overlayer_Internal.TotalTile()
+def CurTile() -> float:
+  return Overlayer_Internal.CurTile()
+def Attempts() -> float:
+  return Overlayer_Internal.Attempts()
+def Year() -> float:
+  return Overlayer_Internal.Year()
+def Month() -> float:
+  return Overlayer_Internal.Month()
+def Day() -> float:
+  return Overlayer_Internal.Day()
+def Hour() -> float:
+  return Overlayer_Internal.Hour()
+def Minute() -> float:
+  return Overlayer_Internal.Minute()
+def Second() -> float:
+  return Overlayer_Internal.Second()
+def MilliSecond() -> float:
+  return Overlayer_Internal.MilliSecond()
+def Multipress() -> float:
+  return Overlayer_Internal.Multipress()
+def Combo() -> float:
+  return Overlayer_Internal.Combo()
+def Fps(op) -> float:
+  return Overlayer_Internal.Fps(op)
+def FrameTime(op) -> float:
+  return Overlayer_Internal.FrameTime(op)
+def PlayTime(op) -> float:
+  return Overlayer_Internal.PlayTime(op)
+def ProcessorCount() -> float:
+  return Overlayer_Internal.ProcessorCount()
+def MemoryGBytes(op) -> float:
+  return Overlayer_Internal.MemoryGBytes(op)
+def CpuUsage(op) -> float:
+  return Overlayer_Internal.CpuUsage(op)
+def TotalCpuUsage(op) -> float:
+  return Overlayer_Internal.TotalCpuUsage(op)
+def MemoryUsage(op) -> float:
+  return Overlayer_Internal.MemoryUsage(op)
+def TotalMemoryUsage(op) -> float:
+  return Overlayer_Internal.TotalMemoryUsage(op)
+def MemoryUsageGBytes(op) -> float:
+  return Overlayer_Internal.MemoryUsageGBytes(op)
+def TotalMemoryUsageGBytes(op) -> float:
+  return Overlayer_Internal.TotalMemoryUsageGBytes(op)
+def PlayPoint(op) -> float:
+  return Overlayer_Internal.PlayPoint(op)
+def ProgressDeath(op) -> float:
+  return Overlayer_Internal.ProgressDeath(op)
+def Score() -> float:
+  return Overlayer_Internal.Score()
+def LScore() -> float:
+  return Overlayer_Internal.LScore()
+def NScore() -> float:
+  return Overlayer_Internal.NScore()
+def SScore() -> float:
+  return Overlayer_Internal.SScore()
+def Timing(op) -> float:
+  return Overlayer_Internal.Timing(op)
+def TimingAvg(op) -> float:
+  return Overlayer_Internal.TimingAvg(op)
 class Overlayer:
+    @staticmethod
+    def invokeTag(tag: str, op = None) -> any:
+        return Overlayer_Internal.invokeTag(tag, op)
     @staticmethod
     def log(obj):
         return Overlayer_Internal.log(obj)
