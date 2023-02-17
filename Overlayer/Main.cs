@@ -514,16 +514,6 @@ namespace Overlayer
             DeathMessagePatch.compiler?.Compile();
             ClearMessagePatch.compiler?.Compile();
         }
-        public static void Backup()
-        {
-            foreach (var file in Directory.GetFiles(Mod.Path, "*.json").Concat(Directory.GetFiles(Mod.Path, "*.txtgrp")).Concat(Directory.GetFiles(Mod.Path, "*.xml")))
-                File.WriteAllBytes(file + ".backup", File.ReadAllBytes(file));
-        }
-        public static void Recover()
-        {
-            foreach (var file in Directory.GetFiles(Mod.Path, "*.backup"))
-                File.WriteAllBytes(file.Remove(file.LastIndexOf(".backup"), 7), File.ReadAllBytes(file));
-        }
     }
 }
 namespace System.Runtime.CompilerServices
