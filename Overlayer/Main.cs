@@ -275,6 +275,7 @@ namespace Overlayer
                     ExceptionCatcher.Catch();
                     ExceptionCatcher.Unhandled += CatchException;
                     SceneManager.sceneLoaded += evt;
+                    Backup();
                     Settings.Load(modEntry);
                     Variables.Reset();
                     JavaScript.Init();
@@ -348,6 +349,10 @@ namespace Overlayer
                 var settings = Settings.Instance;
                 LangGUI(settings);
                 settings.DrawManual();
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Recover With Backup Files"))  Recover();
+                GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(Language[TranslationKeys.DeathMessage]);
                 var dm = GUILayout.TextField(settings.DeathMessage);
@@ -508,6 +513,16 @@ namespace Overlayer
             }
             DeathMessagePatch.compiler?.Compile();
             ClearMessagePatch.compiler?.Compile();
+        }
+        public static void Backup()
+        {
+            foreach (var file in Directory.GetFiles(Mod.Path, "*.json").Concat(Directory.GetFiles(Mod.Path, "*.txtgrp")).Concat(Directory.GetFiles("*.xml")))
+                File.WriteAllBytes(file + ".backup", File.ReadAllBytes(file));
+        }
+        public static void Recover()
+        {
+            foreach (var file in Directory.GetFiles(Mod.Path, "*.backup"))
+                File.WriteAllBytes(file.Remove(file.LastIndexOf(".backup"), 7), File.ReadAllBytes(file));
         }
     }
 }
