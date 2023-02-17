@@ -73,8 +73,8 @@ namespace Overlayer.Python
             Overlayer.Main.AllCustomTagsLoaded += LoadAllPyTags;
             Overlayer.Main.AllInitsLoaded += RunInits;
             Overlayer.Main.LoadAllCustomTags(Overlayer.Main.CustomTagsPath);
-            OverlayerText.Load();
             Overlayer.Main.RunInits();
+            OverlayerText.Load();
             //StringBuilder sb = new StringBuilder();
             //foreach (var tag in Overlayer.Main.AllTags)
             //{

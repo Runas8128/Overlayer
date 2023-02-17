@@ -1,14 +1,12 @@
-﻿using IronPython.Hosting;
-using IronPython.Runtime;
+﻿using IronPython.Runtime;
 using IronPython.Runtime.Types;
-using JSEngine;
+using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
 using Overlayer.Core;
 using Overlayer.Python.CustomLibrary;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Remoting.Messaging;
 using System.Text;
 using Py = IronPython.Hosting.Python;
 
@@ -28,12 +26,12 @@ namespace Overlayer.Python
         public static Func<dynamic> Compile(string path)
         {
             var engine = Py.CreateEngine();
+            var source = engine.CreateScriptSourceFromFile(path, Encoding.UTF8, SourceCodeKind.AutoDetect);
             ScriptScope scope = Py.GetBuiltinModule(engine);
             scope.SetVariable("__import__", new ImportDelegate(ResolveImport));
             engine.SetSearchPaths(modulePaths);
-            var source = engine.CreateScriptSourceFromFile(path);
             var com = source.Compile();
-            return com.Execute<object>;
+            return com.Execute<dynamic>;
         }
         public static Replacer.Tag CreateTag(string path)
         {

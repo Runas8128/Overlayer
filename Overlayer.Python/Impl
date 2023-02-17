@@ -243,6 +243,7 @@ class Overlayer:
     @staticmethod
     def sceneLoad(func):
         return Overlayer_Internal.sceneLoad(func)
+    @staticmethod
     def update(func):
         return Overlayer_Internal.update(func)
     @staticmethod
@@ -265,6 +266,9 @@ class Overlayer:
         return Overlayer_Internal.resolve(clrType)
     @staticmethod
     def registerTag(name, func, notplaying):
+        return Overlayer_Internal.registerTag(name, func, notplaying)
+    @staticmethod
+    def registerOptTag(name, func, notplaying):
         return Overlayer_Internal.registerTag(name, func, notplaying)
     @staticmethod
     def unregisterTag(name):

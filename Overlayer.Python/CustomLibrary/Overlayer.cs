@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using IronPython.Runtime;
 using IronPython.Runtime.Types;
 using Overlayer.Core;
 using Overlayer.Core.Utils;
@@ -96,7 +97,11 @@ namespace Overlayer.Python.CustomLibrary
         {
             return DynamicHelpers.GetPythonTypeFromType(AccessTools.TypeByName(clrType));
         }
-        public static void registerTag(string name, Delegate func, bool notplaying)
+        public static void registerTag(string name, Func<object> func, bool notplaying)
+        {
+            registerOptTag(name, s => func(), notplaying);
+        }
+        public static void registerOptTag(string name, Func<string, object> func, bool notplaying)
         {
             Replacer.Tag tag = new Replacer().CreateTag(name);
             tag.SetGetter(func).Build();

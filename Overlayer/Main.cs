@@ -44,7 +44,7 @@ namespace Overlayer
         public static bool PythonAvailable { get; private set; }
         public static void Load(ModEntry modEntry)
         {
-            PythonAvailable = modEntries.Any(m => m.Info.Id == "Overlayer.Python");
+            PythonAvailable = modEntries.Any(m => m.Info.Id == "Overlayer.Python" && m.Enabled);
             SceneManager.activeSceneChanged += (cur, next) => activeScene = next;
             CustomTagsPath = Path.Combine(modEntry.Path, "CustomTags");
             InitsPath = Path.Combine(modEntry.Path, "Inits");
@@ -271,22 +271,23 @@ namespace Overlayer
             {
                 if (value)
                 {
+                    PythonAvailable = modEntries.Any(m => m.Info.Id == "Overlayer.Python" && m.Enabled);
                     OverlayerEntryIndex = modEntries.IndexOf(modEntry);
                     ExceptionCatcher.Catch();
                     ExceptionCatcher.Unhandled += CatchException;
                     SceneManager.sceneLoaded += evt;
+                    Backup();
                     Settings.Load(modEntry);
                     Variables.Reset();
                     JavaScript.Init();
                     if (!PythonAvailable)
                     {
+                        RunInits();
                         LoadAllCustomTags(CustomTagsPath);
                         OverlayerText.Load();
                     }
                     Harmony = new Harmony(modEntry.Info.Id);
                     Harmony.PatchAll(Assembly.GetExecutingAssembly());
-                    if (!PythonAvailable)
-                        RunInits();
                     UpdateLanguage();
                     var settings = Settings.Instance;
                     DeathMessagePatch.compiler = new Replacer(AllTags);
@@ -348,6 +349,10 @@ namespace Overlayer
                 var settings = Settings.Instance;
                 LangGUI(settings);
                 settings.DrawManual();
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Recover With Backup Files")) Recover();
+                GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(Language[TranslationKeys.DeathMessage]);
                 var dm = GUILayout.TextField(settings.DeathMessage);
@@ -508,6 +513,16 @@ namespace Overlayer
             }
             DeathMessagePatch.compiler?.Compile();
             ClearMessagePatch.compiler?.Compile();
+        }
+        public static void Backup()
+        {
+            foreach (var file in Directory.GetFiles(Mod.Path, "*.json").Concat(Directory.GetFiles(Mod.Path, "*.txtgrp")).Concat(Directory.GetFiles(Mod.Path, "*.xml")))
+                File.WriteAllBytes(file + ".backup", File.ReadAllBytes(file));
+        }
+        public static void Recover()
+        {
+            foreach (var file in Directory.GetFiles(Mod.Path, "*.backup"))
+                File.WriteAllBytes(file.Remove(file.LastIndexOf(".backup"), 7), File.ReadAllBytes(file));
         }
     }
 }
