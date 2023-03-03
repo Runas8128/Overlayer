@@ -11,6 +11,8 @@ using Overlayer.Patches;
 using ACL = Overlayer.MapParser.CustomLevel;
 using System.IO;
 using JSON;
+using Vostok.Commons.Helpers.Extensions;
+using System.Management.Instrumentation;
 
 namespace Overlayer.Tags.Global
 {
@@ -54,17 +56,7 @@ namespace Overlayer.Tags.Global
                     string artist = levelData.artist.BreakRichTag(), author = levelData.author.BreakRichTag(), title = levelData.song.BreakRichTag();
                     var result = await Request(artist, title, author, string.IsNullOrWhiteSpace(levelData.pathData) ? levelData.angleData.Count : levelData.pathData.Length, (int)Math.Round(levelData.bpm));
 #if DIFFICULTY_PREDICTOR
-                    try
-                    {
-                        IntegratedDifficulty = PredictedDifficulty = PredictDifficulty(instance);
-                    }
-                    catch (Exception e)
-                    {
-                        var levelPath = instance.customLevel.levelPath;
-                        Main.Logger.Log($"Error On Predicting Difficulty:\n{e}");
-                        Main.Logger.Log($"Level Path: {levelPath}");
-                        Main.Logger.Log($"Adjusting PredictedDifficulty To Editor Difficulty {IntegratedDifficulty = ForumDifficulty = ((double)instance.levelData.difficulty).Map(1, 10, 1, 21)}");
-                    }
+                    PredictDiff(instance);
                     IntegratedDifficulty = (result?.difficulty).HasValue ? (ForumDifficulty = result.difficulty) : PredictedDifficulty;
 #else
                     PredictedDifficulty = ((double)instance.levelData.difficulty).Map(1, 10, 1, 21);
@@ -217,17 +209,44 @@ namespace Overlayer.Tags.Global
             return CachedStrings[key].Contains(value);
         }
 #if DIFFICULTY_PREDICTOR
-        public static double PredictDifficulty(scnEditor editor)
+        public static async void PredictDiff(scnEditor editor)
+        {
+            try
+            {
+                IntegratedDifficulty = PredictedDifficulty = await PredictDifficulty(editor).TryWaitAsync(TimeSpan.FromSeconds(10));
+            }
+            catch (Exception e)
+            {
+                var levelPath = editor.customLevel.levelPath;
+                Main.Logger.Log($"Error On Predicting Difficulty:\n{e}");
+                Main.Logger.Log($"Level Path: {levelPath}");
+                Main.Logger.Log($"Adjusting PredictedDifficulty To Editor Difficulty {IntegratedDifficulty = ForumDifficulty = ((double)editor.levelData.difficulty).Map(1, 10, 1, 21)}");
+            }
+        }
+        public static async Task<double> PredictDifficulty(scnEditor editor)
         {
             var levelData = editor.levelData;
             var hash = DataInit.MakeHash(levelData.author, levelData.artist, levelData.song);
             if (PredictedDiffCache.TryGetValue(hash, out var diff)) return diff;
-            var meta = GetMeta(editor.customLevel.levelPath);
-            var predicted = meta.Difficulty.ToDouble();
-            return PredictedDiffCache[hash] = Clamp(Math.Round(predicted, 1), 1, 21);
+            var meta = await Task.Run(() => GetMeta(editor.customLevel.levelPath));
+            Main.Logger.Log($"Difficulty Request Url: {meta.RequestUrl}");
+            var predicted = await Task.Run(() => meta.Difficulty.ToDouble());
+            return PredictedDiffCache[hash] = AdjustDiff(Clamp(Math.Round(predicted, 1), 1, 21));
         }
         public static LevelMeta GetMeta(string levelPath)
             => LevelMeta.GetMeta(ACL.Read(JsonNode.Parse(File.ReadAllText(levelPath))));
+        public static double AdjustDiff(double diff)
+        {
+            double result;
+            if (diff > 30)
+                return 21;
+            if (diff <= 20)
+                if (diff > 18)
+                    result = Math.Round(diff / .5) * .5;
+                else result = Math.Round(diff);
+            else result = Math.Round(20f + (diff % 20f / 10f), 1);
+            return result;
+        }
 #endif
         public static List<string> CachedState = new List<string>();
         public static Dictionary<string, double> PredictedDiffCache = new Dictionary<string, double>();

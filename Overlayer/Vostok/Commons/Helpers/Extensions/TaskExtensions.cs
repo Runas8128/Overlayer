@@ -37,6 +37,35 @@ namespace Vostok.Commons.Helpers.Extensions
 
         /// <inheritdoc cref="WaitAsync"/>
         [Obsolete("Use TryWaitAsync method instead.")]
+        public static Task<T> WaitAsync<T>(this Task<T> task, TimeSpan timeout) =>
+            TryWaitAsync(task, timeout);
+
+        /// <summary>
+        /// <para>Returns true if <paramref name="task"/> finished within given <paramref name="timeout"/>.</para>
+        /// <para>Does not stop or cancel given <paramref name="task"/></para>
+        /// </summary>
+        public static async Task<T> TryWaitAsync<T>(this Task<T> task, TimeSpan timeout)
+        {
+            if (task.IsCompleted)
+                return task.Result;
+            using (var cts = new CancellationTokenSource())
+            {
+                var delay = Task.Delay(timeout, cts.Token);
+
+                var result = await Task.WhenAny(task, delay).ConfigureAwait(false);
+                if (result == delay)
+                {
+                    return default;
+                }
+
+                cts.Cancel();
+            }
+
+            return task.Result;
+        }
+
+        /// <inheritdoc cref="WaitAsync"/>
+        [Obsolete("Use TryWaitAsync method instead.")]
         public static Task<bool> WaitAsync(this Task task, TimeSpan timeout) =>
             TryWaitAsync(task, timeout);
     }

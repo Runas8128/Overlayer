@@ -22,7 +22,7 @@ namespace Overlayer
                     + $"{minSA},{maxSA},{saAverage},{saVariance},{saStdDeviation},"
                     + $"{minMs},{maxMs},{msAverage},{msVariance},{msStdDeviation},"
                     + $"{minBpm},{maxBpm},{bpmAverage},{bpmVariance},{bpmStdDeviation}";
-        public string RequestUrl { get; } = $"http://152.69.230.61:9200/?tileCount={tileCount}&twirlRatio={twirlRatio}&setSpeedRatio={setSpeedRatio}&minTA={minTA}&maxTA={maxTA}&taAverage={taAverage}&taVariance={taVariance}&taStdDeviation={taStdDeviation}&minSA={minSA}&maxSA={maxSA}&saAverage={saAverage}&saVariance={saVariance}&saStdDeviation={saStdDeviation}&minMs={minMs}&maxMs={maxMs}&msAverage={msAverage}&msVariance={msVariance}&msStdDeviation={msStdDeviation}&minBpm={minBpm}&maxBpm={maxBpm}&bpmAverage={bpmAverage}&bpmVariance={bpmVariance}&bpmStdDeviation={bpmStdDeviation}".Replace("+", "").Replace("∞", "-1");
+        public string RequestUrl { get; } = $"http://220.81.234.183:6974/predict/?tileCount={tileCount}&twirlRatio={twirlRatio}&setSpeedRatio={setSpeedRatio}&minTA={minTA}&maxTA={maxTA}&taAverage={taAverage}&taVariance={taVariance}&taStdDeviation={taStdDeviation}&minSA={minSA}&maxSA={maxSA}&saAverage={saAverage}&saVariance={saVariance}&saStdDeviation={saStdDeviation}&minMs={minMs}&maxMs={maxMs}&msAverage={msAverage}&msVariance={msVariance}&msStdDeviation={msStdDeviation}&minBpm={minBpm}&maxBpm={maxBpm}&bpmAverage={bpmAverage}&bpmVariance={bpmVariance}&bpmStdDeviation={bpmStdDeviation}".Replace("+", "").Replace("∞", "-1");
         public string Difficulty => client.DownloadString(RequestUrl);
         public static LevelMeta GetMeta(ACL level)
         {
