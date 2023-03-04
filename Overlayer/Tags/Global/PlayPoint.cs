@@ -13,6 +13,7 @@ using System.IO;
 using JSON;
 using Vostok.Commons.Helpers.Extensions;
 using System.Management.Instrumentation;
+using Discord;
 
 namespace Overlayer.Tags.Global
 {
@@ -56,7 +57,7 @@ namespace Overlayer.Tags.Global
                     string artist = levelData.artist.BreakRichTag(), author = levelData.author.BreakRichTag(), title = levelData.song.BreakRichTag();
                     var result = await Request(artist, title, author, string.IsNullOrWhiteSpace(levelData.pathData) ? levelData.angleData.Count : levelData.pathData.Length, (int)Math.Round(levelData.bpm));
 #if DIFFICULTY_PREDICTOR
-                    PredictDiff(instance);
+                    PredictDiff(instance, !(result?.difficulty).HasValue);
                     IntegratedDifficulty = (result?.difficulty).HasValue ? (ForumDifficulty = result.difficulty) : PredictedDifficulty;
 #else
                     PredictedDifficulty = ((double)instance.levelData.difficulty).Map(1, 10, 1, 21);
@@ -209,11 +210,13 @@ namespace Overlayer.Tags.Global
             return CachedStrings[key].Contains(value);
         }
 #if DIFFICULTY_PREDICTOR
-        public static async void PredictDiff(scnEditor editor)
+        public static async void PredictDiff(scnEditor editor, bool requireUpload)
         {
             try
             {
                 IntegratedDifficulty = PredictedDifficulty = await PredictDifficulty(editor).TryWaitAsync(TimeSpan.FromSeconds(10));
+                if (requireUpload)
+                    LevelMeta.Upload(editor.customLevel.levelPath, editor.levelData.song, PredictedDifficulty.ToString());
             }
             catch (Exception e)
             {

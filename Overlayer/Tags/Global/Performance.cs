@@ -30,7 +30,7 @@ namespace Overlayer.Tags.Global
             ProcessorCount = Environment.ProcessorCount;
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                Main.Logger.Log("Performance Monitoring Tag Is Not Supported At MacOS Or Linux.");
+                Main.Logger.Log("<b>Performance Monitoring Tag Is Not Supported At MacOS Or Linux.</b>");
                 Initialized = true;
                 return;
             }

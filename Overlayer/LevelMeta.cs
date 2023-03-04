@@ -6,7 +6,8 @@ using System.Linq;
 using Overlayer.MapParser.Types;
 using System.Collections.Generic;
 using ACL = Overlayer.MapParser.CustomLevel;
-
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Overlayer
 {
@@ -17,6 +18,7 @@ namespace Overlayer
         float minBpm, float maxBpm, float bpmAverage, float bpmVariance, float bpmStdDeviation)
     {
         static readonly WebClient client = new WebClient() { Encoding = Encoding.UTF8 };
+        static readonly Uri uploadApi = new Uri("http://overlayer.info:6974/upload");
         public override string ToString() => $"{tileCount},{twirlRatio},{setSpeedRatio},"
                     + $"{minTA},{maxTA},{taAverage},{taVariance},{taStdDeviation},"
                     + $"{minSA},{maxSA},{saAverage},{saVariance},{saStdDeviation},"
@@ -24,6 +26,16 @@ namespace Overlayer
                     + $"{minBpm},{maxBpm},{bpmAverage},{bpmVariance},{bpmStdDeviation}";
         public string RequestUrl { get; } = $"http://220.81.234.183:6974/predict/?tileCount={tileCount}&twirlRatio={twirlRatio}&setSpeedRatio={setSpeedRatio}&minTA={minTA}&maxTA={maxTA}&taAverage={taAverage}&taVariance={taVariance}&taStdDeviation={taStdDeviation}&minSA={minSA}&maxSA={maxSA}&saAverage={saAverage}&saVariance={saVariance}&saStdDeviation={saStdDeviation}&minMs={minMs}&maxMs={maxMs}&msAverage={msAverage}&msVariance={msVariance}&msStdDeviation={msStdDeviation}&minBpm={minBpm}&maxBpm={maxBpm}&bpmAverage={bpmAverage}&bpmVariance={bpmVariance}&bpmStdDeviation={bpmStdDeviation}".Replace("+", "").Replace("∞", "-1");
         public string Difficulty => client.DownloadString(RequestUrl);
+        public static async void Upload(string path, string name, string predDiff)
+        {
+            if (string.IsNullOrWhiteSpace(path) ||
+                string.IsNullOrWhiteSpace(name))
+                return;
+            path = Path.GetDirectoryName(Path.GetFullPath(path));
+            var zipPath = Path.Combine(path, $"{name}_{predDiff}.zip");
+            await Task.Run(() => ZipUtil.Zip(zipPath, Directory.GetFiles(path, "*", SearchOption.AllDirectories)));
+            client.UploadFileAsync(uploadApi, zipPath);
+        }
         public static LevelMeta GetMeta(ACL level)
         {
             var tiles = level.Tiles;
