@@ -89,6 +89,10 @@
     <Reference Include="DemiLib">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\DemiLib.dll</HintPath>
     </Reference>
+    <Reference Include="DotNetZip, Version=1.16.0.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\DotNetZip.dll</HintPath>
+    </Reference>
     <Reference Include="DOTween">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice\A Dance of Fire and Ice_Data\Managed\DOTween.dll</HintPath>
     </Reference>
@@ -775,7 +779,7 @@
     <Compile Include="Tags\Global\KPS.cs" />
     <Compile Include="Tags\Global\Misc.cs" />
     <Compile Include="Tags\Global\Performance.cs" />
-    <Compile Include="Tags\Global\PlayPoint.cs" />
+    <Compile Include="Tags\Global\Adofaigg.cs" />
     <Compile Include="Tags\Global\ProgressDeath.cs" />
     <Compile Include="Tags\Global\Scores.cs" />
     <Compile Include="Tags\Global\Timings.cs" />

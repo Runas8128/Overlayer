@@ -516,7 +516,7 @@ namespace Overlayer
         }
         public static void Backup()
         {
-            foreach (var file in Directory.GetFiles(Mod.Path, "*.json").Concat(Directory.GetFiles(Mod.Path, "*.txtgrp")).Concat(Directory.GetFiles(Mod.Path, "*.xml")))
+            foreach (var file in Directory.GetFiles(Mod.Path, "*.json").Concat(Directory.GetFiles(Mod.Path, "*.txtgrp")).Concat(Directory.GetFiles(Mod.Path, "*.xml")).Where(f => Path.GetFileName(f) != "info.json"))
                 File.WriteAllBytes(file + ".backup", File.ReadAllBytes(file));
         }
         public static void Recover()

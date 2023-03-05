@@ -81,7 +81,7 @@ namespace Overlayer.Python.CustomLibrary
         }
         public static double calculatePP(double difficulty, int speed, double accuracy, int totalTiles)
         {
-            return Tags.Global.PlayPoint.CalculatePlayPoint(difficulty, speed, accuracy, totalTiles);
+            return Tags.Global.Adofaigg.CalculatePlayPoint(difficulty, speed, accuracy, totalTiles);
         }
         public static object getGlobalVariable(string name)
         {
@@ -219,7 +219,7 @@ namespace Overlayer.Python.CustomLibrary
         public static double TotalMemoryUsage(double op) => Performance.TotalMemoryUsage_(op);
         public static double MemoryUsageGBytes(double op) => Performance.MemoryUsageGBytes_(op);
         public static double TotalMemoryUsageGBytes(double op) => Performance.TotalMemoryUsageGBytes_(op);
-        public static double PlayPoint(double op) => Tags.Global.PlayPoint.PlayPointValue(op);
+        public static double PlayPoint(double op) => Tags.Global.Adofaigg.PlayPointValue(op);
         public static double ProgressDeath(string op) => Tags.Global.ProgressDeath.GetDeaths(op);
         public static double Score() => Scores.Score();
         public static double LScore() => Scores.LScore();

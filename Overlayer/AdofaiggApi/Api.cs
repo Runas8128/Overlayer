@@ -10,6 +10,7 @@ namespace Overlayer.AdofaiggApi
 {
     public class Api
     {
+        public static bool EscapeParameter { get; set; } = false;
         public const string API = "https://adofai.gg:9200/api/v1";
         static readonly WebClient api;
         static Api()

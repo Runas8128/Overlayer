@@ -22,7 +22,7 @@ namespace Overlayer.AdofaiggApi
         }
         public Parameter<T> SetValue(T value)
         {
-            if (str)
+            if (Api.EscapeParameter && str)
                 value_ = (T)(object)Uri.EscapeDataString(value.ToString());
             else value_ = value;
             return this;

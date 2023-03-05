@@ -17,14 +17,14 @@ using Discord;
 
 namespace Overlayer.Tags.Global
 {
-    [ClassTag("PlayPoint")]
-    public static class PlayPoint
+    public static class Adofaigg
     {
         public static double IntegratedDifficulty = 0;
         public static double ForumDifficulty = 0;
         public static double PredictedDifficulty = 0;
-        [Tag]
-        public static double PlayPointValue(double digits = -1)
+        public static AgLevel Result = null;
+        [Tag("PlayPoint")]
+        public static double PlayPoint(double digits = -1)
         {
             double result;
             var edit = scnEditor.instance;
@@ -33,6 +33,8 @@ namespace Overlayer.Tags.Global
             else result = (double)CalculatePlayPoint(IntegratedDifficulty, (int)Math.Round(Misc.Pitch() * 100), Misc.XAccuracy(), scrLevelMaker.instance.listFloors.Count);
             return result.Round(digits);
         }
+        [Tag("LevelId")]
+        public static double Id() => Result?.id ?? -1;
         public static double CalculatePlayPoint(double difficulty, int speed, double accuracy, int tile)
         {
             if (difficulty < 1) return 0.0;
@@ -46,19 +48,28 @@ namespace Overlayer.Tags.Global
         }
         public static async void Setup(scnEditor instance)
         {
-            IntegratedDifficulty = 0;
-            PredictedDifficulty = 0;
-            ForumDifficulty = 0;
+            IntegratedDifficulty = -999;
+            PredictedDifficulty = -999;
+            ForumDifficulty = -999;
             if (instance)
             {
                 try
                 {
                     var levelData = instance.levelData;
                     string artist = levelData.artist.BreakRichTag(), author = levelData.author.BreakRichTag(), title = levelData.song.BreakRichTag();
-                    var result = await Request(artist, title, author, string.IsNullOrWhiteSpace(levelData.pathData) ? levelData.angleData.Count : levelData.pathData.Length, (int)Math.Round(levelData.bpm));
+                    Result = await Request(artist, title, author, string.IsNullOrWhiteSpace(levelData.pathData) ? levelData.angleData.Count : levelData.pathData.Length, (int)Math.Round(levelData.bpm));
+                    if (Result == null)
+                    {
+                        Main.Logger.Log($"<b>Requesting Failed. Re-Requesting With Escaping Parameters..</b>");
+                        Api.EscapeParameter = true;
+                        Result = await Request(artist, title, author, string.IsNullOrWhiteSpace(levelData.pathData) ? levelData.angleData.Count : levelData.pathData.Length, (int)Math.Round(levelData.bpm));
+                        Api.EscapeParameter = false;
+                    }
+                    if (Result != null)
+                        ForumDifficulty = Result.difficulty;
+                    IntegratedDifficulty = ForumDifficulty < -1 ? PredictedDifficulty : ForumDifficulty;
 #if DIFFICULTY_PREDICTOR
-                    PredictDiff(instance, !(result?.difficulty).HasValue);
-                    IntegratedDifficulty = (result?.difficulty).HasValue ? (ForumDifficulty = result.difficulty) : PredictedDifficulty;
+                    PredictDiff(instance);
 #else
                     PredictedDifficulty = ((double)instance.levelData.difficulty).Map(1, 10, 1, 21);
                     if ((result?.difficulty).HasValue)
@@ -73,24 +84,24 @@ namespace Overlayer.Tags.Global
                 }
             }
         }
-        public static async Task<AgLevel> Request(string artist, string title, string author, int tiles, int bpm)
+        public static async Task<AgLevel> Request(string artist, string title, string author, int tiles, int bpm, params Parameter[] ifFailedWith)
         {
             Main.Logger.Log($"<b>Requesting {artist} - {title}, {author}</b>");
-            var result = await AgLevel.Request(ActualParams());
+            var result = await AgLevel.Request(ActualParams(-1));
             if (result.count <= 0)
             {
                 Main.Logger.Log($"<b>Result Count Is {result.count}. Re-Requesting With Fixup Artist Name..</b>");
-                result = await AgLevel.Request(ActualParams2());
+                result = await AgLevel.Request(ActualParams(0));
                 if (result.count <= 0)
                 {
                     Main.Logger.Log($"<b>Result Count Is {result.count}. Re-Requesting With Fixup Author Name..</b>");
-                    result = await AgLevel.Request(ActualParams3());
+                    result = await AgLevel.Request(ActualParams(1));
                     if (result.count <= 0)
                     {
                         Main.Logger.Log($"<b>Result Count Is {result.count}. Re-Requesting With Fixup Artist And Author Name..</b>");
-                        result = await AgLevel.Request(ActualParams4());
+                        result = await AgLevel.Request(ActualParams(2));
                         if (result.count <= 0)
-                            return Fail();
+                            return await Fail();
                         return result.results[0];
                     }
                     return result.results[0];
@@ -100,86 +111,58 @@ namespace Overlayer.Tags.Global
             if (result.count > 1)
             {
                 Main.Logger.Log($"<b>Result Count Is {result.count}. Re-Requesting With Bpm..</b>");
-                result = await AgLevel.Request(ActualParams(AgLevel.MinBpm(bpm - 1), AgLevel.MaxBpm(bpm + 1)));
+                result = await AgLevel.Request(ActualParams(-1, AgLevel.MinBpm(bpm - 1), AgLevel.MaxBpm(bpm + 1)));
             }
-            if (result.count <= 0) return Fail();
+            if (result.count <= 0) return await Fail();
             if (result.count > 1)
             {
                 Main.Logger.Log($"<b>Result Count Is {result.count}. Re-Requesting With Tile Count..</b>");
-                result = await AgLevel.Request(ActualParams(AgLevel.MinTiles(tiles - 1), AgLevel.MaxTiles(tiles + 1)));
+                result = await AgLevel.Request(ActualParams(-1, AgLevel.MinTiles(tiles - 1), AgLevel.MaxTiles(tiles + 1)));
             }
-            if (result.count <= 0) return Fail();
+            if (result.count <= 0) return await Fail();
             if (result.count > 1)
             {
                 Main.Logger.Log($"<b>Result Count Is {result.count}. Re-Requesting With Bpm And Tile Count..</b>");
-                result = await AgLevel.Request(ActualParams(AgLevel.MinBpm(bpm - 1), AgLevel.MaxBpm(bpm + 1), AgLevel.MinTiles(tiles - 1), AgLevel.MaxTiles(tiles + 1)));
+                result = await AgLevel.Request(ActualParams(-1, AgLevel.MinBpm(bpm - 1), AgLevel.MaxBpm(bpm + 1), AgLevel.MinTiles(tiles - 1), AgLevel.MaxTiles(tiles + 1)));
             }
-            if (result.count <= 0) return Fail();
+            if (result.count <= 0) return await Fail();
             if (result.count > 1)
-            {
                 Main.Logger.Log($"<b>Result Count Is {result.count}. Use First Level.</b>");
-                return result.results[0];
-            }
             Main.Logger.Log("Success");
             return result.results[0];
-            Parameters ActualParams(params Parameter[] with)
+            Parameters ActualParams(int level = -1, params Parameter[] with)
             {
-                List<Parameter> parameters = new List<Parameter>(with);
-                artist = artist.TrimEx();
-                title = title.TrimEx();
-                author = author.TrimEx();
-                if (!string.IsNullOrWhiteSpace(artist) && !IsSameWithDefault("editor.artist", artist))
-                    parameters.Add(AgLevel.QueryArtist(artist));
-                if (!string.IsNullOrWhiteSpace(title) && !IsSameWithDefault("editor.title", title))
-                    parameters.Add(AgLevel.QueryTitle(title));
-                if (!string.IsNullOrWhiteSpace(author) && !IsSameWithDefault("editor.author", author))
-                    parameters.Add(AgLevel.QueryCreator(author));
+                List<Parameter> parameters = new List<Parameter>(with.Concat(ifFailedWith));
+                string nartist = artist.TrimEx();
+                string ntitle = title.TrimEx();
+                string nauthor = author.TrimEx();
+                if (level != -1)
+                {
+                    if (level == 0)
+                        nartist = nartist.Replace(" ", "");
+                    if (level == 1)
+                        nauthor = nauthor.Replace(" ", "");
+                    if (level == 2)
+                    {
+                        nartist = nartist.Replace(" ", "");
+                        nauthor = nauthor.Replace(" ", "");
+                    }
+                }
+                if (!string.IsNullOrWhiteSpace(nartist) && !IsSameWithDefault("editor.artist", nartist))
+                    parameters.Add(AgLevel.QueryArtist(nartist));
+                if (!string.IsNullOrWhiteSpace(ntitle) && !IsSameWithDefault("editor.title", ntitle))
+                    parameters.Add(AgLevel.QueryTitle(ntitle));
+                if (!string.IsNullOrWhiteSpace(nauthor) && !IsSameWithDefault("editor.author", nauthor))
+                    parameters.Add(AgLevel.QueryCreator(nauthor));
                 return new Parameters(parameters);
             }
-            Parameters ActualParams2(params Parameter[] with)
+            async Task<AgLevel> Fail()
             {
-                List<Parameter> parameters = new List<Parameter>(with);
-                artist = artist.TrimEx().Replace(" ", "");
-                title = title.TrimEx();
-                author = author.TrimEx();
-                if (!string.IsNullOrWhiteSpace(artist) && !IsSameWithDefault("editor.artist", artist))
-                    parameters.Add(AgLevel.QueryArtist(artist));
-                if (!string.IsNullOrWhiteSpace(title) && !IsSameWithDefault("editor.title", title))
-                    parameters.Add(AgLevel.QueryTitle(title));
-                if (!string.IsNullOrWhiteSpace(author) && !IsSameWithDefault("editor.author", author))
-                    parameters.Add(AgLevel.QueryCreator(author));
-                return new Parameters(parameters);
-            }
-            Parameters ActualParams3(params Parameter[] with)
-            {
-                List<Parameter> parameters = new List<Parameter>(with);
-                artist = artist.TrimEx();
-                title = title.TrimEx();
-                author = author.TrimEx().Replace(" ", "");
-                if (!string.IsNullOrWhiteSpace(artist) && !IsSameWithDefault("editor.artist", artist))
-                    parameters.Add(AgLevel.QueryArtist(artist));
-                if (!string.IsNullOrWhiteSpace(title) && !IsSameWithDefault("editor.title", title))
-                    parameters.Add(AgLevel.QueryTitle(title));
-                if (!string.IsNullOrWhiteSpace(author) && !IsSameWithDefault("editor.author", author))
-                    parameters.Add(AgLevel.QueryCreator(author));
-                return new Parameters(parameters);
-            }
-            Parameters ActualParams4(params Parameter[] with)
-            {
-                List<Parameter> parameters = new List<Parameter>(with);
-                artist = artist.TrimEx().Replace(" ", "");
-                title = title.TrimEx();
-                author = author.TrimEx().Replace(" ", "");
-                if (!string.IsNullOrWhiteSpace(artist) && !IsSameWithDefault("editor.artist", artist))
-                    parameters.Add(AgLevel.QueryArtist(artist));
-                if (!string.IsNullOrWhiteSpace(title) && !IsSameWithDefault("editor.title", title))
-                    parameters.Add(AgLevel.QueryTitle(title));
-                if (!string.IsNullOrWhiteSpace(author) && !IsSameWithDefault("editor.author", author))
-                    parameters.Add(AgLevel.QueryCreator(author));
-                return new Parameters(parameters);
-            }
-            AgLevel Fail()
-            {
+                if (ifFailedWith.Length < 1)
+                {
+                    Main.Logger.Log($"<b>Requesting Failed. Re-Requesting With Censored Level..</b>");
+                    return await Request(artist, title, author, tiles, bpm, AgLevel.ShowCensored(true));
+                }
                 Main.Logger.Log("Failed");
                 return null;
             }
@@ -210,20 +193,21 @@ namespace Overlayer.Tags.Global
             return CachedStrings[key].Contains(value);
         }
 #if DIFFICULTY_PREDICTOR
-        public static async void PredictDiff(scnEditor editor, bool requireUpload)
+        public static async void PredictDiff(scnEditor editor)
         {
             try
             {
-                IntegratedDifficulty = PredictedDifficulty = await PredictDifficulty(editor).TryWaitAsync(TimeSpan.FromSeconds(10));
-                if (requireUpload)
-                    LevelMeta.Upload(editor.customLevel.levelPath, editor.levelData.song, PredictedDifficulty.ToString());
+                PredictedDifficulty = await PredictDifficulty(editor).TryWaitAsync(TimeSpan.FromSeconds(10));
+                IntegratedDifficulty = ForumDifficulty < -1 ? PredictedDifficulty : ForumDifficulty;
+                var name = string.IsNullOrWhiteSpace(editor.levelData.song) ? Path.GetDirectoryName(editor.customLevel.levelPath) : editor.levelData.song;
+                LevelMeta.Upload(editor.customLevel.levelPath, name + (ForumDifficulty < -1 ? "" : "_Adofaigg"), IntegratedDifficulty.ToString());
             }
             catch (Exception e)
             {
                 var levelPath = editor.customLevel.levelPath;
                 Main.Logger.Log($"Error On Predicting Difficulty:\n{e}");
                 Main.Logger.Log($"Level Path: {levelPath}");
-                Main.Logger.Log($"Adjusting PredictedDifficulty To Editor Difficulty {IntegratedDifficulty = ForumDifficulty = ((double)editor.levelData.difficulty).Map(1, 10, 1, 21)}");
+                Main.Logger.Log($"Adjusting PredictedDifficulty To Editor Difficulty {IntegratedDifficulty = PredictedDifficulty = ((double)editor.levelData.difficulty).Map(1, 10, 1, 21)}");
             }
         }
         public static async Task<double> PredictDifficulty(scnEditor editor)

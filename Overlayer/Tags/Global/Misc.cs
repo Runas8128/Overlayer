@@ -42,11 +42,11 @@ namespace Overlayer.Tags.Global
         [Tag("StartTile")]
         public static double StartTile() => Variables.StartTile;
         [Tag("IntegratedDifficulty")]
-        public static double IntegratedDifficulty(double digits = -1) => PlayPoint.IntegratedDifficulty.Round(digits);
+        public static double IntegratedDifficulty(double digits = -1) => Adofaigg.IntegratedDifficulty.Round(digits);
         [Tag("PredictedDifficulty")]
-        public static double PredictedDifficulty(double digits = -1) => PlayPoint.PredictedDifficulty.Round(digits);
+        public static double PredictedDifficulty(double digits = -1) => Adofaigg.PredictedDifficulty.Round(digits);
         [Tag("ForumDifficulty")]
-        public static double ForumDifficulty(double digits = -1) => PlayPoint.ForumDifficulty.Round(digits);
+        public static double ForumDifficulty(double digits = -1) => Adofaigg.ForumDifficulty.Round(digits);
         [Tag("Accuracy")]
         public static double Accuracy(double digits = -1) => (scrController.instance.mistakesManager.percentAcc * 100).Round(digits);
         [Tag("Progress")]

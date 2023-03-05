@@ -43,7 +43,6 @@ namespace Overlayer.Patches
                 {
                     if (scnEditor.instance?.levelData == null)
                         return;
-                    Main.Logger.Log("Hash");
                     var levelData = scnEditor.instance.levelData;
                     MapID = DataInit.MakeHash(levelData.author, levelData.artist, levelData.song);
                     if (!PlayTimes.TryGetValue(ID(MapID), out _))

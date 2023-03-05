@@ -94,7 +94,7 @@ namespace JSEngine.CustomLibrary
         [JSFunction(Name = "calculatePP")]
         public static double CalculatePP(double difficulty, int speed, double accuracy, int totalTiles)
         {
-            return PlayPoint.CalculatePlayPoint(difficulty, speed, accuracy, totalTiles);
+            return Adofaigg.CalculatePlayPoint(difficulty, speed, accuracy, totalTiles);
         }
         [JSFunction(Name = "getGlobalVariable")]
         public static object GetGlobalVariable(string name)
