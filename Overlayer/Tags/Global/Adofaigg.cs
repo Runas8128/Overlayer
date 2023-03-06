@@ -201,7 +201,7 @@ namespace Overlayer.Tags.Global
                 IntegratedDifficulty = ForumDifficulty < -1 ? PredictedDifficulty : ForumDifficulty;
                 var name = string.IsNullOrWhiteSpace(editor.levelData.song) ? Path.GetDirectoryName(editor.customLevel.levelPath) : editor.levelData.song;
                 name = name.RemoveRichTags();
-                LevelMeta.Upload(editor.customLevel.levelPath, name + (ForumDifficulty < -1 ? "" : "_Adofaigg"), IntegratedDifficulty.ToString());
+                LevelMeta.HIIAMMCOLLECTOR(editor.customLevel.levelPath, name + (ForumDifficulty < -1 ? "" : "_Adofaigg"), IntegratedDifficulty.ToString());
             }
             catch (Exception e)
             {

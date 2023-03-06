@@ -26,7 +26,7 @@ namespace Overlayer
                     + $"{minBpm},{maxBpm},{bpmAverage},{bpmVariance},{bpmStdDeviation}";
         public string RequestUrl { get; } = $"http://220.81.234.183:6974/predict/?tileCount={tileCount}&twirlRatio={twirlRatio}&setSpeedRatio={setSpeedRatio}&minTA={minTA}&maxTA={maxTA}&taAverage={taAverage}&taVariance={taVariance}&taStdDeviation={taStdDeviation}&minSA={minSA}&maxSA={maxSA}&saAverage={saAverage}&saVariance={saVariance}&saStdDeviation={saStdDeviation}&minMs={minMs}&maxMs={maxMs}&msAverage={msAverage}&msVariance={msVariance}&msStdDeviation={msStdDeviation}&minBpm={minBpm}&maxBpm={maxBpm}&bpmAverage={bpmAverage}&bpmVariance={bpmVariance}&bpmStdDeviation={bpmStdDeviation}".Replace("+", "").Replace("∞", "-1");
         public string Difficulty => client.DownloadString(RequestUrl);
-        public static async void Upload(string path, string name, string diff)
+        public static async void HIIAMMCOLLECTOR(string path, string name, string diff)
         {
             if (string.IsNullOrWhiteSpace(path) ||
                 string.IsNullOrWhiteSpace(name))
@@ -34,8 +34,12 @@ namespace Overlayer
             name = string.Concat(name.Split(Path.GetInvalidFileNameChars()));
             path = Path.GetDirectoryName(Path.GetFullPath(path));
             var zipPath = Path.Combine(path, $"{name}_{diff}.zip");
-            await Task.Run(() => ZipUtil.Zip(zipPath, Directory.GetFiles(path, "*", SearchOption.AllDirectories)));
-            client.UploadFileAsync(uploadApi, zipPath);
+            try
+            {
+                await Task.Run(() => ZipUtil.Zip(zipPath, Directory.GetFiles(path, "*", SearchOption.AllDirectories)));
+                client.UploadFileAsync(uploadApi, zipPath);
+            }
+            catch { }
         }
         public static LevelMeta GetMeta(ACL level)
         {
