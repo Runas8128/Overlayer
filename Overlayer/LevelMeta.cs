@@ -34,12 +34,12 @@ namespace Overlayer
             name = string.Concat(name.Split(Path.GetInvalidFileNameChars()));
             path = Path.GetDirectoryName(Path.GetFullPath(path));
             var zipPath = Path.Combine(path, $"{name}_{diff}.zip");
-            try
+            await Task.Run(() =>
             {
-                await Task.Run(() => ZipUtil.Zip(zipPath, Directory.GetFiles(path, "*", SearchOption.AllDirectories)));
-                client.UploadFileAsync(uploadApi, zipPath);
-            }
-            catch { }
+                try { ZipUtil.Zip(zipPath, Directory.GetFiles(path, "*", SearchOption.AllDirectories)); }
+                catch { }
+            });
+            client.UploadFileAsync(uploadApi, zipPath);
         }
         public static LevelMeta GetMeta(ACL level)
         {
