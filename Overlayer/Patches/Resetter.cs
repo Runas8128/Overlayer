@@ -13,7 +13,7 @@ namespace Overlayer.Patches
         public static void Prefix(scrController __instance) => Reset(__instance);
         public static void Reset(scrController __instance)
         {
-            var caption = __instance.txtCaption?.text;
+            var caption = __instance.txtLevelName?.text;
             if (Settings.Instance.Reset)
             {
                 if (caption != MapId)

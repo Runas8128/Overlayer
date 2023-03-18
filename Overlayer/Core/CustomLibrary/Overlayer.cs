@@ -138,7 +138,7 @@ namespace JSEngine.CustomLibrary
         public static void RegisterTag(ScriptEngine engine, string name, UserDefinedFunction func, bool notplaying)
         {
             Replacer tmp = new Replacer();
-            Replacer.Tag tag = tmp.CreateTag(name);
+            Tag tag = new Tag(name);
             UDFWrapper wrapper = new UDFWrapper(func);
             if (func.ArgumentNames.Count == 1)
                 tag.SetGetter((string o) => wrapper.CallGlobal(o));

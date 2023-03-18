@@ -20,7 +20,7 @@ namespace Overlayer
     public class TextGroup
     {
         readonly bool isGlobal = false;
-        internal List<Replacer.Tag> references = new List<Replacer.Tag>();
+        internal List<Tag> references = new List<Tag>();
         private Vector2 relativePos = new Vector2();
         private float relativeSize = 0;
         public TextGroup(bool isGlobal = false)
@@ -34,7 +34,7 @@ namespace Overlayer
         public string LoadedPath { get; private set; }
         public string Name { get; set; }
         public List<OverlayerText> Texts { get; set; }
-        public ReadOnlyCollection<Replacer.Tag> References => references.AsReadOnly();
+        public ReadOnlyCollection<Tag> References => references.AsReadOnly();
         public bool Expanded = false;
         public Vector2 Position
         {
@@ -207,11 +207,11 @@ namespace Overlayer
                 Remove(Texts[i]);
             Count = 0;
             Texts.Clear();
-            references = new List<Replacer.Tag>();
+            references = new List<Tag>();
         }
         public void TraceReference()
         {
-            HashSet<Replacer.Tag> refs = new HashSet<Replacer.Tag>();
+            HashSet<Tag> refs = new HashSet<Tag>();
             foreach (var tag in Texts.Where(t => t.Activated).SelectMany(t => t.PlayingCompiler.References))
                 refs.Add(tag);
             references = refs.ToList();

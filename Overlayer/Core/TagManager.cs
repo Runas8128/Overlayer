@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using Overlayer.Core.Utils;
 using System.Collections.Generic;
-using Tag = Overlayer.Core.Replacer.Tag;
+using Tag = Overlayer.Core.Tag;
 using UnityEngine;
 
 namespace Overlayer.Core
@@ -19,7 +19,6 @@ namespace Overlayer.Core
         }
         public static void LoadTags(this List<Tag> tags, Type type)
         {
-            Replacer tmpRep = new Replacer();
             ClassTagAttribute cTagAttr = type.GetCustomAttribute<ClassTagAttribute>();
             MethodInfo[] methods = type.GetMethods((BindingFlags)15420);
             if (cTagAttr != null)
@@ -35,7 +34,7 @@ namespace Overlayer.Core
                     throw new InvalidOperationException("ClassTag Must Have ValueGetter Method!");
                 if (!valueGetter.IsStatic)
                     throw new InvalidOperationException("ValueGetter Must Be Static!");
-                Tag tag = tmpRep.CreateTag(cTagAttr.Name).SetGetter(valueGetter);
+                Tag tag = new Tag(cTagAttr.Name).SetGetter(valueGetter);
                 cTagAttr.Threads?.ForEach(s => tag.AddThread(type.GetMethod(s)));
                 tag.Build();
                 tags.Add(tag);
@@ -46,7 +45,7 @@ namespace Overlayer.Core
                 TagAttribute tagAttr = method.GetCustomAttribute<TagAttribute>();
                 if (tagAttr == null) continue;
                 if (tagAttr.IsDefault) continue;
-                var tag = tmpRep.CreateTag(tagAttr.Name).SetGetter(method);
+                var tag = new Tag(tagAttr.Name).SetGetter(method);
                 tag.Build();
                 tags.Add(tag);
                 Dict.Add(tag.Name, tag);

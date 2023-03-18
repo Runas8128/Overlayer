@@ -35,8 +35,8 @@ namespace Overlayer
         public static byte[] Impljs;
         // Prevent GUI Error
         public static int LockGUIFrames = 0;
-        public static List<Replacer.Tag> AllTags = new List<Replacer.Tag>();
-        public static List<Replacer.Tag> NotPlayingTags = new List<Replacer.Tag>();
+        public static List<Tag> AllTags = new List<Tag>();
+        public static List<Tag> NotPlayingTags = new List<Tag>();
         public static event Action AllCustomTagsLoaded = delegate { };
         public static event Action AllInitsLoaded = delegate { };
         public static readonly string AsmFullName = Assembly.GetExecutingAssembly().FullName;
@@ -136,7 +136,7 @@ namespace Overlayer
                 fpsTimeTimer += deltaTime;
             };
         }
-        public static bool LoadJSTag(string path, string name, out Replacer.Tag tag)
+        public static bool LoadJSTag(string path, string name, out Tag tag)
         {
             tag = null;
             string desc = null;
@@ -150,7 +150,7 @@ namespace Overlayer
             try
             {
                 var del = source.CompileEval();
-                tag = new Replacer().CreateTag(name).SetGetter(del);
+                tag = new Tag(name).SetGetter(del);
                 tag.Build();
                 tag.SourcePath = path;
                 Language[name] = desc;

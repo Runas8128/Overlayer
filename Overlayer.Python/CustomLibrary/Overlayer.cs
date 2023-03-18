@@ -103,7 +103,7 @@ namespace Overlayer.Python.CustomLibrary
         }
         public static void registerOptTag(string name, Func<string, object> func, bool notplaying)
         {
-            Replacer.Tag tag = new Replacer().CreateTag(name);
+            Tag tag = new Tag(name);
             tag.SetGetter(func).Build();
             Overlayer.Main.AllTags.SetTag(name, tag);
             tag.SourcePath = currentSource;
@@ -219,7 +219,7 @@ namespace Overlayer.Python.CustomLibrary
         public static double TotalMemoryUsage(double op) => Performance.TotalMemoryUsage_(op);
         public static double MemoryUsageGBytes(double op) => Performance.MemoryUsageGBytes_(op);
         public static double TotalMemoryUsageGBytes(double op) => Performance.TotalMemoryUsageGBytes_(op);
-        public static double PlayPoint(double op) => Tags.Global.Adofaigg.PlayPointValue(op);
+        public static double PlayPoint(double op) => Adofaigg.PlayPoint(op);
         public static double ProgressDeath(string op) => Tags.Global.ProgressDeath.GetDeaths(op);
         public static double Score() => Scores.Score();
         public static double LScore() => Scores.LScore();
