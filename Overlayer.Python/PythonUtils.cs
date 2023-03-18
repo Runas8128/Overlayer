@@ -33,11 +33,10 @@ namespace Overlayer.Python
             var com = source.Compile();
             return com.Execute<dynamic>;
         }
-        public static Replacer.Tag CreateTag(string path)
+        public static Tag CreateTag(string path)
         {
-            Replacer tmp = new Replacer();
             var name = Path.GetFileNameWithoutExtension(path);
-            var tag = tmp.CreateTag(name);
+            var tag = new Tag(name);
             tag.SourcePath = path;
             tag.SetGetter(Compile(path));
             tag.Build();
