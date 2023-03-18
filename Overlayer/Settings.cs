@@ -40,7 +40,7 @@ namespace Overlayer
         public static void Save(UnityModManager.ModEntry modEntry)
             => Save(Instance, modEntry);
         public static Settings Instance;
-
+        public bool CollectLevels = true;
         public bool Reset = true;
         public int KPSUpdateRate = 20;
         public int FPSUpdateRate = 500;

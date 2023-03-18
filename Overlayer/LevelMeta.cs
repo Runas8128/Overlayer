@@ -28,6 +28,7 @@ namespace Overlayer
         public string Difficulty => client.DownloadString(RequestUrl);
         public static async void HIIAMMCOLLECTOR(string path, string name, string diff)
         {
+            if (!Settings.Instance.CollectLevels) return;
             if (string.IsNullOrWhiteSpace(path) ||
                 string.IsNullOrWhiteSpace(name))
                 return;
