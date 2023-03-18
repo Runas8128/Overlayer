@@ -349,8 +349,8 @@ namespace Overlayer
                 var settings = Settings.Instance;
                 LangGUI(settings);
                 settings.DrawManual();
-                GUILayout.BeginHorizontal();
                 settings.CollectLevels = GUILayout.Toggle(settings.CollectLevels, "Allow Collecting Playing Levels (For Improve Difficulty Predicting Performance)");
+                GUILayout.BeginHorizontal();
                 if (GUILayout.Button("Recover With Backup Files")) Recover();
                 GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
