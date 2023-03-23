@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Collections.Generic;
 
-namespace Overlayer.Core
+namespace Overlayer.Core.Tags
 {
     public class Replacer
     {
@@ -29,13 +29,13 @@ namespace Overlayer.Core
         {
             this.tags = tags ?? new List<Tag>();
             References = new HashSet<Tag>();
-            tagOpenChars = tags != null ? tags.Select(t => t.Open).Distinct().ToHashSet() : new HashSet<char>();
+            tagOpenChars = tags != null ? tags.Select(t => t.Config.Open).Distinct().ToHashSet() : new HashSet<char>();
         }
         public Replacer(string str, List<Tag> tags = null) : this(tags) => Source = str;
         public void AddTag(Tag tag)
         {
             tags.Add(tag);
-            tagOpenChars.Add(tag.Open);
+            tagOpenChars.Add(tag.Config.Open);
         }
         public string Replace()
         {
@@ -162,14 +162,14 @@ namespace Overlayer.Core
         }
         TagInfo ParseTag(char open, ref int index)
         {
-            var t = tags.Where(tag => tag.Open == open);
+            var t = tags.Where(tag => tag.Config.Open == open);
             if (!t.Any()) return null;
             foreach (Tag tag in t)
             {
-                int closeIndex = str.IndexOf(tag.Close, index);
+                int closeIndex = str.IndexOf(tag.Config.Close, index);
                 if (closeIndex < 0) continue;
                 string subStr = str.Substring(index + 1, closeIndex - index - 1);
-                string[] nameOpt = subStr.Split(new char[] { tag.Separator }, 2);
+                string[] nameOpt = subStr.Split(new char[] { tag.Config.Separator }, 2);
                 if (nameOpt[0] != tag.Name) continue;
                 index += closeIndex - index - 1;
                 return new TagInfo(tag, nameOpt.Length < 2 ? null : nameOpt[1]);

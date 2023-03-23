@@ -361,6 +361,7 @@
     <Compile Include="Core\FontManager.cs" />
     <Compile Include="Core\Tags\Replacer.cs" />
     <Compile Include="Core\Tags\Tag.cs" />
+    <Compile Include="Core\Tags\TagConfig.cs" />
     <Compile Include="Core\TileData.cs" />
     <Compile Include="Core\CustomLibrary\Time.cs" />
     <Compile Include="Core\CustomLibrary\Vector2.cs" />

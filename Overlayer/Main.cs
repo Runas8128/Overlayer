@@ -16,9 +16,8 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using JavaScript = Overlayer.Core.JavaScript;
 using JSEngine.CustomLibrary;
-using UnityModManagerNet;
+using Overlayer.Core.Tags;
 using SFB;
-using System.Runtime.ExceptionServices;
 using System.Text;
 
 namespace Overlayer

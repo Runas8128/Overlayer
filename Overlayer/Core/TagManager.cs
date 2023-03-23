@@ -3,8 +3,9 @@ using System.Linq;
 using System.Reflection;
 using Overlayer.Core.Utils;
 using System.Collections.Generic;
-using Tag = Overlayer.Core.Tag;
+using Tag = Overlayer.Core.Tags.Tag;
 using UnityEngine;
+using Overlayer.Core.Tags;
 
 namespace Overlayer.Core
 {

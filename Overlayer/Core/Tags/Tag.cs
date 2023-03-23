@@ -3,16 +3,14 @@ using System.Threading;
 using System.Reflection;
 using System.Linq.Expressions;
 using System.Collections.Generic;
-using static Overlayer.Core.Replacer;
+using static Overlayer.Core.Tags.Replacer;
 
-namespace Overlayer.Core
+namespace Overlayer.Core.Tags
 {
     public class Tag
     {
         public readonly string Name;
-        public readonly char Open;
-        public readonly char Close;
-        public readonly char Separator;
+        public readonly TagConfig Config;
         readonly List<Thread> Threads;
         public MethodInfo Getter { get; private set; }
         public Delegate GetterDelegate { get; private set; }
@@ -23,12 +21,10 @@ namespace Overlayer.Core
         public bool HasOption { get; private set; }
         // For CustomTag
         public string SourcePath = null;
-        public Tag(string name, char open = '{', char close = '}', char separator = ':')
+        public Tag(string name, TagConfig config = null)
         {
             Name = name;
-            Open = open;
-            Close = close;
-            Separator = separator;
+            Config = config ?? TagConfig.DefaultNormal;
             OptionConverter = null;
             Threads = new List<Thread>();
         }
@@ -116,7 +112,7 @@ namespace Overlayer.Core
         }
         public Tag Copy()
         {
-            Tag tag = new Tag(Name, Open, Close, Separator);
+            Tag tag = new Tag(Name, Config);
             tag.Getter = Getter;
             tag.GetterDelegate = GetterDelegate;
             tag.OptionConverter = OptionConverter;
@@ -124,7 +120,7 @@ namespace Overlayer.Core
             Threads.ForEach(tag.Threads.Add);
             return tag;
         }
-        public override string ToString() => $"{Open}{Name}{Close}";
+        public override string ToString() => $"{Config.Open}{Name}{Config.Close}";
         public static bool CheckGetterSig(MethodInfo method) => method.GetParameters().Length < 2;
         public static bool CheckThreadSig(MethodInfo method)
         {

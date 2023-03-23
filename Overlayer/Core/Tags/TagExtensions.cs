@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Overlayer.Core
+namespace Overlayer.Core.Tags
 {
     public static class TagExtensions
     {
