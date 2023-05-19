@@ -4,6 +4,7 @@ using Overlayer.Core.Tags;
 using Overlayer.Scripting;
 using Overlayer.Scripting.JS;
 using Overlayer.Core.Utils;
+using Overlayer.Core;
 
 namespace Overlayer.Tags
 {
@@ -14,6 +15,11 @@ namespace Overlayer.Tags
         [Tag]
         public static object Expr(string expr)
         {
+            if (!Main.HasScripts)
+            {
+                TagManager.UpdatePatchReference();
+                Main.HasScripts = true;
+            }
             if (expressions.TryGetValue(expr, out var res))
                 return res.Eval();
             res = MiscUtils.ExecuteSafe(() => JSUtils.CompileSource(expr), out _);

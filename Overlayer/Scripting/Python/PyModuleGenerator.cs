@@ -1,20 +1,17 @@
 ﻿using Overlayer.Core;
-using Overlayer.Core.Tags;
 using Overlayer.Core.Utils;
+using Overlayer.Scripting.JS;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using Unity.Services.Analytics;
 
 namespace Overlayer.Scripting.Python
 {
-    public class PythonImpl : Impl
+    public class PyModuleGenerator : ModuleGenerator
     {
         public override ScriptType ScriptType => ScriptType.Python;
-        public override string Generate()
+        public override string GenerateTagsModule()
         {
             StringBuilder sb = new StringBuilder();
             foreach (var tag in TagManager.All)
@@ -25,6 +22,13 @@ namespace Overlayer.Scripting.Python
                 else
                     sb.AppendLine($"def {tag.Name}() -> {GetTypeStr(tag.Getter.ReturnType)}: return {tag.Name}()");
             }
+            return sb.ToString();
+        }
+        public override string GenerateApiModule()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var (attr, t) in Api.GetApiTypesWithAttr(ScriptType))
+                PythonUtils.WriteType(t, sb, attr.Name);
             foreach (var api in Api.GetApiMethods(ScriptType))
             {
                 ParameterInfo[] options = api.GetParameters();
@@ -35,15 +39,15 @@ namespace Overlayer.Scripting.Python
             }
             return sb.ToString();
         }
-        static string GetArgStr(ParameterInfo[] args)
+        public static string GetArgStr(ParameterInfo[] args, bool defaultTypeIsOriginal = false)
         {
             StringBuilder sb = new StringBuilder();
             foreach (var arg in args)
-                sb.Append($"{arg.Name.IfNullOrEmpty("digits")}:{GetTypeStr(arg.ParameterType)}, ");
+                sb.Append($"{arg.Name.IfNullOrEmpty("digits")}:{GetTypeStr(arg.ParameterType, defaultTypeIsOriginal)}, ");
             var result = sb.ToString();
             return result.Remove(result.Length - 2);
         }
-        static string GetCallArgStr(ParameterInfo[] args)
+        public static string GetCallArgStr(ParameterInfo[] args)
         {
             StringBuilder sb = new StringBuilder();
             foreach (var arg in args)
@@ -51,13 +55,18 @@ namespace Overlayer.Scripting.Python
             var result = sb.ToString();
             return result.Remove(result.Length - 2);
         }
-        static string GetTypeStr(Type type)
+        public static string GetTypeStr(Type type, bool defaultIsOriginal = false)
         {
+            if (type == typeof(void)) return "None";
+            else if (type.IsArray) return "list";
+            else if (typeof(IDictionary).IsAssignableFrom(type)) return "dict";
+            string result;
             switch (Type.GetTypeCode(type))
             {
                 case TypeCode.Single:
                 case TypeCode.Double:
-                    return "float";
+                    result = "float";
+                    break;
                 case TypeCode.Byte:
                 case TypeCode.SByte:
                 case TypeCode.Int16: 
@@ -66,14 +75,22 @@ namespace Overlayer.Scripting.Python
                 case TypeCode.UInt16:
                 case TypeCode.UInt32:
                 case TypeCode.UInt64:
-                    return "int";
+                    result = "int";
+                    break;
                 case TypeCode.String:
-                    return "str";
+                    result = "str";
+                    break;
                 case TypeCode.Boolean:
-                    return "bool";
+                    result =  "bool";
+                    break;
                 default:
-                    return "object";
+                    var toSearch = type.IsArray ? type.GetElementType() : type;
+                    if (Api.IsContains(ScriptType.Python, toSearch))
+                        result = toSearch.GetCustomAttribute<ApiAttribute>().Name ?? type.Name;
+                    else result = defaultIsOriginal ? type.Name.RemoveAfter("`") : "object";
+                    break;
             }
+            return result;
         }
     }
 }

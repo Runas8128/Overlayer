@@ -1,4 +1,5 @@
-﻿using Overlayer.Core;
+﻿using Jint;
+using Overlayer.Core;
 using Overlayer.Core.Utils;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace Overlayer.Scripting.JS
 {
-    public class JavaScriptImpl : Impl
+    public class JSModuleGenerator : ModuleGenerator
     {
         public override ScriptType ScriptType => ScriptType.JavaScript;
-        public override string Generate()
+        public override string GenerateTagsModule()
         {
             StringBuilder sb = new StringBuilder();
             foreach (var tag in TagManager.All)
@@ -21,25 +22,33 @@ namespace Overlayer.Scripting.JS
                 ParameterInfo[] tagOptions = tag.Getter.GetParameters();
                 if (tag.HasOption)
                     sb.AppendLine(GetPRTypeHintComment(rt, "", (tagOptions[0].ParameterType, tagOptions[0].Name.IfNullOrEmpty("digits"))))
-                        .AppendLine($"function {tag.Name}({tagOptions[0].Name.IfNullOrEmpty("digits")});");
+                        .AppendLine($"export function {tag.Name}({tagOptions[0].Name.IfNullOrEmpty("digits")}) {{ {(rt != typeof(void) ? "return " : "")}{tag.Name}({tagOptions[0].Name.IfNullOrEmpty("digits")}); }}");
                 else sb.AppendLine(GetPRTypeHintComment(rt, ""))
-                        .AppendLine($"function {tag.Name}();");
-            }    
+                        .AppendLine($"export function {tag.Name}() {{ {(rt != typeof(void) ? "return " : "")}{tag.Name}(); }}");
+            }
+            return sb.ToString();
+        }
+        public override string GenerateApiModule()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var (attr, t) in Api.GetApiTypesWithAttr(ScriptType))
+                JSUtils.WriteType(t, sb, attr.Name);
             foreach (var api in Api.GetApiMethods(ScriptType))
             {
                 Type rt = api.ReturnType;
                 ParameterInfo[] options = api.GetParameters();
                 if (options.Length > 0)
                 {
-                    var opt = options.Select(p => (p.ParameterType, p.Name)).ToArray();
+                    var opt = options.Where(p => p.ParameterType != typeof(Engine)).Select(p => (p.ParameterType, p.Name)).ToArray();
                     sb.AppendLine(GetPRTypeHintComment(rt, "", opt));
                     var optStr = opt.Aggregate("", (c, n) => $"{c}{n.Name}, ");
-                    sb.AppendLine($"function {api.Name}({optStr.Remove(optStr.Length - 2)});");
+                    optStr = optStr.Remove(optStr.Length - 2);
+                    sb.AppendLine($"export function {api.Name}({optStr}) {{ {(rt != typeof(void) ? "return " : "")}{api.Name}({optStr}); }}");
                 }
                 else
                 {
                     sb.AppendLine(GetPRTypeHintComment(rt, ""));
-                    sb.AppendLine($"function {api.Name}();");
+                    sb.AppendLine($"export function {api.Name}() {{ {(rt != typeof(void) ? "return " : "")}{api.Name}(); }}");
                 }
             }
             return sb.ToString();

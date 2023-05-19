@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using System;
 using Overlayer.Tags;
+using Overlayer.Scripting;
 
 namespace Overlayer.Patches
 {
@@ -15,6 +16,11 @@ namespace Overlayer.Patches
                 BpmUpdater.TimingList.Add(Variables.Timing);
             }
             else Variables.Timing = 0;
+        }
+        public static void Postfix()
+        {
+            if (scrController.instance.gameworld)
+                Api.CaptureTile(Misc.Accuracy(), Misc.XAccuracy(), Variables.CurrentTile, Variables.Timing, BpmUpdater.TimingAvg(), Variables.TileBpm, (int)CurHitTags.GetCurHitMargin(GCS.difficulty));
         }
     }
 }

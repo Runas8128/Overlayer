@@ -60,7 +60,7 @@ namespace Overlayer.Core
             var timer = new Stopwatch();
             ExecuteInfo info;
             info.timer = timer;
-            info.executor = toExecute;
+            info.executor = toExecute ?? ExecutingStack.Count.ToString();
             ExecutingStack.Push(info);
             timer.Start();
         }
@@ -76,6 +76,19 @@ namespace Overlayer.Core
         {
             SaveLog();
             Application.OpenURL(Path.Combine(Main.Mod.Path, "Debug.log"));
+        }
+        public static T ExecuteSafe<T>(Action action) where T : Exception
+        {
+            return ExecuteSafe<T>(null, action);
+        }
+        public static T ExecuteSafe<T>(string name, Action action) where T : Exception
+        {
+            T exception = null;
+            Begin(name);
+            try { action?.Invoke(); }
+            catch (T ex) { exception = ex; }
+            End(exception == null);
+            return exception;
         }
         public static void Enable()
         {

@@ -28,6 +28,20 @@ namespace Overlayer.Core
         {
             ReferencedTags = AllTags.Values.Where(t => t.Referenced).ToDictionary(t => t.Name, t => t);
             if (!Main.HasScripts)
+                UpdatePatchReference(false);
+            ReferenceUpdated();
+        }
+        public static void UpdatePatchReference(bool forceAll = true)
+        {
+            if (forceAll)
+            {
+                foreach (var (patch, tags) in Patches)
+                {
+                    if (patch.Patched) continue;
+                    patch.Patch(Main.Harmony);
+                }
+            }
+            else
             {
                 foreach (var (patch, tags) in Patches)
                 {
@@ -36,7 +50,6 @@ namespace Overlayer.Core
                     else patch.Patch(Main.Harmony);
                 }
             }
-            ReferenceUpdated();
         }
         public static void SetTag(Tag tag, bool notPlaying)
         {
@@ -197,12 +210,10 @@ namespace Overlayer.Core
                 if (Patches.TryGetValue(info, out var tags))
                     tags.Add(tag);
                 else Patches.Add(info, new List<Tag> { tag });
-                OverlayerDebug.Log($"Added Patch {info}..");
             }
         }
         static List<PatchInfo> ParsePatchNames(string patchNames)
         {
-            OverlayerDebug.Log($"Parsing Patch Names..");
             string[] patches = patchNames.Split('|');
             List<PatchInfo> pInfos = new List<PatchInfo>();
             foreach (string patch in patches)

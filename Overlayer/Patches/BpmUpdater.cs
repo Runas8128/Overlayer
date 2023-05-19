@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 using Overlayer.Core.Tags;
+using Overlayer.Core.Api;
 
 namespace Overlayer.Patches
 {
@@ -30,13 +31,13 @@ namespace Overlayer.Patches
         public static float bpm = 0, pitch = 0, playbackSpeed = 1;
         public static bool beforedt = false;
         public static double beforebpm = 0;
-        [HarmonyPatch(typeof(CustomLevel), "Play")]
+        [HarmonyPatch(typeof(scnGame), "Play")]
         public static class CustomLevelStart
         {
-            public static void Postfix(CustomLevel __instance)
+            public static void Postfix(scnGame __instance)
             {
                 if (!scrController.instance.gameworld) return;
-                if (CustomLevel.instance == null) return;
+                if (scnGame.instance == null) return;
                 Init(scrController.instance);
             }
         }
@@ -46,7 +47,7 @@ namespace Overlayer.Patches
             public static void Postfix(scrPressToStart __instance)
             {
                 if (!scrController.instance.gameworld) return;
-                if (CustomLevel.instance != null) return;
+                if (scnGame.instance != null) return;
                 Init(scrController.instance);
                 Variables.StartProg = scrController.instance.percentComplete * 100;
             }
@@ -101,12 +102,13 @@ namespace Overlayer.Patches
             Variables.IsStarted = true;
             AllCheckPoints = scrLevelMaker.instance.listFloors.FindAll(f => f.GetComponent<ffxCheckpoint>() != null);
             float kps = 0;
-            if (CustomLevel.instance != null)
+            if (scnGame.instance != null)
             {
-                pitch = (float)CustomLevel.instance.levelData.pitch / 100;
-                if (GCS.standaloneLevelMode) pitch *= (float)curSpd.GetValue(null);
+                pitch = (float)scnGame.instance.levelData.pitch / 100;
+#warning FIX THIS
+                //if (GCS.standaloneLevelMode) pitch *= (float)curSpd.GetValue(null);
                 playbackSpeed = scnEditor.instance.playbackSpeed;
-                bpm = CustomLevel.instance.levelData.bpm * playbackSpeed * pitch;
+                bpm = scnGame.instance.levelData.bpm * playbackSpeed * pitch;
             }
             else
             {
@@ -123,6 +125,7 @@ namespace Overlayer.Patches
             Variables.TileBpm = cur;
             Variables.CurBpm = cur;
             Variables.RecKPS = kps;
+            Scripting.Api.ClearTileInfo();
         }
     }
 }

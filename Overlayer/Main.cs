@@ -24,11 +24,12 @@ namespace Overlayer
     public static class Main
     {
         #region Variables
-        public static bool HasScripts { get; private set; }
+        public static bool HasScripts { get; internal set; }
         public static ModEntry Mod { get; private set; }
         public static ModLogger Logger { get; private set; }
         public static Harmony Harmony { get; private set; }
         public static string ScriptPath => Path.Combine(Mod.Path, "Scripts");
+        public static string ScriptModulePath => Path.Combine(ScriptPath, "Modules");
         public static Language Language { get; private set; }
         public static Settings Settings { get; private set; }
         public static Texture2D OverlayerV2Logo { get; private set; }
@@ -227,20 +228,34 @@ namespace Overlayer
         {
             ActiveScene = to;
         }
+        public static async Task GenerateModules(string folderPath)
+        {
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+            OverlayerDebug.Log($"Generating Script Modules..");
+
+            var jsModGen = new JSModuleGenerator();
+            var pyModGen = new PyModuleGenerator();
+
+            await Task.Run(() => File.WriteAllText(Path.Combine(folderPath, "Tags.js"), jsModGen.GenerateTagsModule()));
+            await Task.Run(() => File.WriteAllText(Path.Combine(folderPath, "Tags.py"), pyModGen.GenerateTagsModule()));
+
+            await Task.Run(() => File.WriteAllText(Path.Combine(folderPath, "Api.js"), jsModGen.GenerateApiModule()));
+            await Task.Run(() => File.WriteAllText(Path.Combine(folderPath, "Api.py"), pyModGen.GenerateApiModule()));
+        }
         public static async Task RunScripts(string folderPath)
         {
             if (ScriptsRunning) return;
             ScriptsRunning = true;
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
-            OverlayerDebug.Log($"Generating Script Implementations..");
-            await Task.Run(() => File.WriteAllText(Path.Combine(folderPath, "Impl.js"), new JavaScriptImpl().Generate()));
-            await Task.Run(() => File.WriteAllText(Path.Combine(folderPath, "Impl.py"), new PythonImpl().Generate()));
             OverlayerDebug.Log($"Preparing Executing Scripts..");
+            await GenerateModules(Path.Combine(folderPath, "Modules"));
             Api.Clear();
             Expression.expressions.Clear();
             OverlayerDebug.Begin("Executing All Scripts");
-            foreach (string script in Directory.GetFiles(folderPath))
+            foreach (string script in Directory.GetFiles(folderPath).OrderBy(f => Path.GetFileNameWithoutExtension(f)))
             {
                 var nameWithoutExt = Path.GetFileNameWithoutExtension(script);
                 if (nameWithoutExt == "Impl") continue;

@@ -11,6 +11,7 @@ using System.IO;
 using System.Text;
 using Esprima.Ast;
 using Overlayer.Core.Utils;
+using static IronPython.Modules._ast;
 
 namespace Overlayer.Scripting.JS
 {
@@ -21,7 +22,9 @@ namespace Overlayer.Scripting.JS
         {
             var engine = new Engine(op => 
                 op.AllowClr(MiscUtils.loadedAsss)
-                    .Strict(false)
+                .AllowReflection()
+                .EnableModules(Main.ScriptPath, false)
+                .Strict(false)
             );
             foreach (var tag in TagManager.All)
                 engine.SetValue(tag.Name, tag.Getter);
@@ -36,6 +39,11 @@ namespace Overlayer.Scripting.JS
             foreach (var api in apis)
                 engine.SetValue(api.Key, api.Value);
             return engine;
+        }
+        public static Options AllowReflection(this Options op)
+        {
+            op.Interop.AllowSystemReflection = true;
+            return op;
         }
         public static Result Compile(string path) => new Result(Prepare(), File.ReadAllText(path));
         public static Result CompileSource(string source) => new Result(Prepare(), source);
@@ -189,6 +197,8 @@ namespace Overlayer.Scripting.JS
                 case TypeCode.String:
                     return "string";
                 case TypeCode.Object:
+                    if (Api.IsContains(ScriptType.JavaScript, type))
+                        return type.GetCustomAttribute<ApiAttribute>().Name ?? type.Name;
                     if (type.Namespace != null)
                         return (type.FullName?.Replace(type.Namespace + ".", "").Replace('+', '.') ?? type.Name).RemoveAfter("`");
                     else return type.Name.RemoveAfter("`");
@@ -198,13 +208,13 @@ namespace Overlayer.Scripting.JS
         }
         private static string GetPTypeHintComment(Type type, string name) => $"/**@param {{{GetTypeHintCode(type)}}} {name}*/";
         private static string GetTypeHintComment(Type type) => $"/**@type {{{GetTypeHintCode(type)}}}*/";
-        static string RemoveAfter(this string str, string after)
+        public static string RemoveAfter(this string str, string after)
         {
             int index = str.IndexOf(after);
             if (index < 0) return str;
             return str.Remove(index, str.Length - index);
         }
-        static string TrimBetween(this string str, string start, string end)
+        public static string TrimBetween(this string str, string start, string end)
         {
             int sIdx = str.IndexOf(start);
             int eIdx = str.LastIndexOf(end);
@@ -391,5 +401,54 @@ namespace Overlayer.Scripting.JS
             }
             return fileName;
         }
+        public static void WriteType(Type type, StringBuilder sb, string alias = null)
+        {
+            sb.Append("export class ");
+            var tName = (alias ?? type.Name);
+            sb.Append(tName.RemoveAfter("`"));
+            sb.AppendLine(" {");
+            #region Fields
+            sb.AppendLine("  constructor() {");
+            foreach (var field in type.GetFields(BindingFlags.Public | BindingFlags.Instance))
+            {
+                if (field.Name.StartsWith("<"))
+                    continue;
+                if (field.IsStatic) continue;
+                sb.AppendLine("    " + GetTypeHintComment(field.FieldType));
+                sb.AppendLine($"    this.{field.Name} = null;");
+            }
+            sb.AppendLine("  }");
+
+            foreach (var field in type.GetFields(BindingFlags.Public | BindingFlags.Static))
+            {
+                if (field.Name.StartsWith("<"))
+                    continue;
+                sb.AppendLine("  " + GetTypeHintComment(field.FieldType));
+                sb.AppendLine($"  static {field.Name};");
+            }
+            #endregion
+            #region Methods
+            foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).OrderBy(x => x.Name))
+            {
+                if (method.IsObjectDeclared()) continue;
+                if (method.Name.StartsWith("<"))
+                    continue;
+                if (method.IsSpecialName && !method.Name.StartsWith("add_") && !method.Name.StartsWith("remove_"))
+                    continue;
+                var prms = method.GetParameters().Where(p => p.ParameterType != typeof(Engine));
+                var tuples = prms.Select(p => (p.ParameterType, p.Name));
+                sb.AppendLine(GetPRTypeHintComment(method.ReturnType, "  ", tuples.ToArray()));
+                var prmString = prms.Aggregate("", (c, n) => $"{c}{n.Name}, ");
+                if (prmString.Length > 2)
+                    prmString = prmString.Remove(prmString.Length - 2);
+                var name = method.Name.Split('.').Last();
+                if (method.IsStatic)
+                    sb.AppendLine($"  static {name}({prmString}) {{ {(method.ReturnType != typeof(void) ? "return " : "")}{method.Name}({prmString}) }}");
+                else sb.AppendLine($"  {name}({prmString}) {{ {(method.ReturnType != typeof(void) ? "return " : "")}{method.Name}({prmString}) }}");
+            }
+            #endregion
+            sb.AppendLine("}");
+        }
+        public static bool IsObjectDeclared(this MemberInfo member) => member.DeclaringType == typeof(object);
     }
 }

@@ -749,11 +749,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripting\Api.cs" />
     <Compile Include="Scripting\ApiAttribute.cs" />
-    <Compile Include="Scripting\Impl.cs" />
+    <Compile Include="Scripting\ModuleGenerator.cs" />
     <Compile Include="Scripting\JS\FIWrapper.cs" />
-    <Compile Include="Scripting\JS\JavaScriptImpl.cs" />
+    <Compile Include="Scripting\JS\JSModuleGenerator.cs" />
     <Compile Include="Scripting\JS\JSUtils.cs" />
-    <Compile Include="Scripting\Python\PythonImpl.cs" />
+    <Compile Include="Scripting\Python\PyModuleGenerator.cs" />
     <Compile Include="Scripting\Python\PythonUtils.cs" />
     <Compile Include="Scripting\Result.cs" />
     <Compile Include="Scripting\Script.cs" />
